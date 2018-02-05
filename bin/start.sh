@@ -31,12 +31,12 @@ then
       echo "$user" >> "$CONFIG_DIR/usermap.txt"
    done
 fi
-if [ ! -e $SMBUSERS ]
-then
-   for user in $SMBUSERS
-   do
-      echo "$user" >> "$CONFIG_DIR/smbusers"
-   done
-fi
+#if [ ! -e $SMBUSERS ]
+#then
+#   for user in $SMBUSERS
+#   do
+#      echo "$user" >> "$CONFIG_DIR/smbusers"
+#   done
+#fi
 nmbd -D && smbd -FS
 exit 0
