@@ -13,7 +13,7 @@ RUN apk add --no-cache samba-server \
  && chmod +x /usr/local/bin/start.sh \
  && adduser -D -S -u 100 samba \
  && mkdir -p "$SECRET_DIR" \
-# && touch "$SMBPASSWD_FILE" \
+ && touch "$SMBPASSWD_FILE" \
  && chmod -R 400 "$SECRET_DIR" \
  && chown samba "$CONFIG_DIR" 
 # && chown -R samba "$LOG_DIR" 
