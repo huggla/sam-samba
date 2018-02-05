@@ -24,7 +24,7 @@ then
       echo "$conf" >> $smbconf
    done
 fi
-if [ ! -e $USERMAP ]
+if [ ! -e "$CONFIG_DIR/usermap.txt" ]
 then
    for user in $USERMAP
    do
