@@ -1,7 +1,11 @@
 FROM alpine:3.7
 
+COPY ./bin/start.sh /usr/local/bin/start.sh
+
 RUN apk add --no-cache samba-server \
-    chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd
+    chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
+    mv /etc/samba/smb.conf /etc/samba/smb.conf.old \
+    chmod +x /usr/local/bin/start.sh
 
 ENV DNS_PROXY no \
     SMBPASSWD_FILE "\etc\samba\smbpasswd"
