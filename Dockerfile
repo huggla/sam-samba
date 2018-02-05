@@ -15,7 +15,8 @@ RUN apk add --no-cache samba-server \
  && mkdir -p "$SECRET_DIR" "$LOG_DIR" \
  && touch "$SMBPASSWD_FILE" \
  && chmod -R 400 "$SECRET_DIR" \
- && chown -R samba "$CONFIG_DIR" /var/log/samba
+ && chown samba "$CONFIG_DIR" \
+ && chown -R samba "$LOG_DIR"
 
 ENV DNS_PROXY no \
     PASSDB_BACKEND "smbpasswd $SMBPASSWD_FILE" \
