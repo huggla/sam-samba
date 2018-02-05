@@ -8,7 +8,7 @@ ENV CONFIG_DIR /etc/samba \
 
 RUN apk add --no-cache samba-server \
  && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
- && mv $CONFIG_DIR/smb.conf $CONFIG_DIR/smb.conf.old \
+# && mv $CONFIG_DIR/smb.conf $CONFIG_DIR/smb.conf.old \
  && chmod +x /usr/local/bin/start.sh \
  && adduser -D -S -u 100 samba \
  && mkdir -p $SECRET_DIR \
