@@ -20,7 +20,7 @@ RUN apk add --no-cache samba-server \
  && chmod -R 0700 "$LOG_DIR"
 
 ENV DNS_PROXY=no \
-    PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE" \
+    PASSDB_BACKEND=smbpasswd:"$SMBPASSWD_FILE" \
     LOG_FILE="$LOG_DIR/log.%m" \
     MAX_LOG_SIZE=0 \
     SYSLOG=0 \
