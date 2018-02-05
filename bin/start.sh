@@ -26,6 +26,7 @@ then
 fi
 if [ ! -e "$CONFIG_DIR/usermap.txt" ]
 then
+   touch "$CONFIG_DIR/usermap.txt"
    for user in $USERMAP
    do
       echo "$user" >> "$CONFIG_DIR/usermap.txt"
