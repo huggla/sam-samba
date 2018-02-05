@@ -2,16 +2,21 @@ FROM alpine:3.7
 
 COPY ./bin/start.sh /usr/local/bin/start.sh
 
+ENV CONFIG_DIR /etc/samba \
+    SECRET_DIR "$CONFIG_DIR/secret" \
+    SMBPASSWD_FILE "$SECRET_DIR/smbpasswd"
+
 RUN apk add --no-cache samba-server \
  && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
- && mv /etc/samba/smb.conf /etc/samba/smb.conf.old \
+ && mv $CONFIG_DIR/smb.conf $CONFIG_DIR/smb.conf.old \
  && chmod +x /usr/local/bin/start.sh \
  && adduser -D -S -u 100 samba \
- && mkdir -pm 400 /etc/samba/secret \
- && chown samba /etc/samba
+ && mkdir -p $SECRET_DIR \
+ && touch $SMBPASSWD_FILE \
+ && chmod -R 400 $SECRET_DIR \
+ && chown samba $CONFIG_DIR
 
 ENV DNS_PROXY no \
-    SMBPASSWD_FILE "/etc/samba/secret/smbpasswd"
     PASSDB_BACKEND "smbpasswd $SMBPASSWD_FILE" \
     LOG_FILE "/var/log/samba/log.%m" \
     MAX_LOG_SIZE 0 \
