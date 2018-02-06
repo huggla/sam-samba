@@ -35,7 +35,7 @@ then
          path_var="$share_uc$pathstr"
          echo "path_var=$path_var"
          echo "path_value=$path_value"
-         evalstr='path_value=$'$path_var
+         evalstr='path_value=${'$path_var'}'
          echo "evalstr=$evalstr"
          eval "$evalstr"
          echo "path_value=$path_value"
