@@ -2,11 +2,11 @@ FROM alpine:3.7
 
 COPY ./bin/start.sh /usr/local/bin/start.sh
 
-ENV CONFIG_DIR=/etc/samba \
+ENV CONFIG_DIR="/etc/samba" \
     SHARES_DIR="/shares" \
     SECRET_DIR="$CONFIG_DIR/secret" \
     SMBPASSWD_FILE="$SECRET_DIR/smbpasswd" \
-    LOG_DIR=/var/log/samba
+    LOG_DIR="/var/log/samba"
 
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
@@ -18,17 +18,17 @@ RUN apk add --no-cache samba-server sudo \
  && adduser -D -S -u 100 samba \
  && echo "samba ALL=(root) NOPASSWD:SETENV: /usr/local/bin/start.sh" > /etc/sudoers.d/samba
 
-ENV DNS_PROXY=no \
+ENV DNS_PROXY="no" \
     LOG_FILE="$LOG_DIR/log.%m" \
-    MAX_LOG_SIZE=0 \
-    SYSLOG=0 \
+    MAX_LOG_SIZE="0" \
+    SYSLOG="0" \
     PANIC_ACTION="killall start.sh" \
-    SERVER_ROLE=standalone \
+    SERVER_ROLE="standalone" \
     MAP_TO_GUEST="bad user" \
-    LOAD_PRINTERS=no \
-    PRINTING=bsd \
+    LOAD_PRINTERS="no" \
+    PRINTING="bsd" \
     PRINTCAP_NAME="/dev/null" \
-    DISABLE_SPOOLSS=yes
+    DISABLE_SPOOLSS="yes"
 
 USER samba
 
