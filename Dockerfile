@@ -29,7 +29,7 @@ ENV DNS_PROXY=no \
     PRINTING=bsd \
     PRINTCAP_NAME="/dev/null" \
     DISABLE_SPOOLSS=yes \
-    USERNAME_MAP="$CONFIG_DIR/usermap.txt"
+    USERNAME_MAP_FILE="$CONFIG_DIR/usermap.txt"
 
 USER samba
 
