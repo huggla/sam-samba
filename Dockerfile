@@ -9,6 +9,7 @@ ENV CONFIG_DIR="/etc/samba" \
     LOG_DIR="/var/log/samba"
 
 RUN apk add --no-cache samba-server sudo \
+ && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
  && chmod 500 /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" "$SHARES_DIR" \
