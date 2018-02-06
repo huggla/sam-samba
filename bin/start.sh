@@ -4,7 +4,7 @@ set -e
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
 mkdir -p "$CONFIG_DIR"
-PASSDB_BACKEND="smbpasswd:\"$SMBPASSWD_FILE\""
+PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
    USERNAME_MAP_FILE="$CONFIG_DIR/usermap.txt"
