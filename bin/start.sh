@@ -51,6 +51,7 @@ then
       done
    fi
 fi
+echo "$USERNAME_MAP_FILE"
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
    mkdir -p "$(dirname "$USERNAME_MAP_FILE")"
@@ -60,6 +61,6 @@ then
       echo "$user" >> "$USERNAME_MAP_FILE"
    done
 fi
-
-nmbd -D && smbd -FS
+echo hej
+nmbd -D && echo hej2 && smbd -FS && echo hej3
 exit 0
