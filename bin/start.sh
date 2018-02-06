@@ -6,38 +6,55 @@ smbconf="$CONFIG_DIR/smb.conf"
 mkdir -p "$CONFIG_DIR"
 if [ ! -e "$smbconf" ]
 then
+   parameters="DNS_PROXY;PASSDB_BACKEND;LOG_FILE;MAX_LOG_SIZE;SYSLOG;PANIC_ACTION;SERVER_ROLE;MAP_TO_GUEST;LOAD_PRINTERS;PRINTING;PRINTCAP_NAME;DISABLE_SPOOLSS;USERSHARE_ALLOW_GUESTS"
    echo "[global]" >> $smbconf
-   echo "dns proxy=$DNS_PROXY" >> $smbconf
-   echo "passdb backend=$PASSDB_BACKEND" >> $smbconf
-   echo "log file=$LOG_FILE" >> $smbconf
-   echo "max log size=$MAX_LOG_SIZE" >> $smbconf
-   echo "syslog=$SYSLOG" >> $smbconf
-   echo "panic action=$PANIC_ACTION" >> $smbconf
-   echo "server role=$SERVER_ROLE" >> $smbconf
-   echo "map to guest=$MAP_TO_GUEST" >> $smbconf
-   echo "load printers=$LOAD_PRINTERS" >> $smbconf
-   echo "printing=$PRINTING" >> $smbconf
-   echo "printcap name=$PRINTCAP_NAME" >> $smbconf
-   echo "disable spoolss=$DISABLE_SPOOLSS" >> $smbconf
-   for conf in $ADDITIONAL_CONFIGURATION
+   echo "username map=\"$USERNAME_MAP_FILE\"" >> $smbconf
+   for param in $parameters
    do
-      echo "$conf" >> $smbconf
+      eval "param_value=\$$param"
+      if [ -n "$param_value" ]
+      then
+         echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+         echo "=$param_value" >> $smbconf
+      fi
    done
+   if [ -n "$SHARES" ]
+   then
+      share_parameters="BROWSEABLE;READ_ONLY;GUEST_OK;ADMIN_USERS"
+      for share in $SHARES
+      do
+         echo >> $smbconf
+         echo "[$share]" >> $smbconf
+         path_var="$(echo $share | tr '[:lower:]' '[:upper:]')-PATH"
+         eval "path_value=\$$path_var"
+         if [ -z "$path_value" ]
+         then
+            path_value="$SHARE_DIR/$share"
+         fi
+         mkdir -p "$path_value"
+         echo "path=$path_value" >> $smbconf
+         for param in $share_parameters
+         do
+            param_var="$(echo $share | tr '[:lower:]' '[:upper:]')-$param"
+            eval "param_value=\$$param_var"
+            if [ -n "$param_value" ]
+            then
+               echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+               echo "=$param_value" >> $smbconf
+            fi
+         done
+      done
+   fi
 fi
-if [ ! -e "$CONFIG_DIR/usermap.txt" ]
+if [ ! -e "$USERNAME_MAP_FILE" ]
 then
-   touch "$CONFIG_DIR/usermap.txt"
-   for user in $USERMAP
+   mkdir -p "$(dirname "$USERNAME_MAP_FILE")"
+   touch "$USERNAME_MAP_FILE"
+   for user in $USERNAME_MAP
    do
-      echo "$user" >> "$CONFIG_DIR/usermap.txt"
+      echo "$user" >> "$USERNAME_MAP_FILE"
    done
 fi
-#if [ ! -e $SMBUSERS ]
-#then
-#   for user in $SMBUSERS
-#   do
-#      echo "$user" >> "$CONFIG_DIR/smbusers"
-#   done
-#fi
+
 nmbd -D && smbd -FS
 exit 0
