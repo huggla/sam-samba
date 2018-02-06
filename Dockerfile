@@ -2,9 +2,9 @@ FROM alpine:3.7
 
 COPY ./bin/start.sh /usr/local/bin/start.sh
 
-ENV CONFIG_DIR="/etc/samba" \
-    SHARES_DIR="/shares" \
-    SECRET_DIR="$CONFIG_DIR/secret" \
+ENV CONFIG_DIR "/etc/samba"
+ENV SECRET_DIR "$CONFIG_DIR/secret"
+ENV SHARES_DIR="/shares" \
     SMBPASSWD_FILE="$SECRET_DIR/smbpasswd" \
     LOG_DIR="/var/log/samba"
 
