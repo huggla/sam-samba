@@ -30,7 +30,7 @@ then
       do
          echo >> $smbconf
          echo "[$share]" >> $smbconf
-         path_var="$(echo $share | tr '[:lower:]' '[:upper:]')-PATH"
+         path_var="$(echo $share | tr '[:lower:]' '[:upper:]')""-PATH"
          eval "path_value=\$$path_var"
          if [ -z "$path_value" ]
          then
