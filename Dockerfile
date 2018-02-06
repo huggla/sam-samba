@@ -16,8 +16,6 @@ RUN apk add --no-cache samba-server \
  && touch "$SMBPASSWD_FILE" \
  && chmod -R 400 "$SECRET_DIR" \
  && chown samba "$CONFIG_DIR" 
-# && chown -R samba "$LOG_DIR" 
-# && chmod -R 0700 "$LOG_DIR"
 
 ENV DNS_PROXY=no \
     PASSDB_BACKEND=smbpasswd:"$SMBPASSWD_FILE" \
@@ -30,7 +28,8 @@ ENV DNS_PROXY=no \
     LOAD_PRINTERS=no \
     PRINTING=bsd \
     PRINTCAP_NAME="/dev/null" \
-    DISABLE_SPOOLSS=yes
+    DISABLE_SPOOLSS=yes \
+    USERNAME_MAP="$CONFIG_DIR/usermap.txt"
 
 USER samba
 
