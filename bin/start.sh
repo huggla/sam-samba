@@ -3,7 +3,7 @@ set -e
 
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-mkdir -p "$CONFIG_DIR" "$SHARE_DIR"
+mkdir -p "$CONFIG_DIR" "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
@@ -34,7 +34,7 @@ then
          eval "path_value=\$$path_var"
          if [ -z "$path_value" ]
          then
-            path_value="$SHARE_DIR/$share"
+            path_value="$SHARES_DIR/$share"
          fi
          mkdir -p "$path_value"
          echo "path=$path_value" >> $smbconf
