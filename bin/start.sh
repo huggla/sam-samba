@@ -30,16 +30,9 @@ then
       do
          echo >> $smbconf
          echo "[$share]" >> $smbconf
-         share_uc="$(echo $share | tr '[:lower:]' '[:upper:]')"
-         pathstr='-PATH'
-         path_var="$share_uc$pathstr"
-         echo "path_var=$path_var"
+         path_var="$(echo $share | tr '[:lower:]' '[:upper:]')_PATH"
+         eval "path_value=\$$path_var"
          echo "path_value=$path_value"
-         evalstr='path_value=${'$path_var'}'
-         echo "evalstr=$evalstr"
-         eval "$evalstr"
-         echo "path_value=$path_value"
-         echo $path_value
          if [ -z "$path_value" ]
          then
             path_value="$SHARES_DIR/$share"
