@@ -34,4 +34,4 @@ ENV DNS_PROXY=no \
 
 USER samba
 
-CMD ["sudo", "start.sh"]
+CMD ["sudo", "-E", "start.sh"]
