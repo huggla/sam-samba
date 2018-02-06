@@ -9,7 +9,6 @@ ENV CONFIG_DIR=/etc/samba \
     LOG_DIR=/var/log/samba
 
 RUN apk add --no-cache samba-server sudo \
-# && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
  && chmod 500 /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" "$SHARES_DIR" \
@@ -18,7 +17,6 @@ RUN apk add --no-cache samba-server sudo \
  && chmod -R 500 "$SECRET_DIR" \
  && adduser -D -S -u 100 samba \
  && echo "samba ALL=(root) NOPASSWD:SETENV: /usr/local/bin/start.sh" > /etc/sudoers.d/samba
-# && chown samba "$CONFIG_DIR" "$SHARES_DIR"
 
 ENV DNS_PROXY=no \
     LOG_FILE="$LOG_DIR/log.%m" \
