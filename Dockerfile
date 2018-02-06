@@ -9,14 +9,16 @@ ENV CONFIG_DIR=/etc/samba \
     LOG_DIR=/var/log/samba
 
 RUN apk add --no-cache samba-server \
- && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
+# && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod +x /usr/local/bin/start.sh \
- && adduser -D -S -u 100 samba \
+ && chmod 500 /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" "$SHARES_DIR" \
+ && chmod -R 700 "$CONFIG_DIR" "$SHARES_DIR" \
  && touch "$SMBPASSWD_FILE" \
- && chmod -R 400 "$SECRET_DIR" \
- && chown samba "$CONFIG_DIR" "$SHARES_DIR"
+ && chmod -R 500 "$SECRET_DIR" \
+ && adduser -D -S -u 100 samba \
+ && echo "samba ALL = (root) /usr/local/bin/start.sh" >> /etc/sudoers
+# && chown samba "$CONFIG_DIR" "$SHARES_DIR"
 
 ENV DNS_PROXY=no \
     LOG_FILE="$LOG_DIR/log.%m" \
@@ -32,4 +34,4 @@ ENV DNS_PROXY=no \
 
 USER samba
 
-CMD ["start.sh"]
+CMD ["sudo", "start.sh"]
