@@ -20,7 +20,7 @@ then
       if [ -n "$param_value" ]
       then
          echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
-         echo "=$param_value" >> $smbconf
+         echo "=\"$param_value\"" >> $smbconf
       fi
    done
    if [ -n "$SHARES" ]
@@ -45,7 +45,7 @@ then
             if [ -n "$param_value" ]
             then
                echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
-               echo "=$param_value" >> $smbconf
+               echo "=\"$param_value\"" >> $smbconf
             fi
          done
       done
