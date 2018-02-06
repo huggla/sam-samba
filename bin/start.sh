@@ -3,7 +3,7 @@ set -e
 
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-mkdir -p "$CONFIG_DIR"
+mkdir -p "$CONFIG_DIR" "$SHARE_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
