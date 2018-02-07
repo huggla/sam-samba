@@ -55,7 +55,7 @@ echo "$USERNAME_MAP_FILE"
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
    username_dir="$(dirname "$USERNAME_MAP_FILE")"
-   sudo mksmbdir "$username_dir"
+   sudo mkdir -p "$username_dir"
    touch "$USERNAME_MAP_FILE"
    for user in $USERNAME_MAP
    do
