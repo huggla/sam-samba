@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 if [ -n "$2" ]
 then
@@ -10,3 +11,4 @@ else
 fi
 file=`/bin/echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 /bin/chown "$rec" root "$file"
+/bin/chmod "$rec" 700 "$file"
