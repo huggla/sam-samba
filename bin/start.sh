@@ -3,7 +3,7 @@ set -e
 
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-mkdir -p "$CONFIG_DIR" "$SHARES_DIR"
+sudo mksmbdir "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
@@ -54,13 +54,17 @@ fi
 echo "$USERNAME_MAP_FILE"
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
-   mkdir -p "$(dirname "$USERNAME_MAP_FILE")"
+   username_dir="$(dirname "$USERNAME_MAP_FILE")"
+   sudo mksmbdir "$username_dir"
    touch "$USERNAME_MAP_FILE"
    for user in $USERNAME_MAP
    do
       echo "$user" >> "$USERNAME_MAP_FILE"
    done
+   sudo chown2root -R "$username_dir"
 fi
+sudo chown2root -R "$CONFIG_DIR"
+sudo chown2root -R "$SHARES_DIR"
 echo hej
 nmbd -D && echo hej2 && smbd -FS && echo hej3
 exit 0
