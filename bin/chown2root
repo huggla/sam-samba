@@ -11,4 +11,4 @@ else
 fi
 file=`/bin/echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 /bin/chown "$rec" root "$file"
-/bin/chmod "$rec" 700 "$file"
+/bin/chmod "$rec" u=rwX,go= "$file"
