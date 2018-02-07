@@ -1,6 +1,6 @@
 FROM alpine:3.7
 
-COPY ./bin/start.sh ./bin/chown2root ./bin/mksmbdir /usr/local/bin/
+COPY ./bin/start.sh ./bin/chown2root ./bin/mkdir2root /usr/local/bin/
 
 ENV CONFIG_DIR "/etc/samba"
 ENV SECRET_DIR "$CONFIG_DIR/secret"
@@ -10,7 +10,7 @@ ENV SHARES_DIR="/shares" \
 
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 100 /usr/local/bin/chown2root /usr/local/bin/mksmbdir \
+ && chmod 100 /usr/local/bin/chown2root /usr/local/bin/mkdir2root \
  && chmod 511 /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" \
  && chmod -R u=rwX,go= "$CONFIG_DIR" \
@@ -18,7 +18,7 @@ RUN apk add --no-cache samba-server sudo \
  && chmod -R u=rX,go= "$SECRET_DIR" \
  && adduser -D -S -u 100 samba \
  && chown samba "$CONFIG_DIR" \
- && echo "samba ALL=(root) NOPASSWD: /usr/local/bin/chown2root, /usr/local/bin/mksmbdir, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
+ && echo "samba ALL=(root) NOPASSWD: /usr/local/bin/chown2root, /usr/local/bin/mkdir2root, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
 ENV DNS_PROXY="no" \
     LOG_FILE="$LOG_DIR/log.%m" \
