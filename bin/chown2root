@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+if [ -n $1 == "-R" ]
+then
+   chown -R root $2
+else
+   chown root $1
+fi
