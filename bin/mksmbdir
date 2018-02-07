@@ -1,5 +1,5 @@
 #!/bin/sh
 
 dir=`/bin/echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-/bin/mkdir "$dir" && /bin/chown samba "$dir"
+/bin/mkdir "$dir"
 exit 0
