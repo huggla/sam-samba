@@ -1,9 +1,12 @@
 #!/bin/sh
-set -e
 
 if [ -n $1 == "-R" ]
 then
-   chown -R root $2
+   rec="-R"
+   file=$2
 else
-   chown root $1
+   rec=""
+   file=$1
 fi
+file=`echo -n "$file" | tr ' ' '_'`
+/bin/chown $rec root $file
