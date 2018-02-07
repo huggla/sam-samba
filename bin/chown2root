@@ -1,12 +1,12 @@
 #!/bin/sh
 
-if [ -n $1 == "-R" ]
+if [ -n "$2" ]
 then
    rec="-R"
-   file=$2
+   file="$2"
 else
    rec=""
-   file=$1
+   file="$1"
 fi
-file=`/bin/echo -n "$file" | tr ' ' '_'`
-/bin/chown $rec root $file
+file=`/bin/echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+/bin/chown "$rec" root "$file"
