@@ -3,7 +3,7 @@ set -e
 
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-sudo mksmbdir "$SHARES_DIR"
+sudo mkdir2root "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
@@ -36,7 +36,7 @@ then
          then
             path_value="$SHARES_DIR/$share"
          fi
-         mkdir -p "$path_value"
+         sudo mkdir2root "$path_value"
          echo "path=$path_value" >> $smbconf
          for param in $share_parameters
          do
@@ -55,7 +55,7 @@ echo "$USERNAME_MAP_FILE"
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
    username_dir="$(dirname "$USERNAME_MAP_FILE")"
-   sudo mkdir -p "$username_dir"
+   mkdir -p "$username_dir"
    touch "$USERNAME_MAP_FILE"
    for user in $USERNAME_MAP
    do
