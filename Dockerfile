@@ -11,7 +11,7 @@ ENV SHARES_DIR="/shares" \
 RUN apk add --no-cache samba-server sudo \
  && chmod 6555 /usr/sbin/nmbd /usr/sbin/smbd \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 500 /usr/local/bin/chown2root /usr/local/bin/mksmbdirs \
+ && chmod 100 /usr/local/bin/chown2root /usr/local/bin/mksmbdirs \
  && chmod 511 /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" "$SHARES_DIR" \
  && chmod -R 700 "$CONFIG_DIR" "$SHARES_DIR" \
