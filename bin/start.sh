@@ -66,5 +66,5 @@ fi
 sudo chown2root -R "$CONFIG_DIR"
 sudo chown2root -R "$SHARES_DIR"
 echo hej
-nmbd -D && echo hej2 && smbd -FS && echo hej3
+sudo nmbd -D && echo hej2 && sudo smbd -FS && echo hej3
 exit 0
