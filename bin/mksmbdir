@@ -2,3 +2,4 @@
 
 dir=`/bin/echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 /bin/mkdir -p "$dir"
+/bin/chown samba "$dir"
