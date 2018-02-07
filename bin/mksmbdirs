@@ -1,4 +1,4 @@
 #!/bin/sh
 
-dir=`/bin/echo -n "$1" | tr ' ' '_'`
-/bin/mkdir $dir
+dir=`/bin/echo -n "$1" | tr '$' '_' | tr ' ' '_'`
+/bin/mkdir -p "$dir"
