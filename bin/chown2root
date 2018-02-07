@@ -8,5 +8,5 @@ else
    rec=""
    file=$1
 fi
-file=`echo -n "$file" | tr ' ' '_'`
+file=`/bin/echo -n "$file" | tr ' ' '_'`
 /bin/chown $rec root $file
