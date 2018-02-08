@@ -51,7 +51,6 @@ then
       done
    fi
 fi
-echo "$USERNAME_MAP_FILE"
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
    username_dir="$(dirname "$USERNAME_MAP_FILE")"
@@ -65,6 +64,5 @@ then
 fi
 sudo chown2root -R "$CONFIG_DIR"
 sudo chown2root -R "$SHARES_DIR"
-echo hej
-sudo nmbd -D && echo hej2 && sudo smbd -FS && echo hej3
+sudo nmbd -D && sudo smbd -FS
 exit 0
