@@ -31,7 +31,7 @@ ENV DNS_PROXY="no" \
     PRINTING="bsd" \
     PRINTCAP_NAME="/dev/null" \
     DISABLE_SPOOLSS="yes" \
-    SHAREUSER="shareuser"
+    SHARE_USER="shareuser"
 
 USER samba
 
