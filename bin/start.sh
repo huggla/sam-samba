@@ -5,8 +5,18 @@ IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
 for user in $SHARE_USERS
 do
-   sudo addshareuser "$user" "$CONFIG_DIR/smbusers"
+   user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
+   envvar=$user_uc"_PASSWORD_FILE"
+   eval "userpwfile=\$$envvar"
+   if [ -z $userpwfile ]
+   then
+      envvar=$user_uc"_PASSWORD"
+      userpwfile=$SECRET_DIR/$user"_pw"
+      eval "echo \$$envvar > $userpwfile"
+   fi
+   sudo addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
 done
+sudo chown2root -R "$SECRET_DIR"
 sudo mkdir2root "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
