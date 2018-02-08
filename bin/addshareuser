@@ -2,7 +2,7 @@
 set -e
 
 user=`/bin/echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-if [ ! `/usr/bin/id $user` ]
+if [ ! `/usr/bin/id $user > /dev/null 2>&1` ]
 then
    smbusers_file=`/bin/echo -n "$2" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
    /usr/sbin/adduser -D -H -s /bin/false "$user"
