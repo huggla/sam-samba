@@ -3,12 +3,12 @@ set -e
 
 if [ -n "$2" ]
 then
-   rec="-R"
    file="$2"
+   cmd='/bin/chown -R root "$file" && /bin/chmod -R u=rwX,go= "$file"'
 else
-   rec=""
    file="$1"
+   cmd='/bin/chown root "$file" && /bin/chmod u=rwX,go=rX "$file"'
 fi
 file=`/bin/echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-/bin/chown $rec root "$file"
-/bin/chmod $rec u=rwX,go= "$file"
+eval $cmd
+exit 0
