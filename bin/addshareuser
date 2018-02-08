@@ -2,5 +2,6 @@
 set -e
 
 user=`/bin/echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+smbusers_file=`/bin/echo -n "$2" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 /usr/sbin/adduser -D -H -s /bin/false "$user"
-/bin/echo "$user = $user" >> /etc/samba/smbusers
+/bin/echo "$user = $user" >> "$smbusers_file"
