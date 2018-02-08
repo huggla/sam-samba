@@ -13,6 +13,7 @@ do
       envvar=$user_uc"_PASSWORD"
       userpwfile=$SECRET_DIR/$user"_pw"
       eval "echo \$$envvar > $userpwfile"
+      eval "echo -n \$$envvar >> $userpwfile"
    fi
    sudo addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
 done
