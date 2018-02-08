@@ -5,7 +5,7 @@ IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
 for user in $SHARE_USERS
 do
-   sudo addshareuser "$user"
+   sudo addshareuser "$user" "$CONFIG_DIR/smbusers"
 done
 sudo mkdir2root "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
