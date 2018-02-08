@@ -68,6 +68,6 @@ then
    sudo chown2root -R "$username_dir"
 fi
 sudo chown2root -R "$CONFIG_DIR"
-#sudo chown2root "$SHARES_DIR"
+sudo chown2root "$SHARES_DIR"
 sudo nmbd -D && sudo smbd -FS
 exit 0
