@@ -17,6 +17,7 @@ if [ ! -e "$smbconf" ]
 then
    parameters="NETBIOS_NAME;WORKGROUP;SERVER_STRING;DNS_PROXY;PASSDB_BACKEND;LOG_FILE;MAX_LOG_SIZE;SYSLOG;PANIC_ACTION;SERVER_ROLE;MAP_TO_GUEST;LOAD_PRINTERS;PRINTING;PRINTCAP_NAME;DISABLE_SPOOLSS;USERSHARE_ALLOW_GUESTS"
    echo "[global]" >> $smbconf
+   echo "smb passwd file=$SMBPASSWD_FILE" >> $smbconf
    echo "username map=$USERNAME_MAP_FILE" >> $smbconf
    for param in $parameters
    do
