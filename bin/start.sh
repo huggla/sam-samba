@@ -94,5 +94,5 @@ fi
 /usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
 /usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
 /usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
-env -i exec /usr/local/bin/runsmbd
+exec env -i /usr/local/bin/runsmbd
 exit 0
