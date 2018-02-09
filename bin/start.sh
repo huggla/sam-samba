@@ -84,5 +84,5 @@ fi
 /usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
 /usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
 /usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
-/usr/bin/sudo /usr/sbin/nmbd -D && /usr/bin/sudo /usr/sbin/smbd -FS
+/usr/bin/sudo /usr/sbin/nmbd -D && /usr/bin/sudo /usr/local/bin/sudoremove && /usr/bin/sudo /usr/sbin/smbd -FS
 exit 0
