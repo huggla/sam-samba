@@ -2,10 +2,9 @@
 set -e
    
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-if [ ! `/usr/bin/id $user > /dev/null 2>&1` ]
+if [ ! `/usr/bin/id $user` ]
 then
    smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-   #   /usr/sbin/adduser -D -H -s /bin/false "$user"
    smbpasswd -s -a "$user" < $2
    echo "$user = $user" >> "$smbusers_file"
 fi
