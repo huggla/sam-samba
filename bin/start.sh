@@ -4,7 +4,7 @@ set +a
 set +m
 set +s
 set +i
-/usr/bin/sudo /usr/local/bin/remountproc
+/usr/bin/sudo /usr/local/bin/procremount
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
 /usr/bin/sudo /usr/local/bin/mkdir2root "$SHARES_DIR"
