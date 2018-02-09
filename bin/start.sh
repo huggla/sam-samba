@@ -64,9 +64,16 @@ do
    if [ -z $userpwfile ]
    then
       envvar=$user_uc"_PASSWORD"
-      userpwfile=$SECRET_DIR/$user"_pw"
-      eval "echo \$$envvar > $userpwfile"
-      eval "echo -n \$$envvar >> $userpwfile"
+      eval "user_pw=\$$envvar"
+      if [ -n "$user_pw" ]
+      then
+         userpwfile=$SECRET_DIR/$user"_pw"
+         eval "echo \$$envvar > $userpwfile"
+         eval "echo -n \$$envvar >> $userpwfile"
+      else
+         echo "No password given for $user."
+         exit 1
+      fi
    fi
    /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
 done
