@@ -1,23 +1,12 @@
 #!/bin/sh
 set -e
+set +a
+set +m
+set +s
+set +i
 
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-for user in $SHARE_USERS
-do
-   user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
-   envvar=$user_uc"_PASSWORD_FILE"
-   eval "userpwfile=\$$envvar"
-   if [ -z $userpwfile ]
-   then
-      envvar=$user_uc"_PASSWORD"
-      userpwfile=$SECRET_DIR/$user"_pw"
-      eval "echo \$$envvar > $userpwfile"
-      eval "echo -n \$$envvar >> $userpwfile"
-   fi
-   sudo addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
-done
-sudo chown2root -R "$SECRET_DIR"
 sudo mkdir2root "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
@@ -78,6 +67,21 @@ then
    done
    sudo chown2root -R "$username_dir"
 fi
+for user in $SHARE_USERS
+do
+   user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
+   envvar=$user_uc"_PASSWORD_FILE"
+   eval "userpwfile=\$$envvar"
+   if [ -z $userpwfile ]
+   then
+      envvar=$user_uc"_PASSWORD"
+      userpwfile=$SECRET_DIR/$user"_pw"
+      eval "echo \$$envvar > $userpwfile"
+      eval "echo -n \$$envvar >> $userpwfile"
+   fi
+   sudo addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
+done
+sudo chown2root -R "$SECRET_DIR"
 sudo chown2root -R "$CONFIG_DIR"
 sudo chown2root "$SHARES_DIR"
 sudo nmbd -D && sudo smbd -FS
