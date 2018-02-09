@@ -56,27 +56,30 @@ then
       done
    fi
 fi
-for user in $SHARE_USERS
-do
-   user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
-   envvar=$user_uc"_PASSWORD_FILE"
-   eval "userpwfile=\$$envvar"
-   if [ -z $userpwfile ]
-   then
-      envvar=$user_uc"_PASSWORD"
-      eval "user_pw=\$$envvar"
-      if [ -n "$user_pw" ]
+if [ ! -s $SMBPASSWD_FILE ]
+then
+   for user in $SHARE_USERS
+   do
+      user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
+      envvar=$user_uc"_PASSWORD_FILE"
+      eval "userpwfile=\$$envvar"
+      if [ -z $userpwfile ]
       then
-         userpwfile=$SECRET_DIR/$user"_pw"
-         eval "echo \$$envvar > $userpwfile"
-         eval "echo -n \$$envvar >> $userpwfile"
-      else
-         echo "No password given for $user."
-         exit 1
+         envvar=$user_uc"_PASSWORD"
+         eval "user_pw=\$$envvar"
+         if [ -n "$user_pw" ]
+         then
+            userpwfile=$SECRET_DIR/$user"_pw"
+            eval "echo \$$envvar > $userpwfile"
+            eval "echo -n \$$envvar >> $userpwfile"
+         else
+            echo "No password given for $user."
+            exit 1
+         fi
       fi
-   fi
-   /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
-done
+      /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
+   done
+fi
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
    username_dir="$(dirname "$USERNAME_MAP_FILE")"
