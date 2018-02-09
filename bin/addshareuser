@@ -4,18 +4,9 @@ set -e
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 if [ ! `/usr/bin/id $user > /dev/null 2>&1` ]
 then
-#   if [ -n "$3" ]
-#   then
-#      exit 1
-#   else
-      smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-      /usr/sbin/adduser -D -H -s /bin/false "$user"
-    #  read pw < "$2"
-    #  pw=`echo -n "$pw" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-   #   echo -e "$pw\n$pw" | smbpasswd -s -a "$user"
-    #   cat $2 | smbpasswd -s -a "$user"
-       smbpasswd -s -a "$user" < $2
+   smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+   #   /usr/sbin/adduser -D -H -s /bin/false "$user"
+   smbpasswd -s -a "$user" < $2
    echo "$user = $user" >> "$smbusers_file"
-#   fi
 fi
 exit 0
