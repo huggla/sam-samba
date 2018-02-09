@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "samba ALL=(root) NOPASSWD: /usr/sbin/smbd" > /etc/sudoers.d/samba
+exit 0
