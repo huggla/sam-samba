@@ -1,9 +1,0 @@
-#!/bin/sh
-set -e
-   
-user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-if [ ! `/usr/bin/id $user > /dev/null 2>&1` ]
-then
-   /usr/sbin/adduser -D -H -s /bin/false "$user"
-fi
-exit 0
