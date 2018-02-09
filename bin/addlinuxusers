@@ -4,7 +4,7 @@ set -e
 for user in $1
 do
    cleanuser=`echo -n "$user" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-   if [ ! `/usr/bin/id $cleanuser > /dev/null 2>&1` ]
+   if [ ! `/usr/bin/id $cleanuser` ]
    then
       /usr/sbin/adduser -D -H -s /bin/false "$cleanuser"
    fi
