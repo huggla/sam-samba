@@ -4,7 +4,7 @@ set -e
 for user in $1
 do
    user=`echo -n "$user" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-   if [ ! `/usr/bin/id $user` ]
+   if [ ! "`/usr/bin/id $user`" ]
    then
       /usr/sbin/adduser -D -H -s /bin/false "$user"
    fi
