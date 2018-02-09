@@ -10,7 +10,7 @@ ENV SHARES_DIR="/shares" \
 
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 500 /usr/local/bin/chown2root /usr/local/bin/mkdir2root /usr/local/bin/addshareuser /usr/local/bin/smbpasswd procremount \
+ && chmod 500 /usr/local/bin/procremount /usr/local/bin/chown2root /usr/local/bin/mkdir2root /usr/local/bin/addshareuser /usr/local/bin/smbpasswd \
  && chmod +x /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" \
  && touch "$SMBPASSWD_FILE" \
