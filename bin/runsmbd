@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+/usr/bin/sudo /usr/sbin/nmbd -D
+/usr/bin/sudo /usr/local/bin/sudoremove
+/usr/bin/sudo /usr/sbin/smbd -FS
+exit 0
