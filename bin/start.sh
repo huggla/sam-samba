@@ -72,6 +72,7 @@ then
             userpwfile=$SECRET_DIR/$user"_pw"
             eval "echo \$$envvar > $userpwfile"
             eval "echo -n \$$envvar >> $userpwfile"
+            eval "unset $envvar"
          else
             echo "No password given for $user."
             exit 1
