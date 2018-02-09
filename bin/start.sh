@@ -4,10 +4,10 @@ set +a
 set +m
 set +s
 set +i
-/usr/bin/sudo /usr/local/bin/procremount
+env -i /usr/bin/sudo /usr/local/bin/procremount
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-/usr/bin/sudo /usr/local/bin/mkdir2root "$SHARES_DIR"
+env -i /usr/bin/sudo /usr/local/bin/mkdir2root "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
@@ -41,7 +41,7 @@ then
          then
             path_value="$SHARES_DIR/$share"
          fi
-         /usr/bin/sudo /usr/local/bin/mkdir2root "$path_value"
+         env -i /usr/bin/sudo /usr/local/bin/mkdir2root "$path_value"
          echo "path=$path_value" >> $smbconf
          for param in $share_parameters
          do
@@ -78,9 +78,10 @@ then
             exit 1
          fi
       fi
-      /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
+      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
    done
 fi
+env -i /usr/bin/sudo /usr/local/bin/addlinuxusers $SHARE_USERS
 if [ ! -e "$USERNAME_MAP_FILE" ]
 then
    username_dir="$(dirname "$USERNAME_MAP_FILE")"
@@ -90,10 +91,10 @@ then
    do
       echo "$user" >> "$USERNAME_MAP_FILE"
    done
-   /usr/bin/sudo /usr/local/bin/chown2root -R "$username_dir"
+   env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$username_dir"
 fi
-/usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
-/usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
-/usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
+env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
+env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
+env -i /usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
 exec env -i /usr/local/bin/runsmbd
 exit 0
