@@ -4,9 +4,10 @@ set +a
 set +m
 set +s
 set +i
+/usr/bin/sudo /usr/local/bin/remountproc
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
-sudo mkdir2root "$SHARES_DIR"
+/usr/bin/sudo /usr/local/bin/mkdir2root "$SHARES_DIR"
 PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
 if [ -z "$USERNAME_MAP_FILE" ]
 then
@@ -40,7 +41,7 @@ then
          then
             path_value="$SHARES_DIR/$share"
          fi
-         sudo mkdir2root "$path_value"
+         /usr/bin/sudo /usr/local/bin/mkdir2root "$path_value"
          echo "path=$path_value" >> $smbconf
          for param in $share_parameters
          do
@@ -64,7 +65,7 @@ then
    do
       echo "$user" >> "$USERNAME_MAP_FILE"
    done
-   sudo chown2root -R "$username_dir"
+   /usr/bin/sudo /usr/local/bin/chown2root -R "$username_dir"
 fi
 for user in $SHARE_USERS
 do
@@ -78,10 +79,10 @@ do
       eval "echo \$$envvar > $userpwfile"
       eval "echo -n \$$envvar >> $userpwfile"
    fi
-   sudo addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
+   /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
 done
-sudo chown2root -R "$SECRET_DIR"
-sudo chown2root -R "$CONFIG_DIR"
-sudo chown2root "$SHARES_DIR"
-sudo nmbd -D && sudo smbd -FS
+/usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
+/usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
+/usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
+/usr/bin/sudo /usr/sbin/nmbd -D && /usr/bin/sudo /usr/sbin/smbd -FS
 exit 0
