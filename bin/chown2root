@@ -7,7 +7,7 @@ then
    cmd='/bin/chown -R root "$file" && /bin/chmod -R u=rwX,go= "$file"'
 else
    file="$1"
-   cmd='/bin/chown root "$file" && /bin/chmod u=rwX,go=r "$file"'
+   cmd='/bin/chown root "$file" && /bin/chmod u=rwX,go=X "$file"'
 fi
 file=`/bin/echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 eval $cmd
