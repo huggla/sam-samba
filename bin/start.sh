@@ -56,17 +56,6 @@ then
       done
    fi
 fi
-if [ ! -e "$USERNAME_MAP_FILE" ]
-then
-   username_dir="$(dirname "$USERNAME_MAP_FILE")"
-   mkdir -p "$username_dir"
-   touch "$USERNAME_MAP_FILE"
-   for user in $USERNAME_MAP
-   do
-      echo "$user" >> "$USERNAME_MAP_FILE"
-   done
-   /usr/bin/sudo /usr/local/bin/chown2root -R "$username_dir"
-fi
 for user in $SHARE_USERS
 do
    user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
@@ -81,6 +70,17 @@ do
    fi
    /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
 done
+if [ ! -e "$USERNAME_MAP_FILE" ]
+then
+   username_dir="$(dirname "$USERNAME_MAP_FILE")"
+   mkdir -p "$username_dir"
+   touch "$USERNAME_MAP_FILE"
+   for user in $USERNAME_MAP
+   do
+      echo "$user" >> "$USERNAME_MAP_FILE"
+   done
+   /usr/bin/sudo /usr/local/bin/chown2root -R "$username_dir"
+fi
 /usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
 /usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
 /usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
