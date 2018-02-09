@@ -10,13 +10,13 @@ ENV SHARES_DIR="/shares" \
 
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 500 /usr/local/bin/chown2root /usr/local/bin/mkdir2root /usr/local/bin/addshareuser /usr/local/bin/smbpasswd \
+ && chmod 500 /usr/local/bin/chown2root /usr/local/bin/mkdir2root /usr/local/bin/addshareuser /usr/local/bin/smbpasswd remountproc \
  && chmod +x /usr/local/bin/start.sh \
  && mkdir -p "$SECRET_DIR" \
  && touch "$SMBPASSWD_FILE" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
  && chown samba "$CONFIG_DIR" "$SECRET_DIR" \
- && echo "samba ALL=(root) NOPASSWD: /usr/local/bin/chown2root, /usr/local/bin/mkdir2root, /usr/local/bin/addshareuser, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
+ && echo "samba ALL=(root) NOPASSWD: /usr/local/bin/remountproc, /usr/local/bin/chown2root, /usr/local/bin/mkdir2root, /usr/local/bin/addshareuser, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
 ENV DNS_PROXY="no" \
     LOG_FILE="$LOG_DIR/log.%m" \
