@@ -2,7 +2,7 @@
 set -e
    
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-if [ ! `/usr/bin/id $user` ]
+if [ ! "`/usr/bin/id $user`" ]
 then
    smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
    smbpasswd -s -a "$user" < $2
