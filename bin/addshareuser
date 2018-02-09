@@ -14,7 +14,7 @@ then
     #  pw=`/bin/echo -n "$pw" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
    #   echo -e "$pw\n$pw" | smbpasswd -s -a "$user"
     #   cat $2 | smbpasswd -s -a "$user"
-       smbpasswd -a "$user" < $2
+       smbpasswd -s -a "$user" < $2
 #   /bin/echo "$user = $user" >> "$smbusers_file"
    fi
 fi
