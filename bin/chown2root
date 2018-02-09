@@ -9,6 +9,6 @@ else
    file="$1"
    cmd='/bin/chown root "$file" && /bin/chmod u=rwX,go=X "$file"'
 fi
-file=`/bin/echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+file=`echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 eval $cmd
 exit 0
