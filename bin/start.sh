@@ -4,7 +4,6 @@ set +a
 set +m
 set +s
 set +i
-
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
 sudo mkdir2root "$SHARES_DIR"
