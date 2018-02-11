@@ -56,7 +56,7 @@ then
       done
    fi
 fi
-env -i /usr/bin/sudo /usr/local/bin/addlinuxusers $SHARE_USERS > /dev/null 2>&1
+env -i /usr/bin/sudo /usr/local/bin/addlinuxusers $SHARE_USERS
 if [ ! -s $SMBPASSWD_FILE ]
 then
    for user in $SHARE_USERS
@@ -78,7 +78,7 @@ then
             exit 1
          fi
       fi
-      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers" > /dev/null 2>&1
+      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
    done
 fi
 if [ ! -e "$USERNAME_MAP_FILE" ]
