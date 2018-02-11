@@ -5,6 +5,7 @@ user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 if [ ! "`/usr/bin/id $user`" ]
 then
    smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+   echo >> "$2"
    cat "$2" "$2" | smbpasswd -s -a "$user"
    rm "$2"
    echo "$user = $user" >> "$smbusers_file"
