@@ -77,7 +77,7 @@ then
             exit 1
          fi
       fi
-      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers" > /dev/null 2>&1
+      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"# > /dev/null 2>&1
    done
 fi
 env -i /usr/bin/sudo /usr/local/bin/addlinuxusers $SHARE_USERS > /dev/null 2>&1
