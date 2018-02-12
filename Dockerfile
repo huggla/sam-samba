@@ -17,7 +17,8 @@ RUN apk add --no-cache samba-server sudo \
  && adduser -D -S -H -s /bin/false -u 100 samba \
  && chown samba "$CONFIG_DIR" "$SECRET_DIR" /usr/local/bin/runsmbd \
  && echo "samba ALL=(root) NOPASSWD: /usr/local/bin/procremount, /usr/local/bin/chown2root, /usr/local/bin/addlinuxusers, /usr/local/bin/mkdir2root, /usr/local/bin/addshareuser, /usr/local/bin/sudoremove, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba \
- && sed -i 's/proc rw,nosuid,nodev,noexec,relatime/proc rw,nosuid,nodev,noexec,relatime,hidepid=2/g' /etc/mtab
+ && echo "proc /proc proc rw,nosuid,nodev,noexec,relatime,hidepid=2 0 0" > /etc/fstab \
+ && mount -o remount /proc
 
 ENV DNS_PROXY="no" \
     LOG_FILE="$LOG_DIR/log.%m" \
