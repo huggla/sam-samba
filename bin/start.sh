@@ -78,7 +78,7 @@ then
             exit 1
          fi
       fi
-      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers"
+      env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
    done
 fi
 if [ ! -e "$USERNAME_MAP_FILE" ]
