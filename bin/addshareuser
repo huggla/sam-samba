@@ -4,7 +4,7 @@ set -e
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 echo | /bin/cat "$2" - "$2" | /usr/local/bin/smbpasswd -s -a "$user"
-if [ "$DELETE_PASSWORD_FILES" == "yes" ]
+if [ "$4" == "yes" ]
 then
    /bin/rm "$2"
 fi
