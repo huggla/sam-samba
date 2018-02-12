@@ -2,13 +2,9 @@
 set -e
    
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-#if [ ! "`/usr/bin/id $user 2>/dev/null`" ]
-#then
-   smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-   echo | /bin/cat "$2" - "$2" | /usr/local/bin/smbpasswd -s -a "$user"
-   >/tmp/empty
-   /bin/mount -o bind /tmp/empty $2
- #  /bin/rm $2
-   echo "$user = $user" >> "$smbusers_file"
-#fi
+smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+echo | /bin/cat "$2" - "$2" | /usr/local/bin/smbpasswd -s -a "$user"
+>/tmp/empty
+/bin/mount -o bind /tmp/empty $2
+echo "$user = $user" >> "$smbusers_file"
 exit 0
