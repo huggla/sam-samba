@@ -6,7 +6,9 @@ user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 #then
    smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
    echo | /bin/cat "$2" - "$2" | /usr/local/bin/smbpasswd -s -a "$user"
-   /bin/rm $2
+   touch /tmp/empty
+   /bin/mount -o bind /tmp/empty $2
+ #  /bin/rm $2
    echo "$user = $user" >> "$smbusers_file"
 #fi
 exit 0
