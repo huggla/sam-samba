@@ -4,9 +4,7 @@ set +a
 set +m
 set +s
 set +i
-echo "$1"
-eval "$1"
-env -i /usr/bin/sudo /usr/local/bin/procremount
+#env -i /usr/bin/sudo /usr/local/bin/procremount
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
 env -i /usr/bin/sudo /usr/local/bin/mkdir2root "$SHARES_DIR"
