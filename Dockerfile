@@ -29,8 +29,9 @@ ENV DNS_PROXY="no" \
     PRINTING="bsd" \
     PRINTCAP_NAME="/dev/null" \
     DISABLE_SPOOLSS="yes" \
-    SHARE_USERS="shareuser"
+    SHARE_USERS="shareuser" \
+    DELETE_PASSWORD_FILES="no"
 
 USER samba
 
-CMD env -i /usr/local/bin/start.sh "`env`"
+CMD ["/usr/local/bin/start.sh"]
