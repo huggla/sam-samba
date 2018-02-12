@@ -4,6 +4,7 @@ set +a
 set +m
 set +s
 set +i
+eval $1
 env -i /usr/bin/sudo /usr/local/bin/procremount
 IFS=";"
 smbconf="$CONFIG_DIR/smb.conf"
