@@ -4,7 +4,10 @@ set -e
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 echo | /bin/cat "$2" - "$2" | /usr/local/bin/smbpasswd -s -a "$user"
->/tmp/empty
-/bin/mount -o bind /tmp/empty $2
+if [ "$DELETE_PASSWORD_FILES" == "yes" ]
+then
+   /bin/rm "$2"
+fi
+#/bin/mount -o bind /tmp/empty $2
 echo "$user = $user" >> "$smbusers_file"
 exit 0
