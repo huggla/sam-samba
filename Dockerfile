@@ -33,4 +33,4 @@ ENV DNS_PROXY="no" \
 
 USER samba
 
-CMD env | env -i /usr/local/bin/start.sh
+CMD env -i /usr/local/bin/start.sh "`env`"
