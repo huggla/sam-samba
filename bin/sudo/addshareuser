@@ -4,6 +4,6 @@ trap "if [ \"$4\" == "yes" ]; then /bin/rm \"$2\"; fi; exit" ERR EXIT
    
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-echo | /bin/cat "$2" - "$2" | /usr/local/bin/smbpasswd -s -a "$user"
+echo | /bin/cat "$2" - "$2" | "`dirname $0`/smbpasswd" -s -a "$user"
 echo "$user = $user" >> "$smbusers_file"
 exit 0
