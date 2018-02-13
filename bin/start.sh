@@ -5,7 +5,8 @@ set +m
 set +s
 set +i
 
-IFS=","
+IFS=";"
+SUDO_SCRIPTS="$(echo $SUDO_SCRIPTS | sed 's/,/;/g')"
 first_run=true
 for script in $SUDO_SCRIPTS
 do
@@ -15,11 +16,11 @@ do
       break
    fi
 done
-IFS=";"
 if [ $first_run ]
 then
    smbconf="$CONFIG_DIR/smb.conf"
-   env -i /usr/bin/sudo /usr/local/bin/mkdir2root "$SHARES_DIR"
+   sudo="/usr/bin/sudo"
+   env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
    PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
    if [ -z "$USERNAME_MAP_FILE" ]
    then
@@ -53,7 +54,7 @@ then
          then
             path_value="$SHARES_DIR/$share"
          fi
-         env -i /usr/bin/sudo /usr/local/bin/mkdir2root "$path_value"
+         env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
          echo "path=$path_value" >> $smbconf
          for param in $share_parameters
          do
@@ -67,7 +68,7 @@ then
          done
       done
    fi
-   env -i /usr/bin/sudo /usr/local/bin/addlinuxusers $SHARE_USERS
+   env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
    if [ ! -s $SMBPASSWD_FILE ]
    then
       for user in $SHARE_USERS
@@ -89,7 +90,7 @@ then
                exit 1
             fi
          fi
-         env -i /usr/bin/sudo /usr/local/bin/addshareuser "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
+         env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
       done
    fi
    if [ ! -e "$USERNAME_MAP_FILE" ]
@@ -101,11 +102,11 @@ then
       do
          echo "$user" >> "$USERNAME_MAP_FILE"
       done
-      env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$username_dir"
+      env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
    fi
-   env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$SECRET_DIR"
-   env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
-   env -i /usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
+   env -i $sudo "$SUDO_DIR/chown2root" -R "$SECRET_DIR"
+   env -i $sudo "$SUDO_DIR/chown2root" -R "$CONFIG_DIR"
+   env -i $sudo "$SUDO_DIR/bin/chown2root" "$SHARES_DIR"
 fi
-exec env -i /usr/local/bin/runsmbd $SUDO_SCRIPTS
+exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
 exit 0
