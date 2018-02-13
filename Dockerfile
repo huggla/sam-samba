@@ -19,7 +19,7 @@ RUN apk add --no-cache samba-server sudo \
  && touch "$SMBPASSWD_FILE" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
  && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/runsmbd" \
- && SUDO_SCRIPTS="`ls -m '$SUDO_DIR'`" \
+ && SUDO_SCRIPTS="$(ls -m "$SUDO_DIR")" \
  && echo "samba ALL=(root) NOPASSWD: $SUDO_SCRIPTS, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
 ENV DNS_PROXY="no" \
