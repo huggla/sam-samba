@@ -107,5 +107,5 @@ then
    env -i /usr/bin/sudo /usr/local/bin/chown2root -R "$CONFIG_DIR"
    env -i /usr/bin/sudo /usr/local/bin/chown2root "$SHARES_DIR"
 fi
-exec env -i /usr/local/bin/runsmbd
+exec env -i /usr/local/bin/runsmbd $SUDO_SCRIPTS
 exit 0
