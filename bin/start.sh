@@ -27,76 +27,77 @@ then
          eval "param_value=\$$param"
          if [ -n "$param_value" ]
          then
-         echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
-         echo "=$param_value" >> $smbconf
-      fi
-   done
-   if [ -n "$SHARES" ]
-   then
-      share_parameters="BROWSEABLE;READ_ONLY;GUEST_OK;ADMIN_USERS"
-      for share in $SHARES
-      do
-         echo >> $smbconf
-         echo "[$share]" >> $smbconf
-         path_var="$(echo $share | tr '[:lower:]' '[:upper:]')_PATH"
-         eval "path_value=\$$path_var"
-         if [ -z "$path_value" ]
-         then
-            path_value="$SHARES_DIR/$share"
+            echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+            echo "=$param_value" >> $smbconf
          fi
-         env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
-         echo "path=$path_value" >> $smbconf
-         for param in $share_parameters
+      done
+      if [ -n "$SHARES" ]
+      then
+         share_parameters="BROWSEABLE;READ_ONLY;GUEST_OK;ADMIN_USERS"
+         for share in $SHARES
          do
-            param_var="$(echo $share | tr '[:lower:]' '[:upper:]')_$param"
-            eval "param_value=\$$param_var"
-            if [ -n "$param_value" ]
+            echo >> $smbconf
+            echo "[$share]" >> $smbconf
+            path_var="$(echo $share | tr '[:lower:]' '[:upper:]')_PATH"
+            eval "path_value=\$$path_var"
+            if [ -z "$path_value" ]
             then
-               echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
-               echo "=$param_value" >> $smbconf
+               path_value="$SHARES_DIR/$share"
             fi
+            env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
+            echo "path=$path_value" >> $smbconf
+            for param in $share_parameters
+            do
+               param_var="$(echo $share | tr '[:lower:]' '[:upper:]')_$param"
+               eval "param_value=\$$param_var"
+               if [ -n "$param_value" ]
+               then
+                  echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+                  echo "=$param_value" >> $smbconf
+               fi
+            done
          done
-      done
-   fi
-   env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
-   if [ ! -s $SMBPASSWD_FILE ]
-   then
-      for user in $SHARE_USERS
-      do
-         user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
-         envvar=$user_uc"_PASSWORD_FILE"
-         eval "userpwfile=\$$envvar"
-         if [ -z $userpwfile ]
-         then
-            envvar=$user_uc"_PASSWORD"
-            eval "user_pw=\$$envvar"
-            if [ -n "$user_pw" ]
+      fi
+      env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
+      if [ ! -s $SMBPASSWD_FILE ]
+      then
+         for user in $SHARE_USERS
+         do
+            user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
+            envvar=$user_uc"_PASSWORD_FILE"
+            eval "userpwfile=\$$envvar"
+            if [ -z $userpwfile ]
             then
-               userpwfile=$SECRET_DIR/$user"_pw"
-               eval "echo \$$envvar > $userpwfile"
-               eval "unset $envvar"
-            else
-               echo "No password given for $user."
-               exit 1
+               envvar=$user_uc"_PASSWORD"
+               eval "user_pw=\$$envvar"
+               if [ -n "$user_pw" ]
+               then
+                  userpwfile=$SECRET_DIR/$user"_pw"
+                  eval "echo \$$envvar > $userpwfile"
+                  eval "unset $envvar"
+               else
+                  echo "No password given for $user."
+                  exit 1
+               fi
             fi
-         fi
-         env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
-      done
+            env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
+         done
+      fi
+      if [ ! -e "$USERNAME_MAP_FILE" ]
+      then
+         username_dir="$(dirname "$USERNAME_MAP_FILE")"
+         /bin/mkdir -p "$username_dir"
+         >"$USERNAME_MAP_FILE"
+         for user in $USERNAME_MAP
+         do
+            echo "$user" >> "$USERNAME_MAP_FILE"
+         done
+         env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
+      fi
+      env -i $sudo "$SUDO_DIR/chown2root" -R "$SECRET_DIR"
+      env -i $sudo "$SUDO_DIR/chown2root" -R "$CONFIG_DIR"
+      env -i $sudo "$SUDO_DIR/bin/chown2root" "$SHARES_DIR"
    fi
-   if [ ! -e "$USERNAME_MAP_FILE" ]
-   then
-      username_dir="$(dirname "$USERNAME_MAP_FILE")"
-      /bin/mkdir -p "$username_dir"
-      >"$USERNAME_MAP_FILE"
-      for user in $USERNAME_MAP
-      do
-         echo "$user" >> "$USERNAME_MAP_FILE"
-      done
-      env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
-   fi
-   env -i $sudo "$SUDO_DIR/chown2root" -R "$SECRET_DIR"
-   env -i $sudo "$SUDO_DIR/chown2root" -R "$CONFIG_DIR"
-   env -i $sudo "$SUDO_DIR/bin/chown2root" "$SHARES_DIR"
 fi
 exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
 exit 0
