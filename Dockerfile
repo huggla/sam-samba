@@ -37,4 +37,4 @@ ENV DNS_PROXY="no" \
 
 USER samba
 
-CMD ["${BIN_DIR}/start.sh"]
+CMD "$BIN_DIR/start.sh"
