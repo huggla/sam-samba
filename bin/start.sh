@@ -96,7 +96,7 @@ then
       fi
       env -i $sudo "$SUDO_DIR/chown2root" -R "$SECRET_DIR"
       env -i $sudo "$SUDO_DIR/chown2root" -R "$CONFIG_DIR"
-      env -i $sudo "$SUDO_DIR/bin/chown2root" "$SHARES_DIR"
+      env -i $sudo "$SUDO_DIR/chown2root" "$SHARES_DIR"
    fi
 fi
 exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
