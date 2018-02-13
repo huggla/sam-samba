@@ -38,4 +38,4 @@ ENV DNS_PROXY="no" \
 
 USER samba
 
-CMD "start.sh"
+CMD ["start.sh"]
