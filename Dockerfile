@@ -33,8 +33,9 @@ ENV DNS_PROXY="no" \
     PRINTCAP_NAME="/dev/null" \
     DISABLE_SPOOLSS="yes" \
     SHARE_USERS="shareuser" \
-    DELETE_PASSWORD_FILES="no"
+    DELETE_PASSWORD_FILES="no" \
+    PATH="$PATH:$BIN_DIR"
 
 USER samba
 
-CMD "$BIN_DIR/start.sh"
+CMD "start.sh"
