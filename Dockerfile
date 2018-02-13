@@ -1,10 +1,9 @@
 FROM alpine:3.7
 
-ENV BIN_DIR="/usr/local/bin/"
-
-COPY ./bin/* ${BIN_DIR}
-
 ENV BIN_DIR="/usr/local/bin"
+
+COPY ./bin ${BIN_DIR}
+
 ENV CONFIG_DIR="/etc/samba"
 ENV SECRET_DIR="$CONFIG_DIR/secret"
 ENV SHARES_DIR="/shares" \
