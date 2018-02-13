@@ -8,17 +8,19 @@ ENV CONFIG_DIR="/etc/samba"
 ENV SECRET_DIR="$CONFIG_DIR/secret"
 ENV SHARES_DIR="/shares" \
     SMBPASSWD_FILE="$SECRET_DIR/smbpasswd" \
-    LOG_DIR="/var/log/samba"
+    LOG_DIR="/var/log/samba" \
+    SUDO_DIR="$BIN_DIR/sudo"
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 500 "$BIN_DIR/sudo/*" "$BIN_DIR/runsmbd" \
+ && chmod 500 "$SUDO_DIR/*" "$BIN_DIR/runsmbd" \
  && chmod go+rx "$BIN_DIR/start.sh" \
  && mkdir -p "$SECRET_DIR" \
  && touch "$SMBPASSWD_FILE" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
  && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/runsmbd" \
- && echo "samba ALL=(root) NOPASSWD: `ls -m \"$BIN_DIR/sudo\"`, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
+ && SUDO_SCRIPTS="`ls -m '$SUDO_DIR'`" \
+ && echo "samba ALL=(root) NOPASSWD: $SUDO_SCRIPTS, /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
 ENV DNS_PROXY="no" \
     LOG_FILE="$LOG_DIR/log.%m" \
