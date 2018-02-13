@@ -5,19 +5,9 @@ set +m
 set +s
 set +i
 
-IFS=";"
-SUDO_SCRIPTS="$(echo $SUDO_SCRIPTS | sed 's/,/;/g')"
-first_run=true
-for script in $SUDO_SCRIPTS
-do
-   if [ ! -f $script ]
-   then
-      first_run=false
-      break
-   fi
-done
-if [ $first_run ]
+if [ -d "$SUDO_DIR" ]
 then
+   IFS=";"
    smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
