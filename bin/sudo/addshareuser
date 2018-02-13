@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-trap "if [ \"$4\" == "yes" ]; then /bin/rm \"$2\"; fi; exit" ERR EXIT
+trap "if [ '$4' == 'yes' ]; then /bin/rm '$2'; fi; exit" ERR EXIT
    
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
