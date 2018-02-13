@@ -13,8 +13,7 @@ ENV SHARES_DIR="/shares" \
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && mkdir -p "$SUDO_DIR" \
- && chmod 500 "$SUDO_DIR/*" "$BIN_DIR/runsmbd" \
+ && chmod 500 "$SUDO_DIR"/* "$BIN_DIR/runsmbd" \
  && chmod go+rx "$BIN_DIR/start.sh" \
  && mkdir -p "$SECRET_DIR" \
  && touch "$SMBPASSWD_FILE" \
