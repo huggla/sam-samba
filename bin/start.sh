@@ -39,7 +39,7 @@ then
             echo >> $smbconf
             echo "[$share]" >> $smbconf
             share_uc="$(echo $share | tr '[:lower:]' '[:upper:]')"
-            share_parameters=`env | /bin/grep "${share_uc}_" | sed "s/^${share_uc}_//g" | /bin/grep -oE '^[^=]+'`
+            share_parameters=`env | /bin/grep "${share_uc}_" | /bin/sed "s/^${share_uc}_//g" | /bin/grep -oE '^[^=]+'`
             path_value="$SHARES_DIR/$share"
             for param in $share_parameters
             do
