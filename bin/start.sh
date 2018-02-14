@@ -11,7 +11,8 @@ then
    smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
-   PASSDB_BACKEND="smbpasswd:$global_smb_passwd_file"
+   env -i $sudo "$SUDO_DIR/mkdir2root" "$(dirname "$global_smb_passwd_file")"
+   global_passdb_backend="smbpasswd:$global_smb_passwd_file"
    if [ -z "$global_username_map" ]
    then
       global_username_map="$CONFIG_DIR/usermap.txt"
