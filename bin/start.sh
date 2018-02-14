@@ -19,14 +19,16 @@ then
    fi
    if [ ! -e "$smbconf" ]
    then
-      SHARES='global;'$SHARES
+      SHARES="global;$SHARES"
       echo $SHARES
       for share in $SHARES
       do
          echo >> $smbconf
          echo "[$share]" >> $smbconf
          share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
+         echo $share_lc
          share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
+         echo $share_parameters
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
