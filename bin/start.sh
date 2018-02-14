@@ -18,7 +18,7 @@ then
    fi
    if [ ! -e "$smbconf" ]
    then
-      parameters="NETBIOS_NAME;WORKGROUP;SERVER_STRING;DNS_PROXY;PASSDB_BACKEND;LOG_FILE;MAX_LOG_SIZE;SYSLOG;PANIC_ACTION;SERVER_ROLE;MAP_TO_GUEST;LOAD_PRINTERS;PRINTING;PRINTCAP_NAME;DISABLE_SPOOLSS;USERSHARE_ALLOW_GUESTS"
+      parameters="netbios_name;workgroup;server_string;dns_proxy;passdb_backend;log_file;max_log_size;syslog;panic_action;server_role;map_to_guest;load_printers;printing;printcap_name;disable_spoolss;usershare_allow_guests"
       echo "[global]" >> $smbconf
       echo "smb passwd file=$SMBPASSWD_FILE" >> $smbconf
       echo "username map=$USERNAME_MAP_FILE" >> $smbconf
@@ -27,7 +27,7 @@ then
          eval "param_value=\$$param"
          if [ -n "$param_value" ]
          then
-            echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+            echo -n "$param" | tr '_' ' ' >> $smbconf
             echo "=$param_value" >> $smbconf
          fi
       done
@@ -37,20 +37,20 @@ then
          do
             echo >> $smbconf
             echo "[$share]" >> $smbconf
-            share_uc="$(echo $share | tr '[:lower:]' '[:upper:]')"
-            share_parameters=`env | /bin/grep "${share_uc}_" | /bin/sed "s/^${share_uc}_//g" | /bin/grep -oE '^[^=]+'`
+            share_lc="$(echo $share | tr '[:upper:]' '[:lower:]')"
+            share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
             path_value="$SHARES_DIR/$share"
             for param in $share_parameters
             do
-               param_var="${share_uc}_${param}"
+               param_var="${share_c}_${param}"
                eval "param_value=\$$param_var"
                if [ -n "$param_value" ]
                then
-                  if [ "$param" == "PATH" ]
+                  if [ "$param" == "path" ]
                   then
                      path_value=$param_value
                   else
-                     echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+                     echo -n "$param" | tr '_' ' ' >> $smbconf
                      echo "=$param_value" >> $smbconf
                   fi
                fi
@@ -64,12 +64,12 @@ then
       then
          for user in $SHARE_USERS
          do
-            user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
-            envvar="PASSWORD_FILE_$user_uc"
+            user_lc=$(echo $user | tr '[:upper:]' '[:lower:]')
+            envvar="password_file_$user_lc"
             eval "userpwfile=\$$envvar"
             if [ -z $userpwfile ]
             then
-               envvar="PASSWORD_$user_uc"
+               envvar="password_$user_lc"
                eval "user_pw=\$$envvar"
                if [ -n "$user_pw" ]
                then
