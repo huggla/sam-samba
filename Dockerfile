@@ -7,7 +7,7 @@ COPY ./bin ${BIN_DIR}
 ENV CONFIG_DIR="/etc/samba"
 ENV SECRET_DIR="$CONFIG_DIR/secret"
 ENV SHARES_DIR="/shares" \
-    SMBPASSWD_FILE="$SECRET_DIR/smbpasswd" \
+    global_smb_passwd_file="$SECRET_DIR/smbpasswd" \
     LOG_DIR="/var/log/samba" \
     SUDO_DIR="$BIN_DIR/sudo"
     
@@ -16,7 +16,7 @@ RUN apk add --no-cache samba-server sudo \
  && chmod 500 "$SUDO_DIR"/* "$BIN_DIR/runsmbd" \
  && chmod go+rx "$BIN_DIR/start.sh" \
  && mkdir -p "$SECRET_DIR" \
- && touch "$SMBPASSWD_FILE" \
+ && touch "$global_smb_passwd_file" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
  && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/runsmbd" \
  && echo "samba ALL=(root) NOPASSWD: "$SUDO_DIR/*", /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
