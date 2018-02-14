@@ -21,17 +21,17 @@ RUN apk add --no-cache samba-server sudo \
  && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/runsmbd" \
  && echo "samba ALL=(root) NOPASSWD: "$SUDO_DIR/*", /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
-ENV DNS_PROXY="no" \
-    LOG_FILE="$LOG_DIR/log.%m" \
-    MAX_LOG_SIZE="0" \
-    SYSLOG="0" \
-    PANIC_ACTION="killall smbd" \
-    SERVER_ROLE="standalone" \
-    MAP_TO_GUEST="bad user" \
-    LOAD_PRINTERS="no" \
-    PRINTING="bsd" \
-    PRINTCAP_NAME="/dev/null" \
-    DISABLE_SPOOLSS="yes" \
+ENV global_dns_proxy="no" \
+    global_log_file="$LOG_DIR/log.%m" \
+    global_max_log_size="0" \
+    global_syslog="0" \
+    global_panic_action="killall smbd" \
+    global_server_role="standalone" \
+    global_map_to_guest="bad user" \
+    global_load_printers="no" \
+    global_printing="bsd" \
+    global_printcap_name="/dev/null" \
+    global_disable_spoolss="yes" \
     SHARE_USERS="shareuser" \
     DELETE_PASSWORD_FILES="no" \
     PATH="$PATH:$BIN_DIR"
