@@ -7,7 +7,7 @@ set +i
 
 if [ -d "$SUDO_DIR" ]
 then
-   IFS="${IFS};"
+   IFS="$'\n';"
    smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
