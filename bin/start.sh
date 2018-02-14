@@ -7,7 +7,7 @@ set +i
 
 if [ -d "$SUDO_DIR" ]
 then
-   IFS=$'\n'$';'
+   IFS="${IFS};"
    smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
@@ -20,6 +20,7 @@ then
    if [ ! -e "$smbconf" ]
    then
       SHARES="global;$SHARES"
+      echo $SHARES
       for share in $SHARES
       do
          echo >> $smbconf
