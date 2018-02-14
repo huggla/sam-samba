@@ -19,13 +19,13 @@ then
    fi
    if [ ! -e "$smbconf" ]
    then
-      SHARES="global;$SHARES"
+      SHARES='global;'$SHARES
       echo $SHARES
       for share in $SHARES
       do
          echo >> $smbconf
          echo "[$share]" >> $smbconf
-         share_lc="$(echo $share | tr '[:upper:]' '[:lower:]')"
+         share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
          share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
@@ -51,7 +51,7 @@ then
       then
          for user in $SHARE_USERS
          do
-            user_lc=$(echo $user | tr '[:upper:]' '[:lower:]')
+            user_lc=$(echo $user | xargs | tr '[:upper:]' '[:lower:]')
             envvar="password_file_$user_lc"
             eval "userpwfile=\$$envvar"
             if [ -z $userpwfile ]
