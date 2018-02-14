@@ -65,11 +65,11 @@ then
          for user in $SHARE_USERS
          do
             user_uc=$(echo $user | tr '[:lower:]' '[:upper:]')
-            envvar=$user_uc"_PASSWORD_FILE"
+            envvar="PASSWORD_FILE_$user_uc"
             eval "userpwfile=\$$envvar"
             if [ -z $userpwfile ]
             then
-               envvar=$user_uc"_PASSWORD"
+               envvar="PASSWORD_$user_uc"
                eval "user_pw=\$$envvar"
                if [ -n "$user_pw" ]
                then
