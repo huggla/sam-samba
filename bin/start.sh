@@ -7,7 +7,7 @@ set +i
 
 if [ -d "$SUDO_DIR" ]
 then
-   IFS=";"
+   IFS="$'\n';"
    smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
@@ -33,29 +33,31 @@ then
       done
       if [ -n "$SHARES" ]
       then
-         share_parameters="BROWSEABLE;READ_ONLY;GUEST_OK;ADMIN_USERS"
+       #  share_parameters="BROWSEABLE;READ_ONLY;GUEST_OK;ADMIN_USERS"
          for share in $SHARES
          do
             echo >> $smbconf
             echo "[$share]" >> $smbconf
-            path_var="$(echo $share | tr '[:lower:]' '[:upper:]')_PATH"
-            eval "path_value=\$$path_var"
-            if [ -z "$path_value" ]
-            then
-               path_value="$SHARES_DIR/$share"
-            fi
-            env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
-            echo "path=$path_value" >> $smbconf
+            share_uc="$(echo $share | tr '[:lower:]' '[:upper:]')"
+            share_parameters=`env | /bin/grep "${share_uc}_" | sed "s/^${share_uc}_//g" | /bin/grep -oE '^[^=]+'`
+            path_value="$SHARES_DIR/$share"
             for param in $share_parameters
             do
-               param_var="$(echo $share | tr '[:lower:]' '[:upper:]')_$param"
+               param_var="${share_uc}_${param}"
                eval "param_value=\$$param_var"
                if [ -n "$param_value" ]
                then
-                  echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
-                  echo "=$param_value" >> $smbconf
+                  if [ "$param" == "PATH" ]
+                  then
+                     path_value=$param_value
+                  else
+                     echo -n "$param" | tr '_' ' ' | tr '[:upper:]' '[:lower:]' >> $smbconf
+                     echo "=$param_value" >> $smbconf
+                  fi
                fi
             done
+            env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
+            echo "path=$path_value" >> $smbconf
          done
       fi
       env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
