@@ -33,7 +33,6 @@ then
       done
       if [ -n "$SHARES" ]
       then
-       #  share_parameters="BROWSEABLE;READ_ONLY;GUEST_OK;ADMIN_USERS"
          for share in $SHARES
          do
             echo >> $smbconf
