@@ -11,54 +11,39 @@ then
    smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
-   PASSDB_BACKEND="smbpasswd:$SMBPASSWD_FILE"
-   if [ -z "$USERNAME_MAP_FILE" ]
+   PASSDB_BACKEND="smbpasswd:$global_smb_passwd_file"
+   if [ -z "$global_username_map" ]
    then
-      USERNAME_MAP_FILE="$CONFIG_DIR/usermap.txt"
+      global_username_map="$CONFIG_DIR/usermap.txt"
    fi
    if [ ! -e "$smbconf" ]
    then
-      parameters="netbios_name;workgroup;server_string;dns_proxy;passdb_backend;log_file;max_log_size;syslog;panic_action;server_role;map_to_guest;load_printers;printing;printcap_name;disable_spoolss;usershare_allow_guests"
-      echo "[global]" >> $smbconf
-      echo "smb passwd file=$SMBPASSWD_FILE" >> $smbconf
-      echo "username map=$USERNAME_MAP_FILE" >> $smbconf
-      for param in $parameters
+      SHARES="global;$SHARES"
+      for share in $SHARES
       do
-         eval "param_value=\$$param"
-         if [ -n "$param_value" ]
-         then
-            echo -n "$param" | tr '_' ' ' >> $smbconf
-            echo "=$param_value" >> $smbconf
-         fi
-      done
-      if [ -n "$SHARES" ]
-      then
-         for share in $SHARES
+         echo >> $smbconf
+         echo "[$share]" >> $smbconf
+         share_lc="$(echo $share | tr '[:upper:]' '[:lower:]')"
+         share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
+         path_value="$SHARES_DIR/$share"
+         for param in $share_parameters
          do
-            echo >> $smbconf
-            echo "[$share]" >> $smbconf
-            share_lc="$(echo $share | tr '[:upper:]' '[:lower:]')"
-            share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
-            path_value="$SHARES_DIR/$share"
-            for param in $share_parameters
-            do
-               param_var="${share_c}_${param}"
-               eval "param_value=\$$param_var"
-               if [ -n "$param_value" ]
+            param_var="${share_c}_${param}"
+            eval "param_value=\$$param_var"
+            if [ -n "$param_value" ]
+            then
+               if [ "$param" == "path" ]
                then
-                  if [ "$param" == "path" ]
-                  then
-                     path_value=$param_value
-                  else
-                     echo -n "$param" | tr '_' ' ' >> $smbconf
-                     echo "=$param_value" >> $smbconf
-                  fi
+                  path_value=$param_value
+               else
+                  echo -n "$param" | tr '_' ' ' >> $smbconf
+                  echo "=$param_value" >> $smbconf
                fi
-            done
-            env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
-            echo "path=$path_value" >> $smbconf
+            fi
          done
-      fi
+         env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
+         echo "path=$path_value" >> $smbconf
+      done
       env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
       if [ ! -s $SMBPASSWD_FILE ]
       then
