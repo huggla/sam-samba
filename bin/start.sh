@@ -20,7 +20,6 @@ then
    if [ ! -e "$smbconf" ]
    then
       SHARES="global;$SHARES"
-      echo $SHARES
       for share in $SHARES
       do
          echo >> $smbconf
@@ -32,7 +31,7 @@ then
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
-            param_var="${share_c}_${param}"
+            param_var="${share_lc}_${param}"
             eval "param_value=\$$param_var"
             if [ -n "$param_value" ]
             then
