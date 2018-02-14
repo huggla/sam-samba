@@ -45,7 +45,7 @@ then
          echo "path=$path_value" >> $smbconf
       done
       env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
-      if [ ! -s $SMBPASSWD_FILE ]
+      if [ ! -s $global_smb_passwd_file ]
       then
          for user in $SHARE_USERS
          do
@@ -69,14 +69,14 @@ then
             env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
          done
       fi
-      if [ ! -e "$USERNAME_MAP_FILE" ]
+      if [ ! -e "$global_username_map" ]
       then
-         username_dir="$(dirname "$USERNAME_MAP_FILE")"
+         username_dir="$(dirname "$global_username_map")"
          /bin/mkdir -p "$username_dir"
-         >"$USERNAME_MAP_FILE"
+         >"$global_username_map"
          for user in $USERNAME_MAP
          do
-            echo "$user" >> "$USERNAME_MAP_FILE"
+            echo "$user" >> "$global_username_map"
          done
          env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
       fi
