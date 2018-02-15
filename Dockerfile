@@ -13,12 +13,11 @@ ENV SHARES_DIR="/shares" \
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 500 "$SUDO_DIR"/* "$BIN_DIR/runsmbd" \
- && chmod go+rx "$BIN_DIR/start.sh" \
+ && chmod 500 "$SUDO_DIR"/* "$BIN_DIR/*" \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
- && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/runsmbd" \
+ && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/*" \
  && echo "samba ALL=(root) NOPASSWD: "$SUDO_DIR/*", /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
 ENV global_dns_proxy="no" \
