@@ -8,7 +8,6 @@ set +i
 if [ -d "$SUDO_DIR" ]
 then
    IFS="${IFS};"
-   smbconf="$CONFIG_DIR/smb.conf"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$(dirname "$global_smb_passwd_file")"
@@ -17,13 +16,13 @@ then
    then
       global_username_map="$CONFIG_DIR/usermap.txt"
    fi
-   if [ ! -s "$smbconf" ]
+   if [ ! -s "$CONFIG_FILE" ]
    then
       SHARES="global;$SHARES"
       for share in $SHARES
       do
-         echo >> $smbconf
-         echo "[$share]" >> $smbconf
+         echo >> "$CONFIG_FILE"
+         echo "[$share]" >> "$CONFIG_FILE"
          share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
          share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
          path_value="$SHARES_DIR/$share"
@@ -37,13 +36,13 @@ then
                then
                   path_value=$param_value
                else
-                  echo -n "$param" | tr '_' ' ' >> $smbconf
-                  echo "=$param_value" >> $smbconf
+                  echo -n "$param" | tr '_' ' ' >> "$CONFIG_FILE"
+                  echo "=$param_value" >> "$CONFIG_FILE"
                fi
             fi
          done
          env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
-         echo "path=$path_value" >> $smbconf
+         echo "path=$path_value" >> "$CONFIG_FILE"
       done
       env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
       if [ ! -s $global_smb_passwd_file ]
