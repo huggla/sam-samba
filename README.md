@@ -36,5 +36,4 @@ A secure and minimal docker image with Samba server (share) on Alpine. Runs by d
 * password_\<user name from USERS\>: Password for named user. Less secure!
 
 ## Capabilities
-### Can drop
-* All but CHOWN, DAC_OVERRIDE, NET_BIND_SERVICE, SETGID and SETUID.
+Can drop all but CHOWN, DAC_OVERRIDE, NET_BIND_SERVICE, SETGID and SETUID.
