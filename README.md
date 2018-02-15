@@ -28,9 +28,9 @@ A secure and minimal docker image with Samba server (share) on Alpine. Runs by d
 ## Runtime environment variables
 * SHARES: Semi colon separated list of share names. Might also contain homes, printers.
 ### Global configuration
-* global_\<parameter name with space replaced by underscore\> (example: global_allow_nt4_crypto)
+* global_\<parameter name with space replaced by underscore\>: f ex global_allow_nt4_crypto.
 ### Share configuration
-* \<share name from SHARES\>_\<parameter name with space replaced by underscore\> (example: public_guest_ok)
+* \<share name from SHARES\>_\<parameter name with space replaced by underscore\>: f ex public_guest_ok.
 ### User configuration
 * password_file_\<user name from USERS\>: Path to file containing password for named user.
 * password_\<user name from USERS\>: Password for named user. Less secure!
