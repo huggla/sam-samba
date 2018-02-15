@@ -17,7 +17,7 @@ then
    then
       global_username_map="$CONFIG_DIR/usermap.txt"
    fi
-   if [ ! -e "$smbconf" ]
+   if [ ! -s "$smbconf" ]
    then
       SHARES="global;$SHARES"
       for share in $SHARES
