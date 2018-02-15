@@ -9,10 +9,11 @@ ENV SECRET_DIR="$CONFIG_DIR/secret"
 ENV SHARES_DIR="/shares" \
     global_smb_passwd_file="$SECRET_DIR/smbpasswd" \
     LOG_DIR="/var/log/samba" \
-    SUDO_DIR="$BIN_DIR/sudo"
+    SUDO_DIR="$BIN_DIR/sudo" \
+    CONFIG_FILE="$CONFIG_DIR/smb.conf"
     
 RUN apk add --no-cache samba-server sudo \
- && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
+ && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
  && chmod 500 "$SUDO_DIR/*" "$BIN_DIR/*" \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
