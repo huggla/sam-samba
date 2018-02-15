@@ -13,7 +13,7 @@ ENV SHARES_DIR="/shares" \
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_DIR/smb.conf" "$CONFIG_DIR/smb.conf.old" \
- && chmod 500 "$SUDO_DIR"/* "$BIN_DIR/*" \
+ && chmod 500 "$SUDO_DIR/*" "$BIN_DIR/*" \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
