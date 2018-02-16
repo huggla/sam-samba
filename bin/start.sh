@@ -69,7 +69,7 @@ then
             env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
          done
       fi
-      if [ ! -e "$global_username_map" ]
+      if [ ! -f "$global_username_map" ]
       then
          username_dir="$(dirname "$global_username_map")"
          /bin/mkdir -p "$username_dir"
