@@ -59,7 +59,8 @@ then
                if [ -n "$user_pw" ]
                then
                   userpwfile=$SECRET_DIR/$user"_pw"
-                  eval "echo \$$envvar > $userpwfile"
+                  echo $user_pw > $userpwfile
+                  unset $user_pw
                   eval "unset $envvar"
                else
                   echo "No password given for $user."
