@@ -60,8 +60,8 @@ then
                then
                   userpwfile=$SECRET_DIR/$user"_pw"
                   echo $user_pw > $userpwfile
-                  unset $user_pw
-                  eval "unset $envvar"
+                  unset user_pw
+                  unset $envvar
                else
                   echo "No password given for $user."
                   exit 1
