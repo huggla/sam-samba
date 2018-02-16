@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
-echo "$0 $1 $2 $3 $4"  
+echo "$0 $1 $2 $3 $4"
+echo | /bin/cat "$2" - "$2"
+echo "`dirname $0`/smbpasswd" -s -a "$user"
 user=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 smbusers_file=`echo -n "$3" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
 echo | /bin/cat "$2" - "$2" | "`dirname $0`/smbpasswd" -s -a "$user"
