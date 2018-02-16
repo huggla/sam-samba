@@ -62,6 +62,7 @@ then
                   echo $user_pw > $userpwfile
                   unset user_pw
                   unset $envvar
+                  env -i $sudo "$SUDO_DIR/chown2root" "$userpwfile"
                else
                   echo "No password given for $user."
                   exit 1
