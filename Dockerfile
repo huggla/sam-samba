@@ -7,19 +7,21 @@ COPY ./bin ${BIN_DIR}
 ENV CONFIG_DIR="/etc/samba"
 ENV SECRET_DIR="$CONFIG_DIR/secret"
 ENV SHARES_DIR="/shares" \
-    global_smb_passwd_file="$SECRET_DIR/smbpasswd" \
     LOG_DIR="/var/log/samba" \
     SUDO_DIR="$BIN_DIR/sudo" \
-    CONFIG_FILE="$CONFIG_DIR/smb.conf"
+    CONFIG_FILE="$CONFIG_DIR/smb.conf" \
+    USER="samba" \
+    PATH="$PATH:$BIN_DIR" \
+    global_smb_passwd_file="$SECRET_DIR/smbpasswd"
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
  && chmod 500 "$SUDO_DIR/"* "$BIN_DIR/"* \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
- && adduser -D -S -H -s /bin/false -u 100 samba \
- && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/"* \
- && echo "samba ALL=(root) NOPASSWD: '$SUDO_DIR/*', /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
+ && adduser -D -S -H -s /bin/false -u 100 $USER \
+ && chown $USER "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/"* \
+ && echo "$USER ALL=(root) NOPASSWD: '$SUDO_DIR/*', /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/$USER
 
 ENV global_dns_proxy="no" \
     global_log_file="$LOG_DIR/log.%m" \
@@ -33,9 +35,8 @@ ENV global_dns_proxy="no" \
     global_printcap_name="/dev/null" \
     global_disable_spoolss="yes" \
     SHARE_USERS="shareuser" \
-    DELETE_PASSWORD_FILES="no" \
-    PATH="$PATH:$BIN_DIR"
+    DELETE_PASSWORD_FILES="no"
 
-USER samba
+USER ${USER}
 
 CMD ["start.sh"]
