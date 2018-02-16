@@ -18,7 +18,7 @@ RUN apk add --no-cache samba-server sudo \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
  && adduser -D -S -H -s /bin/false -u 100 samba \
- && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/*" \
+ && chown samba "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/"* \
  && echo "samba ALL=(root) NOPASSWD: '$SUDO_DIR/*', /usr/sbin/nmbd, /usr/sbin/smbd" > /etc/sudoers.d/samba
 
 ENV global_dns_proxy="no" \
