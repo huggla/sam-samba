@@ -22,7 +22,8 @@ RUN apk add --no-cache samba-server sudo \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && chmod u=rx,go= "$SUDO_DIR/"* \
  && chmod u=rwx,g=wx,o= "$CONFIG_DIR" "$SECRET_DIR" \
- && adduser -D -S -H -s /bin/false -u 100 $USER \
+ && addgroup -S $USER \
+ && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
  && chown root:$USER "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/"* \
  && echo "$USER ALL=(root) NOPASSWD: $(find "$SUDO_DIR" -type f | paste -d, -s ),/usr/sbin/nmbd,/usr/sbin/smbd" > /etc/sudoers.d/samba
 
