@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-dir=`echo -n "$1" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
+dir=`echo -n "$1" | /usr/bin/tr -dc '[:alnum:]_'`
 if [ ! -e "$dir" ]
 then
    /bin/mkdir "$dir"
