@@ -4,11 +4,18 @@ set -e
 if [ -n "$2" ]
 then
    file="$2"
-   cmd='/bin/chown -R root "$file" && /bin/chmod -R u=rwX,go= "$file"'
+   rec="-R"
+   chmod="-R u=rwX,go="
+   
 else
    file="$1"
-   cmd='/bin/chown root "$file" && /bin/chmod u=rwX,go=X "$file"'
+   rec=""
+   chmod="u=rwX,go=X"
 fi
 file=`echo -n "$file" | /usr/bin/tr '$' '_' | /usr/bin/tr ' ' '_'`
-eval $cmd
+if [ -e "$file" ]
+then
+   /bin/chown $rec root "$file"
+   /bin/chmod $chmod "$file"
+fi
 exit 0
