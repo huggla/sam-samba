@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-
+echo $SUDO_USER
 if [ -n "$2" ]
 then
    file="$2"
@@ -15,13 +15,12 @@ fi
 file=`echo -n "$file" | /usr/bin/tr -dc '[:alnum:]_/'`
 if [ -e "$file" ]
 then
-   read sambauser < /root/sambauser
    fileowner="`stat -c '%U' $file`"
-   if [ "$fileowner" == "$sambauser" ]
+   if [ "$fileowner" == "$SUDO_USER" ]
    then
       /bin/chown $rec root "$file"
    fi
-   if [ "$fileowner" == "root" ] || [ "$fileowner" == "$sambauser" ]
+   if [ "$fileowner" == "root" ] || [ "$fileowner" == "$SUDO_USER" ]
    then
       /bin/chmod $chmod "$file"
    fi
