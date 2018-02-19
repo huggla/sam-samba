@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-dir=`echo -n "$1" | /usr/bin/tr -dc '[:alnum:]_'`
-if [ ! -e "$dir" ]
+dir=`echo -n "$1" | /usr/bin/tr -dc '[:alnum:]_/'`
+if [ ! -e "$dir" ] && [ `echo "$dir" | grep -qE "^/(sys|root|dev|proc|etc|bin|lib|run|sbin|usr|var)/"` ]
 then
    /bin/mkdir "$dir"
 fi
