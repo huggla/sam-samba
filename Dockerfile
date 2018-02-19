@@ -19,6 +19,7 @@ RUN apk add --no-cache samba-server sudo \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
  && echo $USER > "/root/sambauser" \
+ && chmod u=r,go= "/root/sambauser" \
  && chmod u=rw,go= "$global_smb_passwd_file" \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && chmod u=rx,go= "$SUDO_DIR/"* \
