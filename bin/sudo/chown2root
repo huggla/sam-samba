@@ -5,7 +5,7 @@ if [ -n "$2" ]
 then
    file="$2"
    rec="-R"
-   chmod="-R u=rwX,go="
+   chmod="u=rwX,go="
 else
    file="$1"
    rec=""
@@ -22,7 +22,7 @@ echo $file
    fi
    if [ "$fileowner" == "root" ] || [ "$fileowner" == "$SUDO_USER" ]
    then
-      /bin/chmod "$chmod $file"
+      /bin/chmod $chmod "$file"
    fi
 fi
 exit 0
