@@ -26,7 +26,6 @@ RUN apk add --no-cache samba-server sudo \
  && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
  && chown root:$USER "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/"* \
  && echo 'Defaults requiretty' > /etc/sudoers.d/samba \
- && echo 'Defaults use_pty' >> /etc/sudoers.d/samba \
  && echo "$USER HOST=(root) NOPASSWD: $(find "$SUDO_DIR" -type f | paste -d, -s ),/usr/sbin/nmbd,/usr/sbin/smbd" >> /etc/sudoers.d/samba
 
 ENV global_dns_proxy="no" \
