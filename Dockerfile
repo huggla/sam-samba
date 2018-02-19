@@ -16,9 +16,10 @@ ENV SHARES_DIR="/shares" \
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
- && chmod 500 "$SUDO_DIR/"* "$BIN_DIR/"* \
  && mkdir -p "$SECRET_DIR" \
  && touch "$global_smb_passwd_file" \
+ && chmod 400 "$global_smb_passwd_file" \
+ && chmod 500 "$SUDO_DIR/"* "$BIN_DIR/"* \
  && adduser -D -S -H -s /bin/false -u 100 $USER \
  && chown $USER "$CONFIG_DIR" "$SECRET_DIR" "$BIN_DIR/"* \
  && echo "$USER ALL=(root) NOPASSWD: $(find "$SUDO_DIR" -type f | paste -d, -s ),/usr/sbin/nmbd,/usr/sbin/smbd" > /etc/sudoers.d/samba
