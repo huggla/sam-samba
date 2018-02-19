@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-echo $SUDO_USER
+
 if [ -n "$2" ]
 then
    file="$2"
@@ -14,7 +14,6 @@ fi
 file="$(echo -n "$file" | /usr/bin/tr -dc '[:alnum:]_/')"
 if [ -e "$file" ]
 then
-echo $file
    fileowner="`stat -c '%U' $file`"
    if [ "$fileowner" == "$SUDO_USER" ]
    then
