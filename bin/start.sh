@@ -69,7 +69,6 @@ then
                exit 1
             fi
          fi
-         echo apa
          env -i $sudo "$SUDO_DIR/chown2root" "$userpwfile"
          env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
       done
@@ -83,10 +82,8 @@ then
       do
          echo "$user" >> "$global_username_map"
       done
-      echo apa2
       env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
    fi
-   echo hej
    env -i $sudo "$SUDO_DIR/chown2root" "$global_username_map"
    env -i $sudo "$SUDO_DIR/chown2root" "$SECRET_DIR"
    env -i $sudo "$SUDO_DIR/chown2root" "$CONFIG_DIR"
