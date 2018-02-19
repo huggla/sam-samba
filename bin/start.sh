@@ -11,6 +11,7 @@ then
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$(dirname "$global_smb_passwd_file")"
+   env -i $sudo "$SUDO_DIR/chown2root" "$global_smb_passwd_file"
    export global_passdb_backend="smbpasswd:$global_smb_passwd_file"
    if [ -z "$global_username_map" ]
    then
@@ -46,7 +47,7 @@ then
       done
    fi
    env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
-   if [ ! -s $global_smb_passwd_file ]
+   if [ ! -s "$global_smb_passwd_file" ]
    then
       for user in $SHARE_USERS
       do
@@ -63,12 +64,12 @@ then
                echo $user_pw > $userpwfile
                unset user_pw
                unset $envvar
-               env -i $sudo "$SUDO_DIR/chown2root" "$userpwfile"
             else
                echo "No password given for $user."
                exit 1
             fi
          fi
+         env -i $sudo "$SUDO_DIR/chown2root" "$userpwfile"
          env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
       done
    fi
@@ -83,8 +84,9 @@ then
       done
       env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
    fi
-   env -i $sudo "$SUDO_DIR/chown2root" -R "$SECRET_DIR"
-   env -i $sudo "$SUDO_DIR/chown2root" -R "$CONFIG_DIR"
+   env -i $sudo "$SUDO_DIR/chown2root" "$global_username_map"
+   env -i $sudo "$SUDO_DIR/chown2root" "$SECRET_DIR"
+   env -i $sudo "$SUDO_DIR/chown2root" "$CONFIG_DIR"
    env -i $sudo "$SUDO_DIR/chown2root" "$SHARES_DIR"
 fi
 exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
