@@ -10,20 +10,21 @@ ENV SHARES_DIR="/shares" \
     SUDO_DIR="$BIN_DIR/sudo" \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     USER="samba" \
+    SUDOERS_FILE="/etc/sudoers.d/samba" \
     global_smb_passwd_file="$CONFIG_DIR/smbpasswd"
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
  && touch "$global_smb_passwd_file" \
- && chmod u=rw,go= "$global_smb_passwd_file" \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && chmod u=rx,go= "$SUDO_DIR/"* \
  && chmod u=rwx,g=wx,o= "$CONFIG_DIR" \
  && addgroup -S $USER \
  && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
  && chown root:$USER "$CONFIG_DIR" "$BIN_DIR/"* \
- && echo 'Defaults lecture="never"' > /etc/sudoers.d/samba \
- && echo "$USER ALL=(root) NOPASSWD: $SUDO_DIR/,/usr/sbin/nmbd,/usr/sbin/smbd" >> /etc/sudoers.d/samba
+ && echo 'Defaults lecture="never"' > "$SUDOERS_FILE" \
+ && echo "$USER ALL=(root) NOPASSWD: $SUDO_DIR/,/usr/sbin/nmbd,/usr/sbin/smbd" >> "$SUDOERS_FILE" \
+ && chmod u=rw,go= "$global_smb_passwd_file" "$SUDOERS_FILE"
 
 ENV global_dns_proxy="no" \
     global_username_map="$CONFIG_DIR/usermap.txt" \
