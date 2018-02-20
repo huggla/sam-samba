@@ -50,7 +50,7 @@ then
          user_lc=$(echo $user | xargs | tr '[:upper:]' '[:lower:]')
          envvar="password_file_$user_lc"
          eval "userpwfile=\$$envvar"
-         if [ -z $userpwfile ]
+         if [ -z "$userpwfile" ]
          then
             envvar="password_$user_lc"
             eval "user_pw=\$$envvar"
@@ -69,7 +69,7 @@ then
          env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
       done
    fi
-   if [ ! -f "$global_username_map" ]
+   if [ ! -e "$global_username_map" ]
    then
       username_dir="$(dirname "$global_username_map")"
       if [ ! -e "$username_dir" ]
