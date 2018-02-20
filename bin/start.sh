@@ -13,10 +13,6 @@ then
    env -i $sudo "$SUDO_DIR/mkdir2root" "$(dirname "$global_smb_passwd_file")"
    env -i $sudo "$SUDO_DIR/chown2root" "$global_smb_passwd_file"
    export global_passdb_backend="smbpasswd:$global_smb_passwd_file"
-   if [ -z "$global_username_map" ]
-   then
-      global_username_map="$CONFIG_DIR/usermap.txt"
-   fi
    if [ ! -s "$CONFIG_FILE" ]
    then
       SHARES="global;$SHARES"
@@ -76,7 +72,10 @@ then
    if [ ! -f "$global_username_map" ]
    then
       username_dir="$(dirname "$global_username_map")"
-      /bin/mkdir -p "$username_dir"
+      if [ ! -e "$username_dir" ]
+      then
+         /bin/mkdir -p "$username_dir"
+      fi
       >"$global_username_map"
       for user in $USERNAME_MAP
       do
