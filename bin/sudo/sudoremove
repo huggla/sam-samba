@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
-echo "samba ALL=(root) NOPASSWD: /usr/sbin/nmbd,/usr/sbin/smbd" > /etc/sudoers.d/samba
+echo 'Defaults lecture="never"' > /etc/sudoers.d/samba
+echo "samba HOST=(root) NOPASSWD: /usr/sbin/nmbd,/usr/sbin/smbd" >> /etc/sudoers.d/samba
 /bin/rm -r `dirname $0`
 exit 0
