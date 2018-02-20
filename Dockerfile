@@ -28,6 +28,7 @@ RUN apk add --no-cache samba-server sudo \
  && echo "$USER HOST=(root) NOPASSWD: $(find "$SUDO_DIR" -type f | paste -d, -s ),/usr/sbin/nmbd,/usr/sbin/smbd" >> /etc/sudoers.d/samba
 
 ENV global_dns_proxy="no" \
+    global_username_map="$CONFIG_DIR/usermap.txt" \
     global_log_file="$LOG_DIR/log.%m" \
     global_max_log_size="0" \
     global_syslog="0" \
