@@ -70,7 +70,7 @@ then
             fi
          fi
          env -i $sudo "$SUDO_DIR/chown2root" "$userpwfile"
-         env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
+         env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$SMBUSERS_FILE" $DELETE_PASSWORD_FILES
       done
    fi
    if [ -n "$global_username_map" ] 
