@@ -11,6 +11,7 @@ ENV SHARES_DIR="/shares" \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     USER="samba" \
     SUDOERS_FILE="/etc/sudoers.d/samba" \
+    SMBUSERS_FILE="$CONFIG_DIR/smbusers" \
     global_smb_passwd_file="$CONFIG_DIR/smbpasswd"
     
 RUN apk add --no-cache samba-server sudo \
