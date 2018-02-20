@@ -73,21 +73,23 @@ then
          env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$CONFIG_DIR/smbusers" $DELETE_PASSWORD_FILES
       done
    fi
-   if [ ! -e "$global_username_map" ]
+   if [ -n "$global_username_map" ] 
    then
-      username_dir="$(dirname "$global_username_map")"
-      if [ ! -e "$username_dir" ]
+      if [ ! -e "$global_username_map" ]
       then
-         /bin/mkdir -p "$username_dir"
+         username_dir="$(dirname "$global_username_map")"
+         if [ ! -e "$username_dir" ]
+         then
+            /bin/mkdir -p "$username_dir"
+         fi
+         >"$global_username_map"
+         for user in $USERNAME_MAP
+         do
+            echo "$user" >> "$global_username_map"
+         done
       fi
-      >"$global_username_map"
-      for user in $USERNAME_MAP
-      do
-         echo "$user" >> "$global_username_map"
-      done
-      env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
+      env -i $sudo "$SUDO_DIR/chown2root" "$global_username_map"
    fi
-   env -i $sudo "$SUDO_DIR/chown2root" "$global_username_map"
    env -i $sudo "$SUDO_DIR/chown2root" "$CONFIG_DIR"
    env -i $sudo "$SUDO_DIR/chown2root" "$SHARES_DIR"
 fi
