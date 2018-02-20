@@ -56,7 +56,7 @@ then
             eval "user_pw=\$$envvar"
             if [ -n "$user_pw" ]
             then
-               userpwfile=$SECRET_DIR/$user"_pw"
+               userpwfile=$CONFIG_DIR/$user"_pw"
                echo $user_pw > $userpwfile
                unset user_pw
                unset $envvar
@@ -84,7 +84,6 @@ then
       env -i $sudo "$SUDO_DIR/chown2root" -R "$username_dir"
    fi
    env -i $sudo "$SUDO_DIR/chown2root" "$global_username_map"
-   env -i $sudo "$SUDO_DIR/chown2root" "$SECRET_DIR"
    env -i $sudo "$SUDO_DIR/chown2root" "$CONFIG_DIR"
    env -i $sudo "$SUDO_DIR/chown2root" "$SHARES_DIR"
 fi
