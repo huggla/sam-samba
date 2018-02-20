@@ -10,7 +10,11 @@ then
    IFS="${IFS};"
    sudo="/usr/bin/sudo"
    env -i $sudo "$SUDO_DIR/mkdir2root" "$SHARES_DIR"
-   env -i $sudo "$SUDO_DIR/mkdir2root" "$(dirname "$global_smb_passwd_file")"
+   smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
+   if [ ! -e "$smbpasswd_dir" ]
+   then
+      env -i $sudo "$SUDO_DIR/mkdir2root" "$smbpasswd_dir"
+   fi
    env -i $sudo "$SUDO_DIR/chown2root" "$global_smb_passwd_file"
    export global_passdb_backend="smbpasswd:$global_smb_passwd_file"
    if [ ! -s "$CONFIG_FILE" ]
