@@ -11,7 +11,6 @@ ENV SHARES_DIR="/shares" \
     SUDO_DIR="$BIN_DIR/sudo" \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     USER="samba" \
-    PATH="$PATH:$BIN_DIR" \
     global_smb_passwd_file="$SECRET_DIR/smbpasswd"
     
 RUN apk add --no-cache samba-server sudo \
@@ -43,4 +42,4 @@ ENV global_dns_proxy="no" \
 
 USER ${USER}
 
-CMD ["start.sh"]
+CMD ["/usr/local/bin/start.sh"]
