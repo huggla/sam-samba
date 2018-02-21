@@ -1,19 +1,19 @@
 #!/bin/sh
 set -e
 
-environment="/etc/samba/environment"
-var(){
-   section_matches="$(awk -v section=$1 -F_ '$1==section{print $2}' $environment)"
-   return "$(echo $section_matches | awk -v param=$2 -F= '$1==param{print $2}')"
-}
-var "global" "smb_passwd_file"
-exit
-if [ -e "$environment" ]
+environment_file="/etc/samba/environment"
+if [ -f "$environment_file" ]
 then
+   environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_/\n'`
+   rm "$environment_file"
+   var(){
+      section_matches="$(echo $environment | awk -v section=$1 -F_ '$1==section{print $2}')"
+      return "$(echo $section_matches | awk -v param=$2 -F= '$1==param{print $2}')"
+   }
    IFS="${IFS};"
-   global_smb_passwd_file="$(awk -F= '$1=="global_smb_passwd_file"{print $2;exit}' environment)"
-   smbpasswd_file="$(dirname "$global_smb_passwd_file")"
-   mkdir -p "$smbpasswd_file"
+   global_smb_passwd_file="var global smb_passwd_file"
+   smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
+   mkdir -p "$smbpasswd_dir"
    chmod u=rwx,go= "$smbpasswd_file"
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
