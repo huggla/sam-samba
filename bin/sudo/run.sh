@@ -7,18 +7,26 @@ then
    environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_/\n'`
    rm "$environment_file"
    var(){
-      section_matches="$(echo $environment | awk -v section=$1 -F_ '$1==section{print $2}')"
-      return "$(echo $section_matches | awk -v param=$2 -F= '$1==param{print $2}')"
+      if [ -n "$2" ]
+      then
+         section="$1"
+         matches="$(echo $environment | awk -v section=$section -F_ '$1==section{print $2}')"
+         param="$2"
+      else
+         matches="$environment"
+         param="$1"
+      fi
+      return "$(echo $matches | awk -v param=$param -F= '$1==param{print $2}')"
    }
    IFS="${IFS};"
    global_smb_passwd_file="var global smb_passwd_file"
    smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
    mkdir -p "$smbpasswd_dir"
-   chmod u=rwx,go= "$smbpasswd_file"
+   chmod u=rwx,go= "$smbpasswd_dir"
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
-   echo "smbpasswd:$global_smb_passwd_file" >> "$environment"
-   CONFIG_FILE="$(awk -F= '$1=="CONFIG_FILE"{print $2;exit}' environment)"
+   $environment="$environment`echo global_passdb_backend=smbpasswd:$global_smb_passwd_file`"
+   CONFIG_FILE="var $(awk -F= '$1=="CONFIG_FILE"{print $2;exit}' environment)"
    if [ ! -s "$CONFIG_FILE" ]
    then
       SHARES="global;$SHARES"
