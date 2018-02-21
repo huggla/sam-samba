@@ -26,7 +26,9 @@ then
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
    $environment="$environment`echo global_passdb_backend=smbpasswd:$global_smb_passwd_file`"
-   CONFIG_FILE="var $(awk -F= '$1=="CONFIG_FILE"{print $2;exit}' environment)"
+   CONFIG_FILE="var CONFIG_FILE"
+   echo $CONFIG_FILE
+   exit
    if [ ! -s "$CONFIG_FILE" ]
    then
       SHARES="global;$SHARES"
