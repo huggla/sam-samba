@@ -7,16 +7,18 @@ then
    environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_/\n'`
    rm "$environment_file"
    var(){
-      if [ -n "$2" ]
+      if [ "$1" == "*" ]
       then
-         section="$1"
-         matches="$(echo $environment | awk -v section=$section -F_ '$1==section{print $2}')"
-         param="$2"
+         tmp="$environment"
       else
-         matches="$environment"
-         param="$1"
+         tmp="$(echo $environment | awk -v section=$1 -F_ '$1==section{print $2}')"
       fi
-      return "$(echo $matches | awk -v param=$param -F= '$1==param{print $2}')"
+      if [ "$2" == "*" ]
+      then
+         return $tmp
+      else
+         return "$(echo $tmp | awk -v param=$2 -F= '$1==param{print $2}')"
+      fi
    }
    IFS="${IFS};"
    global_smb_passwd_file="var global smb_passwd_file"
@@ -26,18 +28,17 @@ then
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
    $environment="$environment`echo global_passdb_backend=smbpasswd:$global_smb_passwd_file`"
-   CONFIG_FILE="var CONFIG_FILE"
-   echo $CONFIG_FILE
-   exit
+   CONFIG_FILE="var * CONFIG_FILE"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      SHARES="global;$SHARES"
+      SHARES="global;var * SHARES"
       for share in $SHARES
       do
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
          share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
-         share_parameters=`env | /bin/grep "${share_lc}_" | /bin/sed "s/^${share_lc}_//g" | /bin/grep -oE '^[^=]+'`
+         share_parameters="var $share *"
+         SHARES_DIR="var * SHARES_DIR"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
@@ -54,7 +55,7 @@ then
                fi
             fi
          done
-         env -i $sudo "$SUDO_DIR/mkdir2root" "$path_value"
+         mkdir -p "$path_value"
          echo "path=$path_value" >> "$CONFIG_FILE"
       done
    fi
