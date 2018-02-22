@@ -59,6 +59,7 @@ then
          echo "path=$path_value" >> "$CONFIG_FILE"
       done
    fi
+   cat "$CONFIG_FILE"
    env -i $sudo "$SUDO_DIR/addlinuxusers" $SHARE_USERS
    if [ ! -s "$global_smb_passwd_file" ]
    then
