@@ -27,7 +27,7 @@ then
    chmod u=rwx,go= "$smbpasswd_dir"
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
-   $environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
+   environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
    CONFIG_FILE="`var - CONFIG_FILE`"
    if [ ! -s "$CONFIG_FILE" ]
    then
