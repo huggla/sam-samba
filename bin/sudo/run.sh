@@ -45,8 +45,6 @@ then
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
-            param_var="${share_lc}_${param}"
-            #eval "param_value=\$$param_var"
             param_value="`var $share_lc $param`"
             if [ -n "$param_value" ]
             then
