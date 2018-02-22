@@ -28,7 +28,46 @@ then
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
    $environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
-echo $environment
+   CONFIG_FILE="`var - CONFIG_FILE`"
+   if [ ! -s "$CONFIG_FILE" ]
+   then
+      SHARES="global;`var - SHARES`"
+      for share in $SHARES
+      do
+         echo >> "$CONFIG_FILE"
+         echo "[$share]" >> "$CONFIG_FILE"
+         share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
+         share_parameters="`var $share *`"
+         SHARES_DIR="`var - SHARES_DIR`"
+         path_value="$SHARES_DIR/$share"
+         for param in $share_parameters
+         do
+            param_var="${share_lc}_${param}"
+            eval "param_value=\$$param_var"
+            if [ -n "$param_value" ]
+            then
+               if [ "$param" == "path" ]
+               then
+                  path_value=$param_value
+               else
+                  echo -n "$param" | tr '_' ' ' >> "$CONFIG_FILE"
+                  echo "=$param_value" >> "$CONFIG_FILE"
+               fi
+            fi
+         done
+         mkdir -p "$path_value"
+         echo "path=$path_value" >> "$CONFIG_FILE"
+      done
+   fi
+   cat "$CONFIG_FILE"
+   SHARE_USERS="`var - SHARE_USERS`"
+   for user in $SHARE_USERS
+   do
+      if [ ! "`/usr/bin/id $user 2>/dev/null`" ]
+      then
+         /usr/sbin/adduser -D -H -s /bin/false "$user"
+      fi
+   done
 fi
 #exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
 exit 0
