@@ -18,27 +18,8 @@ then
       fi
       if [ -z "$2" ]
       then
-         echo "$tmp"
+         echo "$(echo $tmp | awk -F= '{print $1}')"
       else
-         echo "$(echo $tmp | awk -v param=$2 -F= '$1==param{print $2}')"
-      fi
-      IFS=$IFS_bak
-   }
-      var2(){
-      IFS_bak=$IFS
-      IFS=?
-      if [ "$1" == "-" ]
-      then
-         tmp="$environment"
-      else
-         tmp="$(echo $environment | awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
-      fi
-      if [ -z "$2" ]
-      then
-         echo "$tmp"
-      else
-      echo $tmp
-      echo $2
          echo "$(echo $tmp | awk -v param=$2 -F= '$1==param{print $2}')"
       fi
       IFS=$IFS_bak
@@ -66,7 +47,7 @@ then
          do
             param_var="${share_lc}_${param}"
             #eval "param_value=\$$param_var"
-            param_value="`var2 $share_lc $param`"
+            param_value="`var $share_lc $param`"
             if [ -n "$param_value" ]
             then
                if [ "$param" == "path" ]
