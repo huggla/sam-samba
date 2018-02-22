@@ -4,22 +4,44 @@ set -e
 environment_file="/etc/samba/environment"
 if [ -f "$environment_file" ]
 then
-   IFS=";"
-   environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_ =/\n'`
+ #  IFS=";"
+   environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
    rm "$environment_file"
    var(){
+      IFS_bak=$IFS
+      IFS=?
       if [ "$1" == "-" ]
       then
          tmp="$environment"
       else
          tmp="$(echo $environment | awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
       fi
-      if [ "$2" == "*" ]
+      if [ -z "$2" ]
       then
          echo "$tmp"
       else
          echo "$(echo $tmp | awk -v param=$2 -F= '$1==param{print $2}')"
       fi
+      IFS=$IFS_bak
+   }
+      var2(){
+      IFS_bak=$IFS
+      IFS=?
+      if [ "$1" == "-" ]
+      then
+         tmp="$environment"
+      else
+         tmp="$(echo $environment | awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+      fi
+      if [ -z "$2" ]
+      then
+         echo "$tmp"
+      else
+      echo $tmp
+      echo $2
+         echo "$(echo $tmp | awk -v param=$2 -F= '$1==param{print $2}')"
+      fi
+      IFS=$IFS_bak
    }
    global_smb_passwd_file="`var global smb_passwd_file`"
    smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
@@ -31,19 +53,20 @@ then
    CONFIG_FILE="`var - CONFIG_FILE`"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      SHARES="global;`var - SHARES`"
+      SHARES="global"$'\n'"`var - SHARES`"
       for share in $SHARES
       do
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
          share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
-         share_parameters="`var $share *`"
+         share_parameters="`var $share`"
          SHARES_DIR="`var - SHARES_DIR`"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
             param_var="${share_lc}_${param}"
-            eval "param_value=\$$param_var"
+            #eval "param_value=\$$param_var"
+            param_value="`var2 $share_lc $param`"
             if [ -n "$param_value" ]
             then
                if [ "$param" == "path" ]
