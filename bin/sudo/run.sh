@@ -61,7 +61,8 @@ then
          echo "path=$path_value" >> "$CONFIG_FILE"
       done
    fi
-   cat "$CONFIG_FILE"
+   
+   
    SHARE_USERS="`var - SHARE_USERS`"
    for user in $SHARE_USERS
    do
@@ -70,6 +71,51 @@ then
          /usr/sbin/adduser -D -H -s /bin/false "$user"
       fi
    done
+      if [ ! -s "$global_smb_passwd_file" ]
+   then
+      for user in $SHARE_USERS
+      do
+         user_lc=$(echo $user | xargs | tr '[:upper:]' '[:lower:]')
+         envvar="password_file_$user_lc"
+         eval "userpwfile=\$$envvar"
+         if [ -z "$userpwfile" ]
+         then
+            envvar="password_$user_lc"
+            eval "user_pw=\$$envvar"
+            if [ -n "$user_pw" ]
+            then
+               userpwfile=$CONFIG_DIR/$user"_pw"
+               echo $user_pw > $userpwfile
+               unset user_pw
+               unset $envvar
+            else
+               echo "No password given for $user."
+               exit 1
+            fi
+         fi
+         env -i $sudo "$SUDO_DIR/chown2root" "$userpwfile"
+         env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$SMBUSERS_FILE" $DELETE_PASSWORD_FILES
+      done
+   fi
+   if [ -n "$global_username_map" ] 
+   then
+      if [ ! -e "$global_username_map" ]
+      then
+         username_dir="$(dirname "$global_username_map")"
+         if [ ! -e "$username_dir" ]
+         then
+            /bin/mkdir -p "$username_dir"
+         fi
+         >"$global_username_map"
+         for user in $USERNAME_MAP
+         do
+            echo "$user" >> "$global_username_map"
+         done
+      fi
+      env -i $sudo "$SUDO_DIR/chown2root" "$global_username_map"
+   fi
+   env -i $sudo "$SUDO_DIR/chown2root" "$CONFIG_DIR"
+   env -i $sudo "$SUDO_DIR/chown2root" "$SHARES_DIR"
 fi
 #exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
 exit 0
