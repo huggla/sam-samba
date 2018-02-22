@@ -7,7 +7,7 @@ then
    environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_/\n'`
    rm "$environment_file"
    var(){
-      if [ "$1" == "*" ]
+      if [ "$1" == "-" ]
       then
          tmp="$environment"
       else
@@ -28,17 +28,17 @@ then
    touch "$global_smb_passwd_file"
    chmod u=rwx,go= "$global_smb_passwd_file"
    $environment="$environment`echo global_passdb_backend=smbpasswd:$global_smb_passwd_file`"
-   CONFIG_FILE="var * CONFIG_FILE"
+   CONFIG_FILE="var - CONFIG_FILE"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      SHARES="global;var * SHARES"
+      SHARES="global;var - SHARES"
       for share in $SHARES
       do
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
          share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
          share_parameters="var $share *"
-         SHARES_DIR="var * SHARES_DIR"
+         SHARES_DIR="var - SHARES_DIR"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
