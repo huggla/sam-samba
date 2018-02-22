@@ -4,7 +4,6 @@ set -e
 environment_file="/etc/samba/environment"
 if [ -f "$environment_file" ]
 then
- #  IFS=";"
    environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
    rm "$environment_file"
    var(){
