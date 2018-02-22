@@ -4,14 +4,15 @@ set -e
 environment_file="/etc/samba/environment"
 if [ -f "$environment_file" ]
 then
-   environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_=/\n'`
+   IFS=";"
+   environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_ =/\n'`
    rm "$environment_file"
    var(){
       if [ "$1" == "-" ]
       then
          tmp="$environment"
       else
-         tmp="$(echo $environment | awk -v section=$1 -F_ '$1==section{print $2}')"
+         tmp="$(echo $environment | awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
       fi
       if [ "$2" == "*" ]
       then
