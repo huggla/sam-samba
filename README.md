@@ -31,7 +31,7 @@ A secure and minimal docker image with Samba server (share) on Alpine. Runs by d
 ### Share configuration
 * &lt;share name from SHARES&gt;_&lt;parameter name with space replaced by underscore&gt;: f ex public_guest_ok.
 ### User configuration
-* password_file_&lt;user name from USERS&gt;: Path to file containing password for named user. **Note! This file will be deleted unless write protected.**
+* password&#95;file_&lt;user name from USERS&gt;: Path to file containing password for named user. **Note! This file will be deleted unless write protected.**
 * password_&lt;user name from USERS&gt;: Password for named user. Less secure!
 
 ## Capabilities
