@@ -12,12 +12,11 @@ ENV SHARES_DIR="/shares" \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     USER="samba" \
     SUDOERS_FILE="/etc/sudoers.d/samba" \
-    SMBUSERS_FILE="$CONFIG_DIR/smbusers" \
-    global_smb_passwd_file="$CONFIG_DIR/smbpasswd"
+    SMBUSERS_FILE="$CONFIG_DIR/smbusers"
     
 RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
- && touch "$global_smb_passwd_file" "$SMBUSERS_FILE" \
+ && touch "$SMBUSERS_FILE" \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && chmod u=rx,go= "$SUDO_DIR/"* \
  && touch "$ENVIRONMENT_FILE" \
@@ -27,9 +26,10 @@ RUN apk add --no-cache samba-server sudo \
  && chown root:$USER "$ENVIRONMENT_FILE" "$BIN_DIR/start.sh" \
  && echo 'Defaults lecture="never"' > "$SUDOERS_FILE" \
  && echo "$USER ALL=(root) NOPASSWD: $SUDO_DIR/run.sh" >> "$SUDOERS_FILE" \
- && chmod u=rwX,go= "$CONFIG_DIR" "$global_smb_passwd_file" "$SMBUSERS_FILE" "$SUDOERS_FILE"
+ && chmod u=rwX,go= "$CONFIG_DIR" "$SMBUSERS_FILE" "$SUDOERS_FILE"
 
-ENV global_dns_proxy="no" \
+ENV global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
+    global_dns_proxy="no" \
     global_username_map="$CONFIG_DIR/usermap.txt" \
     global_log_file="$LOG_DIR/log.%m" \
     global_max_log_size="0" \
