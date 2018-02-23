@@ -5,6 +5,5 @@ set +m
 set +s
 set +i
 
-env > "$CONFIG_DIR/environment"
-exec env -i $sudo "$SUDO_DIR/run.sh"
-exit
+env > "$ENVIRONMENT_FILE"
+exec env -i sudo "$SUDO_DIR/run.sh"
