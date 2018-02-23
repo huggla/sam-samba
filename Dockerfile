@@ -18,11 +18,11 @@ RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && touch "$ENVIRONMENT_FILE" "$SMBUSERS_FILE" "$CONFIG_FILE" \
- && chmod u=rx,go= "$SUDO_DIR" "$SUDO_DIR/runsmbd.sh" \
+ && chmod u=rx,go= "$SUDO_DIR/runsmbd.sh" \
  && chmod u=rw,g=w,o= "$ENVIRONMENT_FILE" \
  && addgroup -S $USER \
  && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
- && chown root:$USER "$ENVIRONMENT_FILE" "$BIN_DIR/start.sh" \
+ && chown root:$USER "$ENVIRONMENT_FILE" "$BIN_DIR/start.sh" "$SUDO_DIR" \
  && echo 'Defaults lecture="never"' > "$SUDOERS_FILE" \
  && echo "$USER ALL=(root) NOPASSWD: $SUDO_DIR/runsmbd.sh" >> "$SUDOERS_FILE" \
  && chmod u=rwX,go= "$CONFIG_FILE" "$SMBUSERS_FILE" "$SUDOERS_FILE"
