@@ -143,5 +143,6 @@ then
       fi
    fi
 fi
-#exec env -i "$BIN_DIR/runsmbd" "$SUDO_DIR"
+/usr/bin/sudo /usr/sbin/nmbd -D
+/usr/bin/sudo /usr/sbin/smbd -FS
 exit 0
