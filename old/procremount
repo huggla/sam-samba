@@ -1,3 +1,0 @@
-#!/bin/sh
-
-/bin/mount -o remount,rw,nosuid,nodev,noexec,relatime,hidepid=2 /proc
