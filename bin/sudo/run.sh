@@ -119,7 +119,7 @@ then
          fi
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDO_DIR/smbpasswd" -s -a "$user"
          set +e
-         /bin/rm --interactive=never "$userpwfile"
+         /bin/rm -f "$userpwfile"
          set -e
          echo "$user = $user" >> "$SMBUSERS_FILE"
       done
