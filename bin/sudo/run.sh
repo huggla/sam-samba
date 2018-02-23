@@ -5,8 +5,8 @@ set +m
 set +s
 set +i
 
-SUDO_DIR="`dirname $0`"
-ENVIRONMENT_FILE="$SUDO_DIR/environment"
+readonly SUDO_DIR="`dirname $0`"
+readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
 then
    environment=`cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
@@ -28,19 +28,19 @@ then
       fi
       IFS=$IFS_bak
    }
-   CONFIG_FILE="`var - CONFIG_FILE`"
+   readonly CONFIG_FILE="`var - CONFIG_FILE`"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      global_smb_passwd_file="`var global smb_passwd_file`"
-      environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
-      SHARES="global"$'\n'"`var - SHARES`"
+      readonly global_smb_passwd_file="`var global smb_passwd_file`"
+      readonly environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
+      readonly SHARES="global"$'\n'"`var - SHARES`"
+      readonly SHARES_DIR="`var - SHARES_DIR`"
       for share in $SHARES
       do
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
          share_lc="$(echo $share | xargs | tr '[:upper:]' '[:lower:]')"
          share_parameters="`var $share`"
-         SHARES_DIR="`var - SHARES_DIR`"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
@@ -60,8 +60,12 @@ then
          echo "path=$path_value" >> "$CONFIG_FILE"
       done
    else
-      global_smb_passwd_file="$(echo "$(cat "$CONFIG_FILE" | awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
+      readonly environment
+      readonly global_smb_passwd_file="$(echo "$(cat "$CONFIG_FILE" | awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
+      cat "$CONFIG_FILE" | grep '[' | grep -v 'global' | tr '[' '' | tr ']' ''
    fi
+   cat "$CONFIG_FILE" | grep '[' | grep -v 'global' | tr '[' '' | tr ']' ''
+   exit
    smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
    mkdir -p "$smbpasswd_dir"
    chmod u=rwx,go= "$smbpasswd_dir"
@@ -99,11 +103,11 @@ then
                exit 1
             fi
          fi
-         echo | /bin/cat "$userpwfile" - "$userpwfile" | "`dirname $0`/smbpasswd" -s -a "$user"
+         echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDO_DIR/smbpasswd" -s -a "$user"
          echo "$user = $user" >> "$SMBUSERS_FILE"
-if [ "$4" == "yes" ]
-then
-   /bin/rm "$2"
+         if [ "`var - DELETE_PASSWORD_FILES`" == "yes" ]
+         then
+            /bin/rm "$2"
 fi
          env -i $sudo "$SUDO_DIR/addshareuser" "$user" "$userpwfile" "$SMBUSERS_FILE" $DELETE_PASSWORD_FILES
       done
