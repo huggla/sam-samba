@@ -4,10 +4,11 @@ ENV BIN_DIR="/usr/local/bin"
 
 COPY ./bin ${BIN_DIR}
 
+ENV SUDO_DIR="$BIN_DIR/sudo"
 ENV CONFIG_DIR="/etc/samba"
 ENV SHARES_DIR="/shares" \
     LOG_DIR="/var/log/samba" \
-    SUDO_DIR="$BIN_DIR/sudo" \
+    ENVIRONMENT_FILE="$SUDO_DIR/environment \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     USER="samba" \
     SUDOERS_FILE="/etc/sudoers.d/samba" \
@@ -20,11 +21,11 @@ RUN apk add --no-cache samba-server sudo \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && chmod u=rx,go= "$SUDO_DIR/"* \
  && chmod u=rwx,g=wx,o= "$CONFIG_DIR" \
- && touch "$CONFIG_DIR/environment" \
- && chmod u=rw,g=w,o= "$CONFIG_DIR/environment" \
+ && touch "$ENVIRONMENT_FILE" \
+ && chmod u=rw,g=w,o= "$ENVIRONMENT_FILE" \
  && addgroup -S $USER \
  && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
- && chown root:$USER "$CONFIG_DIR" "$CONFIG_DIR/environment" "$BIN_DIR/"* \
+ && chown root:$USER "$CONFIG_DIR" "$ENVIRONMENT_FILE" "$BIN_DIR/"* \
  && echo 'Defaults lecture="never"' > "$SUDOERS_FILE" \
  && echo "$USER ALL=(root) NOPASSWD: $SUDO_DIR/,/usr/sbin/nmbd,/usr/sbin/smbd" >> "$SUDOERS_FILE" \
  && chmod u=rw,go= "$global_smb_passwd_file" "$SUDOERS_FILE"
