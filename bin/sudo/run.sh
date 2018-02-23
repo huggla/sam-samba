@@ -1,11 +1,12 @@
 #!/bin/sh
 set -e
 
-environment_file="/etc/samba/environment"
-if [ -f "$environment_file" ]
+SUDO_DIR="`dirname $0`"
+ENVIRONMENT_FILE="$SUDO_DIR/environment"
+if [ -f "$ENVIRONMENT_FILE" ]
 then
-   environment=`cat "$environment_file" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
-   rm "$environment_file"
+   environment=`cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
+   rm "$ENVIRONMENT_FILE"
    var(){
       IFS_bak=$IFS
       IFS=?
@@ -27,11 +28,6 @@ then
    if [ ! -s "$CONFIG_FILE" ]
    then
       global_smb_passwd_file="`var global smb_passwd_file`"
-      smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
-      mkdir -p "$smbpasswd_dir"
-      chmod u=rwx,go= "$smbpasswd_dir"
-      touch "$global_smb_passwd_file"
-      chmod u=rw,go= "$global_smb_passwd_file"
       environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
       SHARES="global"$'\n'"`var - SHARES`"
       for share in $SHARES
@@ -59,10 +55,14 @@ then
          mkdir -p "$path_value"
          echo "path=$path_value" >> "$CONFIG_FILE"
       done
-      echo "$(cat "$CONFIG_FILE" | awk -v param="smb passwd file" -F= '$1==param{print $2}')"
- #  else
-   exit
+   else
+      global_smb_passwd_file="$(echo "$(cat "$CONFIG_FILE" | awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
    fi
+   smbpasswd_dir="$(dirname "$global_smb_passwd_file")"
+   mkdir -p "$smbpasswd_dir"
+   chmod u=rwx,go= "$smbpasswd_dir"
+   touch "$global_smb_passwd_file"
+   chmod u=rw,go= "$global_smb_passwd_file"
    SHARE_USERS="`var - SHARE_USERS`"
    SMBUSERS_FILE="`var - SMBUSERS_FILE`"
    chmod u=rw,go= "$SMBUSERS_FILE"
@@ -79,30 +79,22 @@ then
       do
          user_lc=$(echo $user | xargs | tr '[:upper:]' '[:lower:]')
          userpwfile="`var - password_file_$user_lc`"
-         echo "$userpwfile"
-         exit
-     #    envvar="password_file_$user_lc"
-     #    eval "userpwfile=\$$envvar"
          if [ -n "$userpwfile" ]
          then
             chmod u=r,go= "$userpwfile"
          else
             user_pw="`var password $user_lc`"
-        #    envvar="password_$user_lc"
-        #    eval "user_pw=\$$envvar"
             if [ -n "$user_pw" ]
             then
                userpwfile=$CONFIG_DIR/$user"_pw"
                chmod u=r,go= "$userpwfile"
-               echo $user_pw > $userpwfile
+               echo $user_pw > "$userpwfile"
                unset user_pw
-          #     unset $envvar
             else
                echo "No password given for $user."
                exit 1
             fi
          fi
-
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "`dirname $0`/smbpasswd" -s -a "$user"
          echo "$user = $user" >> "$SMBUSERS_FILE"
 if [ "$4" == "yes" ]
