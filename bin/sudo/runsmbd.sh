@@ -5,6 +5,7 @@ set +m
 set +s
 set +i
 
+readonly PATH=""
 readonly SUDO_DIR="`/usr/bin/dirname $0`"
 readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
@@ -144,6 +145,15 @@ then
             echo "$user" >> "$global_username_map"
          done
       fi
+   fi
+   if [ -n "$global_log_file" ] 
+   then
+      /bin/mkdir -p "$(/usr/bin/dirname "$global_log_file")"
+      set +e
+      /bin/touch "$global_log_file"
+      /bin/chown root "$global_log_file"
+      /bin/chmod u=rw,go= "$global_log_file"
+      set -e
    fi
 fi
 /usr/bin/sudo /usr/sbin/nmbd -D
