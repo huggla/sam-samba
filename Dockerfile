@@ -25,7 +25,7 @@ RUN apk add --no-cache samba-server sudo \
  && chown root:$USER "$ENVIRONMENT_FILE" "$BIN_DIR/start.sh" \
  && echo 'Defaults lecture="never"' > "$SUDOERS_FILE" \
  && echo "$USER ALL=(root) NOPASSWD: $SUDO_DIR/run.sh" >> "$SUDOERS_FILE" \
- && chmod u=rwX,go= "$CONFIG_DIR" "$SMBUSERS_FILE" "$SUDOERS_FILE"
+ && chmod u=rwX,go= "$CONFIG_FILE" "$SMBUSERS_FILE" "$SUDOERS_FILE"
 
 ENV global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     global_dns_proxy="no" \
