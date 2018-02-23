@@ -1,5 +1,9 @@
 #!/bin/sh
 set -e
+set +a
+set +m
+set +s
+set +i
 
 SUDO_DIR="`dirname $0`"
 ENVIRONMENT_FILE="$SUDO_DIR/environment"
