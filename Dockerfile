@@ -18,7 +18,7 @@ RUN apk add --no-cache samba-server sudo \
  && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
  && chmod u=rx,g=rx,o= "$BIN_DIR/"* \
  && chmod u=rx,go= "$SUDO_DIR/"* \
- && touch "$ENVIRONMENT_FILE" "$SMBUSERS_FILE" \
+ && touch "$ENVIRONMENT_FILE" "$SMBUSERS_FILE" "$CONFIG_FILE" \
  && chmod u=rw,g=w,o= "$ENVIRONMENT_FILE" \
  && addgroup -S $USER \
  && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
