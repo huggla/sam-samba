@@ -10,7 +10,7 @@ readonly SUDO_DIR="`/usr/bin/dirname $0`"
 readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
 then
-   IFS=$(echo -en "\n\b,")
+   IFS=$(echo -en "\n\b;,")
    environment=`/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
    /bin/rm "$ENVIRONMENT_FILE"
    var(){
@@ -30,13 +30,24 @@ then
       fi
       IFS=$IFS_bak
    }
+   makedir(){
+      /bin/mkdir -p "$1"
+      set +e
+      /bin/chown root "$1"
+      /bin/chmod u=rwx,go=x "$1"
+      set -e
+   }
+   makefile(){
+      makedir "$(/usr/bin/dirname "$1")"
+      set +e
+      /bin/touch "$1"
+      /bin/chown root "$1"
+      /bin/chmod u=rw,go= "$1"
+      set -e
+   }
    readonly CONFIG_FILE="`var - CONFIG_FILE`"
    readonly SHARES_DIR="`var - SHARES_DIR`"
-   /bin/mkdir -p "$SHARES_DIR"
-   set +e
-   /bin/chown root "$SHARES_DIR"
-   /bin/chmod u=rwx,go=x "$SHARES_DIR"
-   set -e
+   makedir "$SHARES_DIR"
    if [ ! -s "$CONFIG_FILE" ]
    then
       readonly global_smb_passwd_file="`var global smb_passwd_file`"
@@ -78,12 +89,7 @@ then
          /bin/mkdir -p "$path"
       done
    fi
-   /bin/mkdir -p "$(/usr/bin/dirname "$global_smb_passwd_file")"
-   set +e
-   /bin/touch "$global_smb_passwd_file"
-   /bin/chown root "$global_smb_passwd_file"
-   /bin/chmod u=rw,go= "$global_smb_passwd_file"
-   set -e
+   makefile "$global_smb_passwd_file"
    readonly SHARE_USERS="`var - SHARE_USERS`"
    readonly SMBUSERS_FILE="`var - SMBUSERS_FILE`"
    for user in $SHARE_USERS
@@ -103,12 +109,7 @@ then
          then
             userpwfile=$CONFIG_DIR/$user"_pw"
          fi
-         /bin/mkdir -p "$(/usr/bin/dirname "$userpwfile")"
-         set +e
-         /bin/touch "$userpwfile"
-         /bin/chown root "$userpwfile"
-         /bin/chmod u=rw,go= "$userpwfile"
-         set -e
+         makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
             user_pw="`var password $user_lc`"
@@ -131,12 +132,7 @@ then
    readonly global_username_map="`var - global_username_map`"
    if [ -n "$global_username_map" ] 
    then
-      /bin/mkdir -p "$(/usr/bin/dirname "$global_username_map")"
-      set +e
-      /bin/touch "$global_username_map"
-      /bin/chown root "$global_username_map"
-      /bin/chmod u=rw,go= "$global_username_map"
-      set -e
+      makefile "$global_username_map"
       if [ ! -s "$global_username_map" ]
       then
          readonly USERNAME_MAP="`var - USERNAME_MAP`"
@@ -148,12 +144,7 @@ then
    fi
    if [ -n "$global_log_file" ] 
    then
-      /bin/mkdir -p "$(/usr/bin/dirname "$global_log_file")"
-      set +e
-      /bin/touch "$global_log_file"
-      /bin/chown root "$global_log_file"
-      /bin/chmod u=rw,go= "$global_log_file"
-      set -e
+      makefile "$global_log_file"
    fi
 fi
 /usr/bin/sudo /usr/sbin/nmbd -D
