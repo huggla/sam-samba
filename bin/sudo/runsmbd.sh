@@ -10,7 +10,7 @@ readonly SUDO_DIR="`/usr/bin/dirname $0`"
 readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
 then
-   IFS=$(/bin/echo -en "\n\b,")
+   IFS=$(echo -en "\n\b,")
    environment=`/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
    /bin/rm "$ENVIRONMENT_FILE"
    var(){
@@ -20,13 +20,13 @@ then
       then
          tmp="$environment"
       else
-         tmp="$(/bin/echo $environment | /usr/bin/awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+         tmp="$(echo $environment | /usr/bin/awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
       fi
       if [ -z "$2" ]
       then
-         /bin/echo "$(/bin/echo $tmp | /usr/bin/awk -F= '{print $1}')"
+         echo "$(echo $tmp | /usr/bin/awk -F= '{print $1}')"
       else
-         /bin/echo "$(/bin/echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
+         echo "$(echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
       fi
       IFS=$IFS_bak
    }
@@ -44,9 +44,9 @@ then
       readonly SHARES="global"$'\n'"`var - SHARES`"
       for share in $SHARES
       do
-         /bin/echo >> "$CONFIG_FILE"
-         /bin/echo "[$share]" >> "$CONFIG_FILE"
-         share_lc="$(/bin/echo $share | /usr/bin/xargs | /usr/bin/tr '[:upper:]' '[:lower:]')"
+         echo >> "$CONFIG_FILE"
+         echo "[$share]" >> "$CONFIG_FILE"
+         share_lc="$(echo $share | /usr/bin/xargs /bin/echo | /usr/bin/tr '[:upper:]' '[:lower:]')"
          share_parameters="`var $share`"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
@@ -58,20 +58,20 @@ then
                then
                   path_value=$param_value
                else
-                  /bin/echo -n "$param" | /usr/bin/tr '_' ' ' >> "$CONFIG_FILE"
-                  /bin/echo "=$param_value" >> "$CONFIG_FILE"
+                  echo -n "$param" | /usr/bin/tr '_' ' ' >> "$CONFIG_FILE"
+                  echo "=$param_value" >> "$CONFIG_FILE"
                fi
             fi
          done
          if [ "$share" != "global" ]
          then
             /bin/mkdir -p "$path_value"
-            /bin/echo "path=$path_value" >> "$CONFIG_FILE"
+            echo "path=$path_value" >> "$CONFIG_FILE"
          fi
       done
    else
       readonly environment
-      readonly global_smb_passwd_file="$(/bin/echo "$(/bin/cat "$CONFIG_FILE" | /usr/bin/awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
+      readonly global_smb_passwd_file="$(echo "$(/bin/cat "$CONFIG_FILE" | /usr/bin/awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
       readonly share_paths="`/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}'`"
       for path in $share_paths
       do
@@ -97,7 +97,7 @@ then
    then
       for user in $SHARE_USERS
       do
-         user_lc=$(/bin/echo $user | /usr/bin/xargs | /usr/bin/tr '[:upper:]' '[:lower:]')
+         user_lc=$(echo $user | /usr/bin/xargs /bin/echo | /usr/bin/tr '[:upper:]' '[:lower:]')
          userpwfile="`var - password_file_$user_lc`"
          if [ -z "$userpwfile" ]
          then
@@ -114,18 +114,18 @@ then
             user_pw="`var password $user_lc`"
             if [ -n "$user_pw" ]
             then
-               /bin/echo $user_pw > "$userpwfile"
+               echo $user_pw > "$userpwfile"
                unset user_pw
             else
-               /bin/echo "No password given for $user."
+               echo "No password given for $user."
                exit 1
             fi
          fi
-         /bin/echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDO_DIR/smbpasswd" -s -a "$user"
+         echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDO_DIR/smbpasswd" -s -a "$user"
          set +e
          /bin/rm -f "$userpwfile"
          set -e
-         /bin/echo "$user = $user" >> "$SMBUSERS_FILE"
+         echo "$user = $user" >> "$SMBUSERS_FILE"
       done
    fi
    readonly global_username_map="`var - global_username_map`"
@@ -142,7 +142,7 @@ then
          readonly USERNAME_MAP="`var - USERNAME_MAP`"
          for user in $USERNAME_MAP
          do
-            /bin/echo "$user" >> "$global_username_map"
+            echo "$user" >> "$global_username_map"
          done
       fi
    fi
