@@ -60,8 +60,6 @@ then
          echo "path=$path_value" >> "$CONFIG_FILE"
       done
    fi
-   
-   
    SHARE_USERS="`var - SHARE_USERS`"
    for user in $SHARE_USERS
    do
@@ -70,13 +68,16 @@ then
          /usr/sbin/adduser -D -H -s /bin/false "$user"
       fi
    done
-      if [ ! -s "$global_smb_passwd_file" ]
+   if [ ! -s "$global_smb_passwd_file" ]
    then
       for user in $SHARE_USERS
       do
          user_lc=$(echo $user | xargs | tr '[:upper:]' '[:lower:]')
-         envvar="password_file_$user_lc"
-         eval "userpwfile=\$$envvar"
+         userpwfile="`var password file_$user_lc`"
+         echo "$userpwfile"
+         exit
+     #    envvar="password_file_$user_lc"
+     #    eval "userpwfile=\$$envvar"
          if [ -z "$userpwfile" ]
          then
             envvar="password_$user_lc"
