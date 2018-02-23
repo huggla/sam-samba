@@ -24,9 +24,9 @@ then
       fi
       if [ -z "$2" ]
       then
-         echo "$(/bin/echo $tmp | /usr/bin/awk -F= '{print $1}')"
+         /bin/echo "$(/bin/echo $tmp | /usr/bin/awk -F= '{print $1}')"
       else
-         echo "$(/bin/echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
+         /bin/echo "$(/bin/echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
       fi
       IFS=$IFS_bak
    }
