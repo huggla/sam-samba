@@ -62,8 +62,11 @@ then
                fi
             fi
          done
-         /bin/mkdir -p "$path_value"
-         echo "path=$path_value" >> "$CONFIG_FILE"
+         if [ "$share" != "global" ]
+         then
+            /bin/mkdir -p "$path_value"
+            echo "path=$path_value" >> "$CONFIG_FILE"
+         fi
       done
    else
       readonly environment
