@@ -40,8 +40,7 @@ ENV global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     global_printing="bsd" \
     global_printcap_name="/dev/null" \
     global_disable_spoolss="yes" \
-    SHARE_USERS="shareuser" \
-    DELETE_PASSWORD_FILES="no"
+    SHARE_USERS="shareuser"
 
 USER ${USER}
 
