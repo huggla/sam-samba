@@ -9,7 +9,7 @@ A secure and minimal docker image with Samba server (share) on Alpine.
 
 ## Pre-set environment variables (can be set at runtime)
 * SHARES_DIR (/shares): Root directory for shares.
-* SHARE_USERS (shareuser): Semi colon separated list of user names that should have access the the shares.
+* SHARE_USERS (shareuser): Comma separated list of user names that should have access the the shares.
 ### Default global configuration
 * global_smb_passwd_file (/shares/smbpasswd): Encrypted passwords for all Samba users.
 * global_dns_proxy (no)
@@ -25,7 +25,7 @@ A secure and minimal docker image with Samba server (share) on Alpine.
 * global_disable_spoolss (yes)
 
 ## Runtime environment variables
-* SHARES: Semi colon separated list of share names. Might also contain homes, printers.
+* SHARES: Comma separated list of share names. Might also contain homes, printers.
 ### Global configuration
 * global_&lt;parameter name with space replaced by underscore&gt;: f ex global_allow_nt4_crypto.
 ### Share configuration
