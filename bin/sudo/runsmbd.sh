@@ -121,7 +121,7 @@ then
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
-            user_pw="$(var - password_$user_lc | head -c -1)"
+            user_pw="$(var - password_$user_lc | /usr/bin/head -c -1)"
             echo "$user_pw"
             if [ -n "$user_pw" ]
             then
