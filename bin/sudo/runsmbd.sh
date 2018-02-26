@@ -52,12 +52,12 @@ then
    then
       readonly global_smb_passwd_file="`var global smb_passwd_file`"
       readonly environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
-      readonly SHARES="global"$'\n'"`var - SHARES`"
+      readonly SHARES="global"$'\n'"$(echo "$(var - SHARES)" | awk '{$1=$1;print}')"
       for share in $SHARES
       do
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
-         share_lc="$(echo $share | /usr/bin/xargs /bin/echo | /usr/bin/tr '[:upper:]' '[:lower:]')"
+         share_lc="$(echo $share | /usr/bin/tr '[:upper:]' '[:lower:]')"
          share_parameters="`var $share`"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
@@ -90,7 +90,7 @@ then
       done
    fi
    makefile "$global_smb_passwd_file"
-   readonly SHARE_USERS="`var - SHARE_USERS`"
+   readonly SHARE_USERS="$(echo "$(var - SHARE_USERS)" | awk '{$1=$1;print}')"
    readonly SMBUSERS_FILE="`var - SMBUSERS_FILE`"
    for user in $SHARE_USERS
    do
@@ -103,7 +103,7 @@ then
    then
       for user in $SHARE_USERS
       do
-         user_lc=$(echo $user | /usr/bin/xargs /bin/echo | /usr/bin/tr '[:upper:]' '[:lower:]')
+         user_lc=$(echo $user | /usr/bin/tr '[:upper:]' '[:lower:]')
          userpwfile="`var - password_file_$user_lc`"
          if [ -z "$userpwfile" ]
          then
