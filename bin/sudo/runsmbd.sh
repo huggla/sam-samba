@@ -10,8 +10,8 @@ readonly SUDO_DIR="`/usr/bin/dirname $0`"
 readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
 then
-   IFS=$(echo -en "\n\b;,")
-   environment=`/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %.=/\n'`
+   IFS=$(echo -en "\n\b,")
+   environment=`/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %,;.=/\n'`
    /bin/rm "$ENVIRONMENT_FILE"
    var(){
       IFS_bak=$IFS
