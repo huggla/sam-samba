@@ -121,11 +121,10 @@ then
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
-            user_pw="$(var - password_$user_lc | /usr/bin/head -c -1)"
-            echo "$user_pw"
+            user_pw="$(var - password_$user_lc)"
             if [ -n "$user_pw" ]
             then
-               echo $user_pw > "$userpwfile"
+               echo -n "$user_pw" > "$userpwfile"
                unset user_pw
             else
                echo "No password given for $user."
