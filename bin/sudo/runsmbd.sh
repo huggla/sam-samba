@@ -122,6 +122,7 @@ then
          if [ ! -s "$userpwfile" ]
          then
             user_pw="$(var - password_$user_lc)"
+            echo "$user_pw"
             if [ -n "$user_pw" ]
             then
                echo $user_pw > "$userpwfile"
@@ -131,6 +132,7 @@ then
                exit 1
             fi
          fi
+         echo | /bin/cat "$userpwfile" - "$userpwfile"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDO_DIR/smbpasswd" -s -a "$user"
          set +e
          /bin/rm -f "$userpwfile"
