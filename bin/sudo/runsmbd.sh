@@ -24,10 +24,11 @@ then
       fi
       if [ -z "$2" ]
       then
-         echo "$(echo $tmp | /usr/bin/awk -F= '{print $1}')"
+         result="$(echo $tmp | /usr/bin/awk -F= '{print $1}')"
       else
-         echo "$(echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
+         result="$(echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
       fi
+      echo $result | /usr/bin/awk '{$1=$1;print}'
       IFS=$IFS_bak
    }
    makedir(){
@@ -52,7 +53,7 @@ then
    then
       readonly global_smb_passwd_file="`var global smb_passwd_file`"
       readonly environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
-      readonly SHARES="global"$'\n'"$(echo "$(var - SHARES)" | /usr/bin/awk '{$1=$1;print}')"
+      readonly SHARES="global"$'\n'"`var - SHARES`"
       for share in $SHARES
       do
          echo >> "$CONFIG_FILE"
@@ -90,7 +91,7 @@ then
       done
    fi
    makefile "$global_smb_passwd_file"
-   readonly SHARE_USERS="$(echo "$(var - SHARE_USERS)" | /usr/bin/awk '{$1=$1;print}')"
+   readonly SHARE_USERS="`var - SHARE_USERS`"
    readonly SMBUSERS_FILE="`var - SMBUSERS_FILE`"
    for user in $SHARE_USERS
    do
