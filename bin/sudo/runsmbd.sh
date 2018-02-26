@@ -6,12 +6,12 @@ set +s
 set +i
 
 readonly PATH=""
-readonly SUDO_DIR="`/usr/bin/dirname $0`"
+readonly SUDO_DIR="$(/usr/bin/dirname $0)"
 readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
 then
    IFS=$(echo -en "\n\b,")
-   environment=`/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %,;.=/\n'`
+   environment="$(/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %,;.=/\n')"
    /bin/rm "$ENVIRONMENT_FILE"
    var(){
       IFS_bak=$IFS
@@ -24,11 +24,10 @@ then
       fi
       if [ -z "$2" ]
       then
-         result="$(echo $tmp | /usr/bin/awk -F= '{print $1}')"
+         echo $tmp | /usr/bin/awk -F= '{print $1}'
       else
-         result="$(echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}')"
+         echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}'
       fi
-      echo $result | /usr/bin/awk '{$1=$1;print}'
       IFS=$IFS_bak
    }
    makedir(){
@@ -46,24 +45,31 @@ then
       /bin/chmod u=rw,go= "$1"
       set -e
    }
-   readonly CONFIG_FILE="`var - CONFIG_FILE`"
-   readonly SHARES_DIR="`var - SHARES_DIR`"
+   trim(){
+      echo "$1" | /usr/bin/awk '{$1=$1;print}'
+   }
+   tolower(){
+      echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
+   }
+   readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+   readonly SHARES_DIR="$(var - SHARES_DIR)"
    makedir "$SHARES_DIR"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      readonly global_smb_passwd_file="`var global smb_passwd_file`"
+      readonly global_smb_passwd_file="$(var global smb_passwd_file)"
       readonly environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
-      readonly SHARES="global"$'\n'"`var - SHARES`"
+      readonly SHARES="global"$'\n'"$(var - SHARES)"
       for share in $SHARES
       do
+         share="$(trim "$share")"
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
-         share_lc="$(echo $share | /usr/bin/tr '[:upper:]' '[:lower:]')"
-         share_parameters="`var $share`"
+         share_lc="$(tolower "$share")"
+         share_parameters="$(var $share)"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
-            param_value="`var $share_lc $param`"
+            param_value="$(var $share_lc $param)"
             if [ -n "$param_value" ]
             then
                if [ "$param" == "path" ]
@@ -84,18 +90,19 @@ then
    else
       readonly environment
       readonly global_smb_passwd_file="$(echo "$(/bin/cat "$CONFIG_FILE" | /usr/bin/awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
-      readonly share_paths="`/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}'`"
+      readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
          /bin/mkdir -p "$path"
       done
    fi
    makefile "$global_smb_passwd_file"
-   readonly SHARE_USERS="`var - SHARE_USERS`"
-   readonly SMBUSERS_FILE="`var - SMBUSERS_FILE`"
+   readonly SHARE_USERS="$(var - SHARE_USERS)"
+   readonly SMBUSERS_FILE="$(var - SMBUSERS_FILE)"
    for user in $SHARE_USERS
    do
-      if [ ! "`/usr/bin/id $user 2>/dev/null`" ]
+      user="$(trim "$user")"
+      if [ ! "$(/usr/bin/id $user 2>/dev/null)" ]
       then
          /usr/sbin/adduser -D -H -s /bin/false "$user"
       fi
@@ -104,8 +111,9 @@ then
    then
       for user in $SHARE_USERS
       do
-         user_lc=$(echo $user | /usr/bin/tr '[:upper:]' '[:lower:]')
-         userpwfile="`var - password_file_$user_lc`"
+         user="$(trim "$user")"
+         user_lc="$(tolower "$user")"
+         userpwfile="$(var - password_file_$user_lc)"
          if [ -z "$userpwfile" ]
          then
             userpwfile=$CONFIG_DIR/$user"_pw"
@@ -113,7 +121,7 @@ then
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
-            user_pw="`var - password_$user_lc`"
+            user_pw="$(var - password_$user_lc)"
             if [ -n "$user_pw" ]
             then
                echo $user_pw > "$userpwfile"
@@ -130,15 +138,16 @@ then
          echo "$user = $user" >> "$SMBUSERS_FILE"
       done
    fi
-   readonly global_username_map="`var - global_username_map`"
+   readonly global_username_map="$(var - global_username_map)"
    if [ -n "$global_username_map" ] 
    then
       makefile "$global_username_map"
       if [ ! -s "$global_username_map" ]
       then
-         readonly USERNAME_MAP="`var - USERNAME_MAP`"
+         readonly USERNAME_MAP="$(var - USERNAME_MAP)"
          for user in $USERNAME_MAP
          do
+            user="$(trim "$user")"
             echo "$user" >> "$global_username_map"
          done
       fi
