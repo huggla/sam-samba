@@ -6,12 +6,12 @@ COPY ./bin ${BIN_DIR}
 
 ENV SUDO_DIR="$BIN_DIR/sudo"
 ENV CONFIG_DIR="/etc/samba"
-ENV SHARES_DIR="/shares" \
-    LOG_DIR="/var/log/samba" \
-    ENVIRONMENT_FILE="$SUDO_DIR/environment" \
+ENV ENVIRONMENT_FILE="$SUDO_DIR/environment" \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
-    USER="samba" \
     SUDOERS_FILE="/etc/sudoers.d/samba" \
+    USER="samba" \
+    SHARES_DIR="/shares" \
+    LOG_DIR="/var/log/samba" \
     SMBUSERS_FILE="$CONFIG_DIR/smbusers"
     
 RUN apk add --no-cache samba-server sudo \
