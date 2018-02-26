@@ -33,15 +33,15 @@ then
    makedir(){
       /bin/mkdir -p "$1"
       set +e
-      /bin/chown root "$1"
-      /bin/chmod u=rwx,go=x "$1"
+      /bin/chown root:$USER "$1"
+      /bin/chmod u=rwx,g=x,o= "$1"
       set -e
    }
    makefile(){
       makedir "$(/usr/bin/dirname "$1")"
       set +e
       /bin/touch "$1"
-      /bin/chown root "$1"
+      /bin/chown root:$USER "$1"
       /bin/chmod u=rw,go= "$1"
       set -e
    }
@@ -52,6 +52,7 @@ then
       echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
    }
    readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+   readonly USER="$(var - USER)"
    readonly SHARES_DIR="$(var - SHARES_DIR)"
    makedir "$SHARES_DIR"
    if [ ! -s "$CONFIG_FILE" ]
