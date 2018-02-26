@@ -116,7 +116,7 @@ then
          userpwfile="$(var - password_file_$user_lc)"
          if [ -z "$userpwfile" ]
          then
-            userpwfile=$CONFIG_DIR/$user"_pw"
+            userpwfile="$SUDO_DIR/$user_pw"
          fi
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
