@@ -11,7 +11,7 @@ readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
 if [ -f "$ENVIRONMENT_FILE" ]
 then
    IFS=$(echo -en "\n\b,")
-   environment="$(/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %,.=/\n')"
+   environment="$(/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %,.=/\012')"
    /bin/rm "$ENVIRONMENT_FILE"
    var(){
       IFS_bak=$IFS
@@ -26,7 +26,7 @@ then
       then
          echo $tmp | /usr/bin/awk -F= '{print $1}'
       else
-         echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{print $2}'
+         echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF}'
       fi
       IFS=$IFS_bak
    }
