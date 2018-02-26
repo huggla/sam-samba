@@ -112,7 +112,7 @@ then
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
-            user_pw="`var password $user_lc`"
+            user_pw="`var - password_$user_lc`"
             if [ -n "$user_pw" ]
             then
                echo $user_pw > "$userpwfile"
