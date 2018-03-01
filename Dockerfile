@@ -37,13 +37,12 @@ RUN addgroup -S $USER \
 
 USER ${USER}
 
-ENV LOG_DIR="/var/log/samba"
 ENV PATH="$BIN_DIR:$SUDOS_DIR" \
     SHARES_DIR="/shares" \
     global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     global_dns_proxy="no" \
     global_username_map="$CONFIG_DIR/usermap.txt" \
-    global_log_file="$LOG_DIR/log.%m" \
+    global_log_file="/var/log/samba/log.%m" \
     global_max_log_size="0" \
     global_syslog="0" \
     global_panic_action="killall smbd" \
