@@ -11,8 +11,6 @@ ENV BUILDTIME_ENVIRONMENT="$SUDOS_DIR/buildtime_environment" \
     CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     SUDOERS_DIR="/etc/sudoers.d" \
     USER="samba" \
-    SHARES_DIR="/shares" \
-    LOG_DIR="/var/log/samba" \
     SMBUSERS_FILE="$CONFIG_DIR/smbusers"
     
 RUN addgroup -S $USER \
@@ -39,7 +37,9 @@ RUN addgroup -S $USER \
 
 USER ${USER}
 
+ENV LOG_DIR="/var/log/samba"
 ENV PATH="$BIN_DIR:$SUDOS_DIR" \
+    SHARES_DIR="/shares" \
     global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     global_dns_proxy="no" \
     global_username_map="$CONFIG_DIR/usermap.txt" \
