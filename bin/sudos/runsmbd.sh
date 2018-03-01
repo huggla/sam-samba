@@ -1,56 +1,59 @@
 #!/bin/sh
-set -e
-set +a
-set +m
-set +s
-set +i
+set -e +a +m +s +i -f
 
-readonly PATH=""
-readonly SUDO_DIR="$(/usr/bin/dirname $0)"
-readonly ENVIRONMENT_FILE="$SUDO_DIR/environment"
-if [ -f "$ENVIRONMENT_FILE" ]
+var(){
+   IFS_bak=$IFS
+   IFS=?
+   if [ "$1" == "-" ]
+   then
+      tmp="$environment"
+   else
+      tmp="$(echo $environment | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+   fi
+   if [ -z "$2" ]
+   then
+      echo $tmp | /usr/bin/awk -F= '{print $1}'
+   else
+      echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}'
+   fi
+   IFS=$IFS_bak
+}
+makedir(){
+   /bin/mkdir -p "$1"
+   set +e
+   /bin/chown root:$USER "$1"
+   /bin/chmod u=rwx,g=x,o= "$1"
+   set -e
+}
+makefile(){
+   makedir "$(/usr/bin/dirname "$1")"
+   set +e
+   /bin/touch "$1"
+   /bin/chown root:$USER "$1"
+   /bin/chmod u=rw,g=r,o= "$1"
+   set -e
+}
+trim(){
+   echo "$1" | /usr/bin/awk '{$1=$1;print}'
+}
+tolower(){
+   echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
+}
+
+readonly SUDOS_DIR="$(/usr/bin/dirname $0)"
+readonly BUILDTIME_ENVIRONMENT="$SUDOS_DIR/buildtime_environment"
+environment="$(/bin/cat "$BUILDTIME_ENVIRONMENT" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
+readonly SUDOERS_FILE="$(var - SUDOERS_FILE)"
+readonly BIN_DIR="$(var - BIN_DIR)"
+readonly USER="$(var - USER)"
+readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+readonly RUNTIME_ENVIRONMENT="$SUDOS_DIR/runtime_environment"
+if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
    IFS=$(echo -en "\n\b,")
-   environment="$(/bin/cat "$ENVIRONMENT_FILE" | /usr/bin/tr -dc '[:alnum:]_ %,.=/\012')"
-   /bin/rm "$ENVIRONMENT_FILE"
-   var(){
-      IFS_bak=$IFS
-      IFS=?
-      if [ "$1" == "-" ]
-      then
-         tmp="$environment"
-      else
-         tmp="$(echo $environment | /usr/bin/awk -v section=$1 -F_ '$1==section{s= ""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
-      fi
-      if [ -z "$2" ]
-      then
-         echo $tmp | /usr/bin/awk -F= '{print $1}'
-      else
-         echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF}'
-      fi
-      IFS=$IFS_bak
-   }
-   makedir(){
-      /bin/mkdir -p "$1"
-      set +e
-      /bin/chown root:$USER "$1"
-      /bin/chmod u=rwx,g=x,o= "$1"
-      set -e
-   }
-   makefile(){
-      makedir "$(/usr/bin/dirname "$1")"
-      set +e
-      /bin/touch "$1"
-      /bin/chown root:$USER "$1"
-      /bin/chmod u=rw,go= "$1"
-      set -e
-   }
-   trim(){
-      echo "$1" | /usr/bin/awk '{$1=$1;print}'
-   }
-   tolower(){
-      echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
-   }
+   readonly environment="$(/bin/cat "$BUILDTIME_ENVIRONMENT" "$RUNTIME_ENVIRONMENT" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
+   /bin/rm "$RUNTIME_ENVIRONMENT"
+
    readonly CONFIG_FILE="$(var - CONFIG_FILE)"
    readonly USER="$(var - USER)"
    readonly SHARES_DIR="$(var - SHARES_DIR)"
