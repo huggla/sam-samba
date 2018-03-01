@@ -51,11 +51,8 @@ readonly RUNTIME_ENVIRONMENT="$SUDOS_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
    IFS=$(echo -en "\n\b,")
-   readonly environment="$(/bin/cat "$BUILDTIME_ENVIRONMENT" "$RUNTIME_ENVIRONMENT" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
+   environment="$(/bin/cat "$BUILDTIME_ENVIRONMENT" "$RUNTIME_ENVIRONMENT" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
    /bin/rm "$RUNTIME_ENVIRONMENT"
-
-   readonly CONFIG_FILE="$(var - CONFIG_FILE)"
-   readonly USER="$(var - USER)"
    readonly SHARES_DIR="$(var - SHARES_DIR)"
    makedir "$SHARES_DIR"
    if [ ! -s "$CONFIG_FILE" ]
@@ -120,7 +117,7 @@ then
          userpwfile="$(var - password_file_$user_lc)"
          if [ -z "$userpwfile" ]
          then
-            userpwfile="$SUDO_DIR/$user_lc"
+            userpwfile="$SUDOS_DIR/$user_lc"
          fi
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
@@ -128,7 +125,7 @@ then
             user_pw="$(var - password_$user_lc)"
             if [ -n "$user_pw" ]
             then
-               echo -n "$user_pw" > "$userpwfile"
+               echo -n "$user_pw" > $userpwfile
                unset user_pw
             else
                echo "No password given for $user."
@@ -161,6 +158,5 @@ then
       makefile "$global_log_file"
    fi
 fi
-/usr/bin/sudo /usr/sbin/nmbd -D
-/usr/bin/sudo /usr/sbin/smbd -FS
-exit 0
+/usr/bin/env -i "$BIN_DIR/sudo" /usr/sbin/nmbd -D
+exec /usr/bin/env -i "$BIN_DIR/sudo" /usr/sbin/smbd -FS
