@@ -132,7 +132,7 @@ then
                exit 1
             fi
          fi
-         echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDO_DIR/smbpasswd" -s -a "$user"
+         echo | /bin/cat "$userpwfile" - "$userpwfile" | "$SUDOS_DIR/smbpasswd" -s -a "$user"
          set +e
          /bin/rm -f "$userpwfile"
          set -e
