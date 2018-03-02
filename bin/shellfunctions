@@ -1,0 +1,38 @@
+var(){
+   IFS_bak=$IFS
+   IFS=?
+   if [ "$1" == "-" ]
+   then
+      tmp="$environment"
+   else
+      tmp="$(echo $environment | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+   fi
+   if [ -z "$2" ]
+   then
+      echo $tmp | /usr/bin/awk -F= '{print $1}'
+   else
+      echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}'
+   fi
+   IFS=$IFS_bak
+}
+makedir(){
+   /bin/mkdir -p "$1"
+   set +e
+   /bin/chown root:$USER "$1"
+   /bin/chmod u=rwx,g=x,o= "$1"
+   set -e
+}
+makefile(){
+   makedir "$(/usr/bin/dirname "$1")"
+   set +e
+   /bin/touch "$1"
+   /bin/chown root:$USER "$1"
+   /bin/chmod u=rw,g=r,o= "$1"
+   set -e
+}
+trim(){
+   echo "$1" | /usr/bin/awk '{$1=$1;print}'
+}
+tolower(){
+   echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
+}
