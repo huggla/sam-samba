@@ -7,7 +7,7 @@ readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
    echo "$SUDO_USER $(/bin/hostname)=(root) NOPASSWD: $BIN_DIR/readruntimeenvironment.sh" > /etc/sudoers.d/docker2
-   /usr/bin/env | /bin/grep "^REV_" > "$RUNTIME_ENVIRONMENT"
+   /usr/bin/env | /bin/grep -i "^rev_" > "$RUNTIME_ENVIRONMENT"
 fi
 if [ -n "$REV_password_$SUDO_USER" ]
 then
