@@ -1,57 +1,58 @@
 FROM alpine:3.7
 
-ENV BIN_DIR="/usr/local/bin"
-
-COPY ./bin ${BIN_DIR}
-
-ENV SUDOS_DIR="$BIN_DIR/sudos"
-ENV CONFIG_DIR="/etc/samba"
-ENV BUILDTIME_ENVIRONMENT="$SUDOS_DIR/buildtime_environment" \
-    RUNTIME_ENVIRONMENT="$SUDOS_DIR/runtime_environment" \
-    CONFIG_FILE="$CONFIG_DIR/smb.conf" \
-    SUDOERS_DIR="/etc/sudoers.d" \
-    USER="samba" \
-    SMBUSERS_FILE="$CONFIG_DIR/smbusers"
+# Buildtime environment variables (can't be modified at runtime).
+ENV BEV_BIN_DIR="/usr/local/bin" \
+    BEV_CONFIG_DIR="/etc/samba"
+ENV BEV_SUDOS_DIR="$BEV_BIN_DIR/sudos"
+ENV BEV_BUILDTIME_ENVIRONMENT="$BEV_SUDOS_DIR/buildtime_environment" \
+    BEV_RUNTIME_ENVIRONMENT="$BEV_SUDOS_DIR/runtime_environment" \
+    BEV_CONFIG_FILE="$BEV_CONFIG_DIR/smb.conf" \
+    BEV_SUDOERS_DIR="/etc/sudoers.d" \
+    BEV_USER="samba" \
+    BEV_SMBUSERS_FILE="$BEV_CONFIG_DIR/smbusers"
     
-RUN addgroup -S $USER \
- && adduser -D -S -H -s /bin/false -u 100 -G $USER $USER \
+COPY ./bin ${BEV_BIN_DIR}
+    
+RUN addgroup -S $BEV_USER \
+ && adduser -D -S -H -s /bin/false -u 100 -G $BEV_USER $BEV_USER \
     && chmod go= /bin /sbin /usr/bin /usr/sbin \
- && env > "$BUILDTIME_ENVIRONMENT" \
- && touch "$RUNTIME_ENVIRONMENT" \
-    && chmod u=rw,go= "$BUILDTIME_ENVIRONMENT" \
-    && chown root:$USER "$RUNTIME_ENVIRONMENT" \
-    && chmod u=rw,g=w,o= "$RUNTIME_ENVIRONMENT" \
+ && env | grep "^BEV_" > "$BEV_BUILDTIME_ENVIRONMENT" \
+ && touch "$BEV_RUNTIME_ENVIRONMENT" \
+    && chmod u=rw,go= "$BEV_BUILDTIME_ENVIRONMENT" \
+    && chown root:$USER "$BEV_RUNTIME_ENVIRONMENT" \
+    && chmod u=rw,g=w,o= "$BEV_RUNTIME_ENVIRONMENT" \
  && apk add --no-cache samba-server sudo \
- && mv "$CONFIG_FILE" "$CONFIG_FILE.old" \
- && touch "$CONFIG_FILE" \
-    && chown root:$USER "$CONFIG_DIR" "$CONFIG_FILE" \
-    && chmod u=rx,g=rx,o= "$CONFIG_DIR" \
-    && chmod u=rw,g=r,o= "$CONFIG_FILE" \
- && ln /usr/bin/sudo "$BIN_DIR/sudo" \
- && echo 'Defaults lecture="never"' > "$SUDOERS_DIR/docker1" \
- && echo "Defaults secure_path = \"$SUDOS_DIR\"" >> "$SUDOERS_DIR/docker1" \
- && echo 'Defaults env_keep = "SUDOERS_DIR DATABASES DATABASE_USERS param_* AUTH_HBA password_*"' > "$SUDOERS_DIR/docker2" \
- && echo "$USER ALL=(root) NOPASSWD: $SUDOS_DIR/readenvironment.sh" >> "$SUDOERS_DIR/docker2" \
-    && chmod u=rw,go= "$SUDOERS_DIR/docker"* "$SMBUSERS_FILE" \
-    && chmod u=rx,go= "$SUDOS_DIR/readenvironment.sh" "$SUDOS_DIR/initsamba.sh"
+ && mv "$BEV_CONFIG_FILE" "$BEV_CONFIG_FILE.old" \
+ && touch "$BEV_CONFIG_FILE" \
+    && chown root:$BEV_USER "$BEV_CONFIG_DIR" "$BEV_CONFIG_FILE" \
+    && chmod u=rx,g=rx,o= "$BEV_CONFIG_DIR" \
+    && chmod u=rw,g=r,o= "$BEV_CONFIG_FILE" \
+ && ln /usr/bin/sudo "$BEV_BIN_DIR/sudo" \
+ && echo 'Defaults lecture="never"' > "$BEV_SUDOERS_DIR/docker1" \
+ && echo "Defaults secure_path = \"$BEV_SUDOS_DIR\"" >> "$BEV_SUDOERS_DIR/docker1" \
+ && echo 'Defaults env_keep = "BEV_SUDOERS_DIR REV_*"' > "$BEV_SUDOERS_DIR/docker2" \
+ && echo "$BEV_USER ALL=(root) NOPASSWD: $BEV_SUDOS_DIR/readenvironment.sh" >> "$BEV_SUDOERS_DIR/docker2" \
+    && chmod u=rw,go= "$BEV_SUDOERS_DIR/docker"* "$BEV_SMBUSERS_FILE" \
+    && chmod u=rx,go= "$BEV_SUDOS_DIR/readenvironment.sh" "$BEV_SUDOS_DIR/initsamba.sh"
 
-USER ${USER}
+USER ${BEV_USER}
 
-ENV PATH="$BIN_DIR:$SUDOS_DIR" \
-    SHARES_DIR="/shares" \
-    global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
-    global_dns_proxy="no" \
-    global_username_map="$CONFIG_DIR/usermap.txt" \
-    global_log_file="/var/log/samba/log.%m" \
-    global_max_log_size="0" \
-    global_syslog="0" \
-    global_panic_action="killall smbd" \
-    global_server_role="standalone" \
-    global_map_to_guest="bad user" \
-    global_load_printers="no" \
-    global_printing="bsd" \
-    global_printcap_name="/dev/null" \
-    global_disable_spoolss="yes" \
-    SHARE_USERS="shareuser"
+# Runtume environment variables.
+ENV PATH="$BEV_BIN_DIR:$BEV_SUDOS_DIR" \
+    REV_SHARES_DIR="/shares" \
+    REV_SHARE_USERS="shareuser" \
+    REV_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
+    REV_global_dns_proxy="no" \
+    REV_global_username_map="$CONFIG_DIR/usermap.txt" \
+    REV_global_log_file="/var/log/samba/log.%m" \
+    REV_global_max_log_size="0" \
+    REV_global_syslog="0" \
+    REV_global_panic_action="killall smbd" \
+    REV_global_server_role="standalone" \
+    REV_global_map_to_guest="bad user" \
+    REV_global_load_printers="no" \
+    REV_global_printing="bsd" \
+    REV_global_printcap_name="/dev/null" \
+    REV_global_disable_spoolss="yes"
 
 CMD ["sudo","readenvironment.sh"]
