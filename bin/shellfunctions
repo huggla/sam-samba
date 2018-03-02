@@ -74,6 +74,8 @@ setvarsfromlist(){
 }
 makealloftypefromlist(){
    set +e
+   IFS_bak=$IFS
+   IFS=?
    matches="$(echo "$2" | /bin/grep -i "_$1$")"
    set -e
    for row in $matches
@@ -81,6 +83,7 @@ makealloftypefromlist(){
       obj="$(echo row | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
       make$1 "$obj"
    done
+   IFS=$IFS_bak
 }
 getparamswithprefixfromlist(){
    echo "$2" | /bin/grep -i "^$1_" | /usr/bin/awk -F_ '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF;}' | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF;}'
