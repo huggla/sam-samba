@@ -4,7 +4,11 @@ set -e +a +m +s +i -f
 readonly BIN_DIR="$(/usr/bin/dirname $0)"
 . "$(/usr/bin/dirname "$0")/shellfunctions
 
-initbevs
+env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
+#setvarsfromlist "$env_list"
+makealloftypefromlist "dir" "$env_list"
+makealloftypefromlist "file" "$env_list"
+
 
 ???readonly SUDOERS_FILE="$(var - SUDOERS_FILE)"???
 ???readonly USER="$(var - USER)"???
@@ -12,27 +16,34 @@ initbevs
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   IFS=$(echo -en "\n\b,")
-   environment="$(/bin/cat "$BUILDTIME_ENVIRONMENT" "$RUNTIME_ENVIRONMENT" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
+   env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
+   #setvarsfromlist "$env_list"
+   makealloftypefromlist "dir" "$env_list"
+   makealloftypefromlist "file" "$env_list"
+   
+   ???IFS=$(echo -en "\n\b,")???
+   
    /bin/rm "$RUNTIME_ENVIRONMENT"
-   readonly SHARES_DIR="$(var - SHARES_DIR)"
-   makedir "$SHARES_DIR"
+
+# Image-specific code
+# --------------------------------------------
+   CONFIG_FILE="$(var "-" "CONFIG_FILE")"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      readonly global_smb_passwd_file="$(var global smb_passwd_file)"
-      readonly environment=$environment$'\n'"global_passdb_backend=smbpasswd:$global_smb_passwd_file"
-      readonly SHARES="global"$'\n'"$(var - SHARES)"
+      readonly global_smb_passwd_file="$(var "global" "smb_passwd_file")"
+      readonly global_passdb_backend="smbpasswd:$global_smb_passwd_file"
+      readonly SHARES="global"$'\n'"$(var "-" "SHARES")"
+      readonly SHARES_DIR="$(var "-" "SHARES_DIR")"
       for share in $SHARES
       do
          share="$(trim "$share")"
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
-         share_lc="$(tolower "$share")"
-         share_parameters="$(var $share)"
+         share_parameters="$(var "$share")"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
-            param_value="$(var $share_lc $param)"
+            param_value="$(eval "\$$param")"
             if [ -n "$param_value" ]
             then
                if [ "$param" == "path" ]
