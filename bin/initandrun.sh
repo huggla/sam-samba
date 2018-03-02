@@ -16,7 +16,7 @@ makealloftypefromlist "file" "$env_list"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   readonly env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
+   readonly env_list="$env_list""$(listfromfile "$BIN_DIR/buildtime_environment")"
    #setvarsfromlist "$env_list"
    makealloftypefromlist "dir" "$env_list"
    makealloftypefromlist "file" "$env_list"
@@ -27,20 +27,20 @@ then
 
 # Image-specific code
 # --------------------------------------------
-   CONFIG_FILE="$(var "-" "CONFIG_FILE")"
+   CONFIG_FILE="$(var - CONFIG_FILE)"
    if [ ! -s "$CONFIG_FILE" ]
    then
-      readonly global_smb_passwd_file="$(var "global" "smb_passwd_file")"
+      readonly global_smb_passwd_file="$(var global smb_passwd_file)"
       readonly global_passdb_backend="smbpasswd:$global_smb_passwd_file"
-      readonly SHARES="global"$'\n'"$(var "-" "SHARES")"
-      readonly SHARES_DIR="$(var "-" "SHARES_DIR")"
+      readonly SHARES="global"$'\n'"$(var - SHARES)"
+      readonly SHARES_DIR="$(var - SHARES_DIR)"
       for share in $SHARES
       do
          share="$(trim "$share")"
          share_lc="$(tolower "$share")"
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
-         share_parameters="$(var "$share_lc")"
+         share_parameters="$(var $share_lc)"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
@@ -127,6 +127,7 @@ then
          done
       fi
    fi
+   readonly global_log_file="$(var - global_log_file)"
    if [ -n "$global_log_file" ] 
    then
       makefile "$global_log_file"
