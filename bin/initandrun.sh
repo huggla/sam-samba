@@ -37,9 +37,10 @@ then
       for share in $SHARES
       do
          share="$(trim "$share")"
+         share_lc="$(tolower "$share")"
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
-         share_parameters="$(var "$share")"
+         share_parameters="$(var "$share_lc")"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
