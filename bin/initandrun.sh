@@ -16,7 +16,7 @@ makealloftypefromlist file $env_list
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   readonly env_list="$env_list""$(listfromfile "$BIN_DIR/buildtime_environment")"
+   readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
    #setvarsfromlist "$env_list"
    makealloftypefromlist "dir" "$env_list"
    makealloftypefromlist "file" "$env_list"
