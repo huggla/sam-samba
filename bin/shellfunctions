@@ -38,7 +38,7 @@ tolower(){
 }
 listfromfile(){
    read list < "$1"
-   echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
+   echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012'
 }
 varfromlist(){
    IFS_bak=$IFS
@@ -83,7 +83,6 @@ makealloftypefromlist(){
 getparamswithprefixfromlist(){
    echo "$2" | /bin/grep -i "^$1_" | /usr/bin/awk -F_ '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF;}' | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF;}'
 }
-getvaluefrom
 initfromfile(){
    readvarsfromfile "$1"
    initfromfiledirs="$(echo "$readvarsfromfileenv" | /bin/grep -i "_dir$")"
