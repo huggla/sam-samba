@@ -37,7 +37,7 @@ tolower(){
    echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
 }
 listfromfile(){
-   read list < "$1"
+   list="$(/bin/cat "$1")"
    echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012'
 }
 varfromlist(){
