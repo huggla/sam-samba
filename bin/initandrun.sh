@@ -16,7 +16,7 @@ makealloftypefromlist "file" "$env_list"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
+   readonly env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
    #setvarsfromlist "$env_list"
    makealloftypefromlist "dir" "$env_list"
    makealloftypefromlist "file" "$env_list"
@@ -44,7 +44,7 @@ then
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
-            param_value="$(eval "\$$param")"
+            param_value="$(var $share_lc $param)"
             if [ -n "$param_value" ]
             then
                if [ "$param" == "path" ]
