@@ -3,9 +3,9 @@ var(){
    IFS=?
    if [ "$1" == "-" ]
    then
-      tmp="$environment"
+      tmp="$env_list"
    else
-      tmp="$(echo $environment | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+      tmp="$(echo $env_list | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
    fi
    if [ -z "$2" ]
    then
@@ -36,11 +36,68 @@ trim(){
 tolower(){
    echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
 }
-readvarsfromfile(){
-   read environment < "$1"
-   environment="$(echo "$environment" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
-   for row in $environment
+listfromfile(){
+   read list < "$1"
+   echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
+}
+varfromlist(){
+   IFS_bak=$IFS
+   IFS=?
+   if [ "$1" == "-" ]
+   then
+      tmp="$3"
+   else
+      if [ -z "$3" ]
+      then
+         $tmp="$2"
+      else
+         $tmp="$3"
+      fi
+      tmp="$(echo $tmp | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+   fi
+   if [ -z "$3" ]
+   then
+      echo $tmp | /usr/bin/awk -F= '{print $1}'
+   else
+      echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}'
+   fi
+   IFS=$IFS_bak
+}
+setvarsfromlist(){
+   IFS_bak=$IFS
+   IFS=$(echo -en "\n\b")
+   for row in $1
    do
       readonly "$row"
    done
+   IFS=$IFS_bak
+}
+makealloftypefromlist(){
+   matches="$(echo "$2" | /bin/grep -i "_$1$")"
+   for row in $matches
+   do
+      obj="$(echo row | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
+      make$1 "$obj"
+   done
+}
+getparamswithprefixfromlist(){
+   echo "$2" | /bin/grep -i "^$1_" | /usr/bin/awk -F_ '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF;}' | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF;}'
+}
+getvaluefrom
+initfromfile(){
+   readvarsfromfile "$1"
+   initfromfiledirs="$(echo "$readvarsfromfileenv" | /bin/grep -i "_dir$")"
+   for dir in $initfromfiledirs
+   do
+      dir="$(echo dir | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
+      makedir "$dir"
+   done
+   unset initfromfiledirs
+   initfromfilefiles="$(echo "$readvarsfromfileenv" | /bin/grep -i "_file$")"
+   for file in $initfromfilefiles
+   do
+      makefile "$file"
+   done
+   unset initfromfilefiles
+   unset readvarsfromfileenv
 }
