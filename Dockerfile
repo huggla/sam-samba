@@ -28,7 +28,7 @@ RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
  && echo 'Defaults lecture="never"' > "$SUDOERS_DIR/docker1" \
  && echo "Defaults secure_path = \"$BIN_DIR\"" >> "$SUDOERS_DIR/docker1" \
  && echo 'Defaults env_keep = "REV_*"' > "$SUDOERS_DIR/docker2" \
- && echo "$NAME ALL=(root) NOPASSWD: $BIN_DIR/readenvironment.sh" >> "$SUDOERS_DIR/docker2" \
+ && echo "$NAME ALL=(root) NOPASSWD: $BIN_DIR/readruntimeenvironment.sh" >> "$SUDOERS_DIR/docker2" \
  && chmod go= /bin /sbin /usr/bin /usr/sbin \
  && chmod u=rw,go= "$BUILDTIME_ENVIRONMENT" \
  && chown root:$USER "$RUNTIME_ENVIRONMENT" \
@@ -37,7 +37,7 @@ RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
  && chmod u=rx,g=rx,o= "$CONFIG_DIR" \
  && chmod u=rw,g=r,o= "$BEV_CONFIG_FILE" \
  && chmod u=rw,go= "$SUDOERS_DIR/docker"* \
- && chmod u=rx,go= "$BIN_DIR/readenvironment.sh" "$BIN_DIR/init$name.sh"
+ && chmod u=rx,go= "$BIN_DIR/readruntimeenvironment.sh" "$BIN_DIR/initandrun.sh"
 
 # Image-specific RUN commands.
 # ---------------------------------------------------------------------
@@ -68,4 +68,4 @@ ENV REV_SHARES_DIR="/shares" \
 
 ENV PATH="$BIN_DIR"
 
-CMD ["sudo","readenvironment.sh"]
+CMD ["sudo","readruntimeenvironment.sh"]
