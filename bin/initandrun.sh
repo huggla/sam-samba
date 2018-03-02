@@ -2,7 +2,7 @@
 set -e +a +m +s +i -f
 
 readonly BIN_DIR="$(/usr/bin/dirname $0)"
-. "$(/usr/bin/dirname "$0")/shellfunctions
+. "$(/usr/bin/dirname "$0")/shellfunctions"
 
 env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
 #setvarsfromlist "$env_list"
