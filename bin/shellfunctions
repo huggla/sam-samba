@@ -36,11 +36,11 @@ trim(){
 tolower(){
    echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
 }
-initbevs(){
-   read environment < "$BIN_DIR/buildtime_environment"
+readvarsfromfile(){
+   read environment < "$1"
    environment="$(echo "$environment" | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012')"
-   for bev in $environment
+   for row in $environment
    do
-      readonly $bev
+      readonly "$row"
    done
 }
