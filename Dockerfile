@@ -28,18 +28,17 @@ RUN addgroup -S $BEV_USER \
     && chmod u=rx,g=rx,o= "$BEV_CONFIG_DIR" \
     && chmod u=rw,g=r,o= "$BEV_CONFIG_FILE" \
  && ln /usr/bin/sudo "$BEV_BIN_DIR/sudo" \
- && echo 'Defaults lecture="never"' > "$BEV_SUDOERS_DIR/docker1" \
- && echo "Defaults secure_path = \"$BEV_SUDOS_DIR\"" >> "$BEV_SUDOERS_DIR/docker1" \
- && echo 'Defaults env_keep = "BEV_SUDOERS_DIR REV_*"' > "$BEV_SUDOERS_DIR/docker2" \
- && echo "$BEV_USER ALL=(root) NOPASSWD: $BEV_SUDOS_DIR/readenvironment.sh" >> "$BEV_SUDOERS_DIR/docker2" \
-    && chmod u=rw,go= "$BEV_SUDOERS_DIR/docker"* "$BEV_SMBUSERS_FILE" \
+ && echo 'Defaults lecture="never"' > /etc/sudoers.d/docker1 \
+ && echo "Defaults secure_path = \"$BEV_SUDOS_DIR\"" >> /etc/sudoers.d/docker1 \
+ && echo 'Defaults env_keep = "REV_*"' > /etc/sudoers.d/docker2 \
+ && echo "$BEV_USER ALL=(root) NOPASSWD: $BEV_SUDOS_DIR/readenvironment.sh" >> /etc/sudoers.d/docker2 \
+    && chmod u=rw,go= /etc/sudoers.d/docker? "$BEV_SMBUSERS_FILE" \
     && chmod u=rx,go= "$BEV_SUDOS_DIR/readenvironment.sh" "$BEV_SUDOS_DIR/initsamba.sh"
 
 USER ${BEV_USER}
 
 # Runtume environment variables.
-ENV PATH="$BEV_BIN_DIR:$BEV_SUDOS_DIR" \
-    REV_SHARES_DIR="/shares" \
+ENV REV_SHARES_DIR="/shares" \
     REV_SHARE_USERS="shareuser" \
     REV_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     REV_global_dns_proxy="no" \
@@ -54,5 +53,7 @@ ENV PATH="$BEV_BIN_DIR:$BEV_SUDOS_DIR" \
     REV_global_printing="bsd" \
     REV_global_printcap_name="/dev/null" \
     REV_global_disable_spoolss="yes"
+
+ENV PATH="$BEV_BIN_DIR:$BEV_SUDOS_DIR"
 
 CMD ["sudo","readenvironment.sh"]
