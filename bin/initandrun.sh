@@ -6,8 +6,8 @@ readonly BIN_DIR="$(/usr/bin/dirname $0)"
 
 env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
 #setvarsfromlist "$env_list"
-makealloftypefromlist "dir" "$env_list"
-makealloftypefromlist "file" "$env_list"
+makealloftypefromlist dir $env_list
+makealloftypefromlist file $env_list
 
 
 #???readonly SUDOERS_FILE="$(var - SUDOERS_FILE)"???
