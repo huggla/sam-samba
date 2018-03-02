@@ -7,7 +7,6 @@ ENV BEV_SUDOS_DIR="$BEV_BIN_DIR/sudos"
 ENV BEV_BUILDTIME_ENVIRONMENT="$BEV_SUDOS_DIR/buildtime_environment" \
     BEV_RUNTIME_ENVIRONMENT="$BEV_SUDOS_DIR/runtime_environment" \
     BEV_CONFIG_FILE="$BEV_CONFIG_DIR/smb.conf" \
-    BEV_SUDOERS_DIR="/etc/sudoers.d" \
     BEV_USER="samba" \
     BEV_SMBUSERS_FILE="$BEV_CONFIG_DIR/smbusers"
     
