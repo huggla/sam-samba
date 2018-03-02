@@ -10,8 +10,8 @@ makealloftypefromlist "dir" "$env_list"
 makealloftypefromlist "file" "$env_list"
 
 
-???readonly SUDOERS_FILE="$(var - SUDOERS_FILE)"???
-???readonly USER="$(var - USER)"???
+#???readonly SUDOERS_FILE="$(var - SUDOERS_FILE)"???
+#???readonly USER="$(var - USER)"???
 
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
@@ -21,7 +21,7 @@ then
    makealloftypefromlist "dir" "$env_list"
    makealloftypefromlist "file" "$env_list"
    
-   ???IFS=$(echo -en "\n\b,")???
+#   ???IFS=$(echo -en "\n\b,")???
    
    /bin/rm "$RUNTIME_ENVIRONMENT"
 
