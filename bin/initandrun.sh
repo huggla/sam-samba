@@ -91,7 +91,7 @@ then
          userpwfile="$(var - password_file_$user_lc)"
          if [ -z "$userpwfile" ]
          then
-            userpwfile="$SUDOS_DIR/$user_lc"
+            userpwfile="$BIN_DIR/$user_lc"
          fi
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
