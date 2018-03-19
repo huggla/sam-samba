@@ -98,7 +98,10 @@ then
          set +e
          /bin/rm -f "$userpwfile"
          set -e
+         
+         echo "debug1"
          echo "$user = $user" >> "$SMBUSERS_FILE"
+         echo "debug2"
       done
    fi
    readonly global_username_map="$(var - global_username_map)"
