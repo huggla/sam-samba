@@ -34,7 +34,7 @@ RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
  && chown root:$USER "$RUNTIME_ENVIRONMENT" \
  && chmod u=rw,g=w,o= "$RUNTIME_ENVIRONMENT" \
  && chown root:$NAME "$CONFIG_DIR" "$BEV_CONFIG_FILE" \
- && chmod u=rx,g=rx,o= "$CONFIG_DIR" \
+ && chmod ug=rx,o= "$CONFIG_DIR" \
  && chmod u=rw,g=r,o= "$BEV_CONFIG_FILE" \
  && chmod u=rw,go= "$SUDOERS_DIR/docker"* \
  && chmod u=rx,go= "$BIN_DIR/readruntimeenvironment.sh" "$BIN_DIR/initandrun.sh"
@@ -42,7 +42,8 @@ RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
 # Image-specific RUN commands.
 # ---------------------------------------------------------------------
 RUN apk add --no-cache samba-server \
- && mv "$BEV_CONFIG_FILE" "$BEV_CONFIG_FILE.old"
+ && mv "$BEV_CONFIG_FILE" "$BEV_CONFIG_FILE.old" \
+ && chmod u=rx,go= "$BIN_DIR/smbpasswd"
 # ---------------------------------------------------------------------
     
 USER ${NAME}
