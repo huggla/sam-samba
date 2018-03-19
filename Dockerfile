@@ -14,7 +14,7 @@ ENV BUILDTIME_ENVIRONMENT="$BIN_DIR/buildtime_environment" \
 # Image-specific buildtime environment variables, prefixed with "BEV_".
 # ---------------------------------------------------------------------
 ENV BEV_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
-    SMBUSERS_FILE="$CONFIG_DIR/smbusers"
+    BEV_SMBUSERS_FILE="$CONFIG_DIR/smbusers"
 # ---------------------------------------------------------------------
 
 COPY ./bin ${BIN_DIR}
