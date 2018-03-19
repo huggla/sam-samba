@@ -80,7 +80,7 @@ makealloftypefromlist(){
    set -e
    for row in $matches
    do
-      obj="$(echo row | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
+      obj="$(echo "$row" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
       make$1 "$obj"
    done
    IFS=$IFS_bak
