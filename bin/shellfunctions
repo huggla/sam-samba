@@ -76,7 +76,7 @@ makealloftypefromlist(){
    set +e
    IFS_bak=$IFS
    IFS=?
-   matches="$(echo "$2" | /bin/grep -i "_$1$")"
+   matches="$(echo "$2" | /bin/grep -i "_$1 *=")"
    set -e
    for row in $matches
    do
