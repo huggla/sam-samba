@@ -94,7 +94,7 @@ then
          then
             userpwfile="$BIN_DIR/$user_lc"
          fi
-         
+         echo "$userpwfile"
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
@@ -117,6 +117,7 @@ then
       done
    fi
    readonly global_username_map="$(var - global_username_map)"
+   echo "$global_username_map"
    if [ -n "$global_username_map" ] 
    then
       makefile "$global_username_map"
@@ -130,6 +131,7 @@ then
          done
       fi
    fi
+   echo "$global_log_file"
    readonly global_log_file="$(var - global_log_file)"
    if [ -n "$global_log_file" ] 
    then
