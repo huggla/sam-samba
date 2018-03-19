@@ -58,13 +58,14 @@ then
          done
          if [ "$share" != "global" ]
          then
+         echo "$path_value"
             /bin/mkdir -p "$path_value"
             echo "path=$path_value" >> "$CONFIG_FILE"
          fi
       done
    else
-      readonly environment
-      readonly global_smb_passwd_file="$(echo "$(/bin/cat "$CONFIG_FILE" | /usr/bin/awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
+  #    readonly environment
+  #    readonly global_smb_passwd_file="$(echo "$(/bin/cat "$CONFIG_FILE" | /usr/bin/awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
       readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
@@ -93,6 +94,7 @@ then
          then
             userpwfile="$BIN_DIR/$user_lc"
          fi
+         
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
@@ -106,6 +108,7 @@ then
                exit 1
             fi
          fi
+         echo "$userpwfile"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$BIN_DIR/smbpasswd" -s -a "$user"
          set +e
          /bin/rm -f "$userpwfile"
