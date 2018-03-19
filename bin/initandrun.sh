@@ -60,6 +60,7 @@ then
    fi
    readonly SHARE_USERS="$(var - SHARE_USERS)"
    readonly SMBUSERS_FILE="$(var - SMBUSERS_FILE)"
+   echo "$SMBUSERS_FILE"
    for user in $SHARE_USERS
    do
       user="$(trim "$user")"
@@ -100,6 +101,8 @@ then
          set -e
          
          echo "debug1"
+         echo "$user"
+         echo "$SMBUSERS_FILE"
          echo "$user = $user" >> "$SMBUSERS_FILE"
          echo "debug2"
       done
