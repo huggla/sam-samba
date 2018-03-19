@@ -71,7 +71,7 @@ then
          /bin/mkdir -p "$path"
       done
    fi
-   makefile "$global_smb_passwd_file"
+#  makefile "$global_smb_passwd_file"
    readonly SHARE_USERS="$(var - SHARE_USERS)"
    readonly SMBUSERS_FILE="$(var - SMBUSERS_FILE)"
    for user in $SHARE_USERS
