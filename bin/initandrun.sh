@@ -3,13 +3,11 @@ set -e +a +m +s +i -f
 
 readonly BIN_DIR="$(/usr/bin/dirname $0)"
 . "$(/usr/bin/dirname "$0")/shellfunctions"
-
 env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
    readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
-   echo "$env_list"
    makealloftypefromlist dir $env_list
    makealloftypefromlist file $env_list
    /bin/rm "$RUNTIME_ENVIRONMENT"
@@ -47,7 +45,6 @@ then
          done
          if [ "$share" != "global" ]
          then
-         echo "$path_value"
             /bin/mkdir -p "$path_value"
             echo "path=$path_value" >> "$CONFIG_FILE"
          fi
@@ -61,7 +58,6 @@ then
    fi
    readonly SHARE_USERS="$(var - SHARE_USERS)"
    readonly SMBUSERS_FILE="$(var - SMBUSERS_FILE)"
-   echo "$SMBUSERS_FILE"
    for user in $SHARE_USERS
    do
       user="$(trim "$user")"
@@ -81,7 +77,6 @@ then
          then
             userpwfile="$BIN_DIR/$user_lc"
          fi
-         echo "$userpwfile"
          makefile "$userpwfile"
          if [ ! -s "$userpwfile" ]
          then
@@ -95,21 +90,14 @@ then
                exit 1
             fi
          fi
-         echo "$userpwfile"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$BIN_DIR/smbpasswd" -s -a "$user"
          set +e
          /bin/rm -f "$userpwfile"
          set -e
-         
-         echo "debug1"
-         echo "$user"
-         echo "$SMBUSERS_FILE"
          echo "$user = $user" >> "$SMBUSERS_FILE"
-         echo "debug2"
       done
    fi
    readonly global_username_map="$(var - global_username_map)"
-   echo "$global_username_map"
    if [ -n "$global_username_map" ] 
    then
       makefile "$global_username_map"
@@ -123,7 +111,6 @@ then
          done
       fi
    fi
-   echo "$global_log_file"
    readonly global_log_file="$(var - global_log_file)"
    if [ -n "$global_log_file" ] 
    then
