@@ -5,24 +5,12 @@ readonly BIN_DIR="$(/usr/bin/dirname $0)"
 . "$(/usr/bin/dirname "$0")/shellfunctions"
 
 env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
-#setvarsfromlist "$env_list"
-#makealloftypefromlist dir $env_list
-#makealloftypefromlist file $env_list
-
-
-#???readonly SUDOERS_FILE="$(var - SUDOERS_FILE)"???
-#???readonly USER="$(var - USER)"???
-
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
    readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
-   #setvarsfromlist "$env_list"
    makealloftypefromlist dir $env_list
    makealloftypefromlist file $env_list
-   
-#   ???IFS=$(echo -en "\n\b,")???
-   
    /bin/rm "$RUNTIME_ENVIRONMENT"
 
 # Image-specific code
@@ -64,15 +52,12 @@ then
          fi
       done
    else
-  #    readonly environment
-  #    readonly global_smb_passwd_file="$(echo "$(/bin/cat "$CONFIG_FILE" | /usr/bin/awk -v param="smb passwd file" -F= '$1==param{print $2}')")"
       readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
          /bin/mkdir -p "$path"
       done
    fi
-#  makefile "$global_smb_passwd_file"
    readonly SHARE_USERS="$(var - SHARE_USERS)"
    readonly SMBUSERS_FILE="$(var - SMBUSERS_FILE)"
    for user in $SHARE_USERS
