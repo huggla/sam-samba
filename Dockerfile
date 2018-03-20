@@ -11,7 +11,7 @@ ENV BIN_DIR="/usr/local/bin" \
 ENV BUILDTIME_ENVIRONMENT="$BIN_DIR/buildtime_environment" \
     RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 
-# Image-specific buildtime environment variables, prefixed with "BEV_".
+# Image-specific BEV_CONFIG_FILE variable and other buildtime environment variables, prefixed with "BEV_".
 # ---------------------------------------------------------------------
 ENV BEV_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     BEV_SMBUSERS_FILE="$CONFIG_DIR/smbusers"
