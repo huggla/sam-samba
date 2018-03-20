@@ -1,13 +1,13 @@
 FROM alpine:3.7
 
-# Image-specific NAME variable.
+# Image-specific BEV_NAME variable.
 # ---------------------------------------------------------------------
-ENV NAME="samba"
+ENV BEV_NAME="samba"
 # ---------------------------------------------------------------------
 
 ENV BIN_DIR="/usr/local/bin" \
     SUDOERS_DIR="/etc/sudoers.d" \
-    CONFIG_DIR="/etc/$NAME"
+    CONFIG_DIR="/etc/$BEV_NAME"
 ENV BUILDTIME_ENVIRONMENT="$BIN_DIR/buildtime_environment" \
     RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 
@@ -20,19 +20,19 @@ ENV BEV_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
 COPY ./bin ${BIN_DIR}
     
 RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
- && addgroup -S $NAME \
- && adduser -D -S -H -s /bin/false -u 100 -G $NAME $NAME \
+ && addgroup -S $BEV_NAME \
+ && adduser -D -S -H -s /bin/false -u 100 -G $BEV_NAME $BEV_NAME \
  && mkdir -p "$CONFIG_DIR" \
  && touch "$RUNTIME_ENVIRONMENT" \
  && apk add --no-cache sudo \
  && echo 'Defaults lecture="never"' > "$SUDOERS_DIR/docker1" \
  && echo "Defaults secure_path = \"$BIN_DIR\"" >> "$SUDOERS_DIR/docker1" \
  && echo 'Defaults env_keep = "REV_*"' > "$SUDOERS_DIR/docker2" \
- && echo "$NAME ALL=(root) NOPASSWD: $BIN_DIR/start" >> "$SUDOERS_DIR/docker2" \
+ && echo "$BEV_NAME ALL=(root) NOPASSWD: $BIN_DIR/start" >> "$SUDOERS_DIR/docker2" \
  && chmod go= /bin /sbin /usr/bin /usr/sbin \
  && chmod u=rx,go= "$BIN_DIR/"* \
  && chmod u=rw,go= "$BUILDTIME_ENVIRONMENT" \
- && chown root:$USER "$RUNTIME_ENVIRONMENT" \
+ && chown root:$BEV_NAME "$RUNTIME_ENVIRONMENT" \
  && chmod u=rw,g=w,o= "$RUNTIME_ENVIRONMENT" \
  && chmod u=rw,go= "$SUDOERS_DIR/docker"* \
  && ln /usr/bin/sudo "$BIN_DIR/sudo"
@@ -43,7 +43,7 @@ RUN apk add --no-cache samba-server \
  && mv "$BEV_CONFIG_FILE" "$BEV_CONFIG_FILE.old"
 # ---------------------------------------------------------------------
     
-USER ${NAME}
+USER ${BEV_NAME}
 
 # Image-specific runtime environment variables, prefixed with "REV_".
 # ---------------------------------------------------------------------
