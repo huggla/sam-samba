@@ -111,11 +111,6 @@ then
          done
       fi
    fi
-   readonly global_log_file="$(var - global_log_file)"
-   if [ -n "$global_log_file" ] 
-   then
-      makefile "$global_log_file"
-   fi
 fi
 /usr/bin/env -i "$BIN_DIR/sudo" /usr/sbin/nmbd -D
 exec /usr/bin/env -i "$BIN_DIR/sudo" /usr/sbin/smbd -FS
