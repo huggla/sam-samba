@@ -19,10 +19,14 @@ then
    if [ ! -s "$CONFIG_FILE" ]
    then
       readonly global_smb_passwd_file="$(var global smb_passwd_file)"
-      readonly global_passdb_backend="$(var global passdb_backend)"
-      if [ -n "$global_smb_passwd_file" ] && [ -z "$global_passdb_backend" ]
+      if [ -n "$global_smb_passwd_file" ]
       then
-         env_list="global_passdb_backend=smbpasswd:$global_smb_passwd_file"$'\n'"$env_list"
+         makefile "$global_smb_passwd_file"
+         readonly global_passdb_backend="$(var global passdb_backend)"
+         if [ -z "$global_passdb_backend" ]
+         then
+            env_list="global_passdb_backend=smbpasswd:$global_smb_passwd_file"$'\n'"$env_list"
+         fi
       fi
       readonly env_list
       readonly SHARES="global"$'\n'"$(var - SHARES)"
