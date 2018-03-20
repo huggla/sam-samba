@@ -28,6 +28,10 @@ then
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
          share_parameters="$(var $share_lc)"
+         if [ "$share" == "global" ]
+         then
+            share_parameters="passdb_backend=$global_passdb_backend"$'\n'"$share_parameters"
+         fi
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
