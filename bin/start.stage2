@@ -32,6 +32,7 @@ then
          if [ "$share" == "global" ]
          then
             share_parameters="passdb_backend"$'\n'"$share_parameters"
+            echo "$share_parameters"
          fi
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
