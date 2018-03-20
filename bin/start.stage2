@@ -7,7 +7,7 @@ env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
+   env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
    makealloftypefromlist dir $env_list
    makealloftypefromlist file $env_list
    /bin/rm "$RUNTIME_ENVIRONMENT"
@@ -19,7 +19,12 @@ then
    if [ ! -s "$CONFIG_FILE" ]
    then
       readonly global_smb_passwd_file="$(var global smb_passwd_file)"
-      readonly global_passdb_backend="smbpasswd:$global_smb_passwd_file"
+      readonly global_passdb_backend="$(var global passdb_backend)"
+      if [ -n "$global_smb_passwd_file" ] && [ -z "$global_passdb_backend" ]
+      then
+         env_list="global_passdb_backend=smbpasswd:$global_smb_passwd_file"$'\n'"$env_list"
+      fi
+      readonly env_list
       readonly SHARES="global"$'\n'"$(var - SHARES)"
       readonly SHARES_DIR="$(var - SHARES_DIR)"
       for share in $SHARES
@@ -29,11 +34,6 @@ then
          echo >> "$CONFIG_FILE"
          echo "[$share]" >> "$CONFIG_FILE"
          share_parameters="$(var $share_lc)"
-         if [ "$share" == "global" ]
-         then
-            share_parameters="passdb_backend"$'\n'"$share_parameters"
-            echo "$share_parameters"
-         fi
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
          do
