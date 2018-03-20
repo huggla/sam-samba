@@ -23,28 +23,24 @@ RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
  && addgroup -S $NAME \
  && adduser -D -S -H -s /bin/false -u 100 -G $NAME $NAME \
  && mkdir -p "$CONFIG_DIR" \
- && touch "$RUNTIME_ENVIRONMENT" "$BEV_CONFIG_FILE" \
+ && touch "$RUNTIME_ENVIRONMENT" \
  && apk add --no-cache sudo \
- && ln /usr/bin/sudo "$BIN_DIR/sudo" \
  && echo 'Defaults lecture="never"' > "$SUDOERS_DIR/docker1" \
  && echo "Defaults secure_path = \"$BIN_DIR\"" >> "$SUDOERS_DIR/docker1" \
  && echo 'Defaults env_keep = "REV_*"' > "$SUDOERS_DIR/docker2" \
- && echo "$NAME ALL=(root) NOPASSWD: $BIN_DIR/readruntimeenvironment.sh" >> "$SUDOERS_DIR/docker2" \
+ && echo "$NAME ALL=(root) NOPASSWD: $BIN_DIR/start" >> "$SUDOERS_DIR/docker2" \
  && chmod go= /bin /sbin /usr/bin /usr/sbin \
+ && chmod u=rx,go= "$BIN_DIR/"* \
  && chmod u=rw,go= "$BUILDTIME_ENVIRONMENT" \
  && chown root:$USER "$RUNTIME_ENVIRONMENT" \
  && chmod u=rw,g=w,o= "$RUNTIME_ENVIRONMENT" \
- && chown root:$NAME "$CONFIG_DIR" "$BEV_CONFIG_FILE" \
- && chmod ug=rx,o= "$CONFIG_DIR" \
- && chmod u=rw,g=r,o= "$BEV_CONFIG_FILE" \
  && chmod u=rw,go= "$SUDOERS_DIR/docker"* \
- && chmod u=rx,go= "$BIN_DIR/readruntimeenvironment.sh" "$BIN_DIR/initandrun.sh"
+ && ln /usr/bin/sudo "$BIN_DIR/sudo"
 
 # Image-specific RUN commands.
 # ---------------------------------------------------------------------
 RUN apk add --no-cache samba-server \
- && mv "$BEV_CONFIG_FILE" "$BEV_CONFIG_FILE.old" \
- && chmod u=rx,go= "$BIN_DIR/smbpasswd"
+ && mv "$BEV_CONFIG_FILE" "$BEV_CONFIG_FILE.old"
 # ---------------------------------------------------------------------
     
 USER ${NAME}
@@ -70,4 +66,4 @@ ENV REV_SHARES_DIR="/shares" \
 
 ENV PATH="$BIN_DIR"
 
-CMD ["sudo","readruntimeenvironment.sh"]
+CMD ["sudo","start"]
