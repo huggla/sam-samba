@@ -18,7 +18,7 @@ var(){
 makedir(){
    /bin/mkdir -p "$1"
    set +e
-   /bin/chown root:$USER "$1"
+   /bin/chown root:$NAME "$1"
    /bin/chmod u=rwx,g=x,o= "$1"
    set -e
 }
@@ -26,7 +26,7 @@ makefile(){
    makedir "$(/usr/bin/dirname "$1")"
    set +e
    /bin/touch "$1"
-   /bin/chown root:$USER "$1"
+   /bin/chown root:$NAME "$1"
    /bin/chmod u=rw,g=r,o= "$1"
    set -e
 }
