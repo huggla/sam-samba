@@ -54,6 +54,7 @@ makealloftypefromlist(){
    IFS=$IFS_bak
 }
 makepwfile(){
+   user="$(trim "$user")"
    user_lc="$(tolower "$user")"
    pwfile="$(var - password_file_$user_lc)"
    if [ -z "$pwfile" ]
@@ -73,4 +74,9 @@ makepwfile(){
          exit 1
       fi
    fi
+}
+deletepwfile(){
+   set +e
+   /bin/rm -f "$pwfile"
+   set -e
 }
