@@ -82,7 +82,7 @@ then
       for user in $SHARE_USERS
       do
          user="$(trim "$user")"
-         userpwfile="$(makepwfile $user)"
+         userpwfile="$(makepwfile)"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$BIN_DIR/smbpasswd" -s -a "$user"
          trydeletefile "$userpwfile"
          echo "$user = $user" >> "$SMBUSERS_FILE"
