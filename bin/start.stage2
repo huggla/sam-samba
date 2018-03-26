@@ -82,29 +82,9 @@ then
       for user in $SHARE_USERS
       do
          user="$(trim "$user")"
-         user_lc="$(tolower "$user")"
-         userpwfile="$(var - password_file_$user_lc)"
-         if [ -z "$userpwfile" ]
-         then
-            userpwfile="$BIN_DIR/$user_lc"
-         fi
-         makefile "$userpwfile"
-         if [ ! -s "$userpwfile" ]
-         then
-            user_pw="$(var - password_$user_lc)"
-            if [ -n "$user_pw" ]
-            then
-               echo -n "$user_pw" > $userpwfile
-               unset user_pw
-            else
-               echo "No password given for $user."
-               exit 1
-            fi
-         fi
+         userpwfile="$(makepwfile $user)"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$BIN_DIR/smbpasswd" -s -a "$user"
-         set +e
-         /bin/rm -f "$userpwfile"
-         set -e
+         trydeletefile "$userpwfile"
          echo "$user = $user" >> "$SMBUSERS_FILE"
       done
    fi
