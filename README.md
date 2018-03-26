@@ -35,7 +35,7 @@ A secure and minimal docker image with Samba server (share) on Alpine.
 * REV_&lt;share name from SHARES&gt;_&lt;parameter name with space replaced by underscore&gt;: f ex public_guest_ok.
 ### User configuration
 * REV_password&#95;file_&lt;user name from USERS&gt;: Path to file containing password for named user. **Note! This file will be deleted unless write protected.**
-* REV_password_&lt;user name from USERS&gt;: Password for named user. Less secure!
+* REV_password_&lt;user name from USERS&gt;: Password for named user. Slightly less secure.
 
 ## Capabilities
 Can drop all but CHOWN, DAC_OVERRIDE, NET_BIND_SERVICE, SETGID and SETUID.
