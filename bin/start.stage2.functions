@@ -1,6 +1,6 @@
 var(){
-   IFS_bak=$IFS
-   IFS=?
+   local IFS=?
+   local tmp
    if [ "$1" == "-" ]
    then
       tmp="$env_list"
@@ -13,7 +13,6 @@ var(){
    else
       echo $tmp | /usr/bin/awk -v param=$2 -F= '$1==param{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}'
    fi
-   IFS=$IFS_bak
 }
 makedir(){
    /bin/mkdir -p "$1"
@@ -42,25 +41,23 @@ tolower(){
    echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
 }
 listfromfile(){
-   list="$(/bin/cat "$1")"
+   local list="$(/bin/cat "$1")"
    echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012'
 }
 makealloftypefromlist(){
    set +e
-   IFS_bak=$IFS
-   IFS=?
-   matches="$(echo "$2" | /bin/grep -i "_$1 *=")"
+   local IFS=?
+   local matches="$(echo "$2" | /bin/grep -i "_$1 *=")"
    set -e
    for row in $matches
    do
-      obj="$(echo "$row" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
+      local obj="$(echo "$row" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
       make$1 "$obj"
    done
-   IFS=$IFS_bak
 }
 makepwfile(){
-   user_lc="$(tolower "$1")"
-   pwfile="$(var - password_file_$user_lc)"
+   local user_lc="$(tolower "$user")"
+   local pwfile="$(var - password_file_$user_lc)"
    if [ -z "$pwfile" ]
    then
       pwfile="$BIN_DIR/$user_lc"
@@ -68,13 +65,13 @@ makepwfile(){
    makefile "$pwfile"
    if [ ! -s "$pwfile" ]
    then
-      user_pw="$(var - password_$user_lc)"
+      local user_pw="$(var - password_$user_lc)"
       if [ -n "$user_pw" ]
       then
          echo -n "$user_pw" > $pwfile
          unset user_pw
       else
-         echo "No password given for $1."
+         echo "No password given for $user."
          exit 1
       fi
    fi
