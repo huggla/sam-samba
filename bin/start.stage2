@@ -5,18 +5,19 @@ readonly BIN_DIR="$(/usr/bin/dirname $0)"
 . "$(/usr/bin/dirname "$0")/start.stage2.functions"
 env_list="$(listfromfile "$BIN_DIR/buildtime_environment")"
 readonly NAME="$(var - NAME)"
+readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
+   readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
    makealloftypefromlist dir $env_list
+   makealloftypefromlist directory $env_list
    makealloftypefromlist file $env_list
    /bin/rm "$RUNTIME_ENVIRONMENT"
 
 # Image-specific code
 # --------------------------------------------
    IFS="${IFS},"
-   CONFIG_FILE="$(var - CONFIG_FILE)"
    if [ ! -s "$CONFIG_FILE" ]
    then
       readonly global_smb_passwd_file="$(var global smb_passwd_file)"
