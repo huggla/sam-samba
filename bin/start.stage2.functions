@@ -53,3 +53,24 @@ makealloftypefromlist(){
    done
    IFS=$IFS_bak
 }
+makepwfile(){
+   user_lc="$(tolower "$user")"
+   pwfile="$(var - password_file_$user_lc)"
+   if [ -z "$pwfile" ]
+   then
+      pwfile="$BIN_DIR/$user_lc"
+   fi
+   makefile "$pwfile"
+   if [ ! -s "$pwfile" ]
+   then
+      user_pw="$(var - password_$user_lc)"
+      if [ -n "$user_pw" ]
+      then
+         echo -n "$user_pw" > $pwfile
+         unset user_pw
+      else
+         echo "No password given for $user."
+         exit 1
+      fi
+   fi
+}
