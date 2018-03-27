@@ -1,11 +1,10 @@
 var(){
    local IFS=?
-   local tmp
    if [ "$1" == "-" ]
    then
-      tmp="$env_list"
+      local tmp="$env_list"
    else
-      tmp="$(echo $env_list | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
+      local tmp="$(echo $env_list | /usr/bin/awk -v section=$1 -F_ '$1==section{s=""; for (i=2; i < NF; i++) s = s $i "_"; print s $NF}')"
    fi
    if [ -z "$2" ]
    then
@@ -44,19 +43,24 @@ listfromfile(){
    local list="$(/bin/cat "$1")"
    echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012'
 }
-makealloftypefromlist(){
-   set +e
-   local IFS=?
-   local matches="$(echo "$2" | /bin/grep -i "_$1 *=")"
-   set -e
-   for row in $matches
+makeallfromenvlist(){
+   local envlist="$env_list"
+   local types="file dir"
+   for type in $types
    do
-      local obj="$(echo "$row" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
-      make$1 "$obj"
+      set +e
+      local matches="$(echo "$envlist" | /bin/grep -iE "_$type(ectory)? *=")"
+      set -e
+      for match in $matches
+      do
+         local obj="$(echo "$match" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
+         make$type "$obj"
+      done
    done
 }
 makepwfile(){
-   local user_lc="$(tolower "$user")"
+   local currentuser="$user"
+   local user_lc="$(tolower "$currentuser")"
    local pwfile="$(var - password_file_$user_lc)"
    if [ -z "$pwfile" ]
    then
@@ -71,7 +75,7 @@ makepwfile(){
          echo -n "$user_pw" > $pwfile
          unset user_pw
       else
-         echo "No password given for $user."
+         echo "No password given for $currentuser."
          exit 1
       fi
    fi
