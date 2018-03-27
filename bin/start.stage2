@@ -9,14 +9,13 @@ readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
+   env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
    makeallfromenvlist
    /bin/rm "$RUNTIME_ENVIRONMENT"
 
 # Image-specific code
 # --------------------------------------------
    IFS="${IFS},"
-   new_env_list="$env_list"
    if [ ! -s "$CONFIG_FILE" ]
    then
       readonly global_smb_passwd_file="$(var global smb_passwd_file)"
@@ -26,10 +25,10 @@ then
          readonly global_passdb_backend="$(var global passdb_backend)"
          if [ -z "$global_passdb_backend" ]
          then
-            readonly new_env_list="global_passdb_backend=smbpasswd:$global_smb_passwd_file"$'\n'"$env_list"
+            env_list="global_passdb_backend=smbpasswd:$global_smb_passwd_file"$'\n'"$env_list"
          fi
       fi
-      readonly new_env_list
+      readonly env_list
       readonly SHARES="global"$'\n'"$(var - SHARES)"
       readonly SHARES_DIR="$(var - SHARES_DIR)"
       for share in $SHARES
@@ -61,7 +60,7 @@ then
          fi
       done
    else
-      readonly new_env_list
+      readonly env_list
       readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
