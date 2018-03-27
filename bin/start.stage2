@@ -9,7 +9,7 @@ readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 if [ -f "$RUNTIME_ENVIRONMENT" ]
 then
-   readonly env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
+   env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
    makeallfromenvlist
    /bin/rm "$RUNTIME_ENVIRONMENT"
 
@@ -60,6 +60,7 @@ then
          fi
       done
    else
+      readonly env_list
       readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
