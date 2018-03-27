@@ -1,5 +1,5 @@
 var(){
-  # local IFS=?
+   local IFS=?
    if [ "$1" == "-" ]
    then
       local tmp="$env_list"
