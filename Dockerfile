@@ -19,6 +19,11 @@ ENV BEV_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
 # ---------------------------------------------------------------------
 
 COPY ./bin ${BIN_DIR}
+
+# Image-specific COPY commands.
+# ---------------------------------------------------------------------
+
+# ---------------------------------------------------------------------
     
 RUN env | grep "^BEV_" > "$BUILDTIME_ENVIRONMENT" \
  && addgroup -S $BEV_NAME \
