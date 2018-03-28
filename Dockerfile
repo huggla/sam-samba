@@ -7,7 +7,8 @@ ENV BEV_NAME="samba"
 
 ENV BIN_DIR="/usr/local/bin" \
     SUDOERS_DIR="/etc/sudoers.d" \
-    CONFIG_DIR="/etc/$BEV_NAME"
+    CONFIG_DIR="/etc/$BEV_NAME" \
+    LANG="en_US.UTF-8"
 ENV BUILDTIME_ENVIRONMENT="$BIN_DIR/buildtime_environment" \
     RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
 
