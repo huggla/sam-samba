@@ -14,23 +14,26 @@ var(){
    fi
 }
 makedir(){
-   /bin/mkdir -p "$1"
+   local dir="$(echo "$1" | /usr/bin/tr -d "'")"
+   /bin/mkdir -p "$dir"
    set +e
-   /bin/chown root:$NAME "$1"
-   /bin/chmod u=rwx,g=x,o= "$1"
+   /bin/chown root:$NAME "$dir"
+   /bin/chmod u=rwx,g=x,o= "$dir"
    set -e
 }
 makefile(){
-   makedir "$(/usr/bin/dirname "$1")"
+   local file="$(echo "$1" | /usr/bin/tr -d "'")"
+   makedir "$(/usr/bin/dirname "$file")"
    set +e
-   /bin/touch "$1"
-   /bin/chown root:$NAME "$1"
-   /bin/chmod u=rw,g=r,o= "$1"
+   /bin/touch "$file"
+   /bin/chown root:$NAME "$file"
+   /bin/chmod u=rw,g=r,o= "$file"
    set -e
 }
 trydeletefile(){
+   local file="$(echo "$1" | /usr/bin/tr -d "'")"
    set +e
-   /bin/rm -f "$1"
+   /bin/rm -f "$file"
    set -e
 }
 trim(){
@@ -40,31 +43,41 @@ tolower(){
    echo "$1" | /usr/bin/tr '[:upper:]' '[:lower:]'
 }
 listfromfile(){
-   local list="$(/bin/cat "$1")"
-   echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.=/\012'
+   local file="$(echo "$1" | /usr/bin/tr -d "'")"
+   local list="$(/bin/cat "$file")"
+   echo "$list" | /usr/bin/cut -c 5- | /usr/bin/tr -dc '[:alnum:]_ %,\052\055.:=/\012\047'
 }
 makeallfromenvlist(){
+   local IFS=$(echo -en "\n\b,")
    local envlist="$env_list"
-   local types="file dir"
+   local types="file,dir"
    for type in $types
    do
       set +e
-      local matches="$(echo "$envlist" | /bin/grep -iE "_$type(ectory)? *=")"
+      local matches="$(echo "$envlist" | /bin/grep -iE "_$type(s|ectory|ectories)? *=")"
       set -e
       for match in $matches
       do
-         local obj="$(echo "$match" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
-         make$type "$obj"
+         local objects="$(echo "$match" | /usr/bin/awk -F= '{s=""; for (i=2; i < NF; i++) s = s $i "="; print s $NF; exit;}')"
+         for obj in $objects
+         do
+            make$type "$obj"
+         done
       done
    done
 }
 makepwfile(){
-   local currentuser="$user"
+   if [ -n "$user" ]
+   then
+      local currentuser="$user"
+   else
+      local currentuser="$NAME"
+   fi
    local user_lc="$(tolower "$currentuser")"
    local pwfile="$(var - password_file_$user_lc)"
    if [ -z "$pwfile" ]
    then
-      pwfile="$BIN_DIR/$user_lc"
+      pwfile="$BIN_DIR/$user_lc-pw"
    fi
    makefile "$pwfile"
    if [ ! -s "$pwfile" ]
