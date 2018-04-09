@@ -74,6 +74,4 @@ ENV REV_SHARES_DIR="/shares" \
     REV_global_disable_spoolss="yes"
 # ---------------------------------------------------------------------
 
-ENV PATH="$BIN_DIR"
-
 CMD ["sudo","start"]
