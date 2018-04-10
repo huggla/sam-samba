@@ -3,7 +3,7 @@
 # samba-alpine
 A secure and minimal docker image with Samba server (share) on Alpine.
 
-## Container ports (expose if you wich)
+## Container ports (expose if you wish)
 * UDP 137
 * UDP 138
 * TCP 139
