@@ -1,25 +1,16 @@
-#!/bin/sh
-set -e +a +m +s +i -f
+# Set in parent script:
+# ---------------------------------------------------------
+# set -e +a +m +s +i -f
+# readonly IFS_bak=$IFS
+# readonly BIN_DIR="$(/usr/bin/dirname "$0")"
+# . "$BIN_DIR/start.stage2.functions"
+# readonly NAME="$(var - NAME)"
+# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
+# ---------------------------------------------------------
 
-readonly BIN_DIR="$(/usr/bin/dirname "$0")"
-readonly BUILDTIME_ENVIRONMENT="$BIN_DIR/buildtime_environment"
-readonly RUNTIME_ENVIRONMENT="$BIN_DIR/runtime_environment"
-. "$BIN_DIR/start.stage2.functions"
-env_list="$(listfromfile "$BUILDTIME_ENVIRONMENT")"
-readonly NAME="$(var - NAME)"
-readonly CONFIG_FILE="$(var - CONFIG_FILE)"
-if [ -n "$CONFIG_FILE" ]
+if [ "$restart" == "false" ]
 then
-   readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
-fi
-if [ -f "$RUNTIME_ENVIRONMENT" ]
-then
-   env_list="$env_list"$'\n'"$(listfromfile "$RUNTIME_ENVIRONMENT")"
-   makeallfromenvlist
-   /bin/rm "$RUNTIME_ENVIRONMENT"
-
-# Image-specific code
-# --------------------------------------------
    IFS="${IFS},"
    if [ ! -s "$CONFIG_FILE" ]
    then
