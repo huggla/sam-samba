@@ -5,10 +5,13 @@
 # readonly BIN_DIR="$(/usr/bin/dirname "$0")"
 # . "$BIN_DIR/start.stage2.functions"
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # ---------------------------------------------------------
 
 if [ "$restart" == "false" ]
 then
+   smbusers_file="$CONFIG_DIR/smbusers" \
+   makefile "$smbusers_file"
    IFS="${IFS},"
    if [ ! -s "$CONFIG_FILE" ]
    then
@@ -62,7 +65,6 @@ then
       done
    fi
    readonly SHARE_USERS="$(var - SHARE_USERS)"
-   readonly SMBUSERS_FILE="$(var - SMBUSERS_FILE)"
    for user in $SHARE_USERS
    do
       user="$(trim "$user")"
@@ -79,7 +81,7 @@ then
          userpwfile="$(makepwfileforuser "$user")"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$BIN_DIR/smbpasswd" -s -a "$user"
          trydeletefile "$userpwfile"
-         echo "$user = $user" >> "$SMBUSERS_FILE"
+         echo "$user = $user" >> "$smbusers_file"
       done
    fi
    readonly global_username_map="$(var - global_username_map)"
@@ -97,5 +99,5 @@ then
       fi
    fi
 fi
-/usr/bin/env -i "$BIN_DIR/sudo" /usr/sbin/nmbd -D
-exec /usr/bin/env -i "$BIN_DIR/sudo" /usr/sbin/smbd -FS
+/usr/bin/env -i /usr/local/sbin/sudo /usr/sbin/nmbd -D
+exec /usr/bin/env -i /usr/local/sbin/sudo /usr/sbin/smbd -FS
