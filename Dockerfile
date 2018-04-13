@@ -4,7 +4,6 @@ ENV CONFIG_DIR="/etc/samba"
 
 ENV REV_NAME="samba" \
     REV_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
-    REV_SMBUSERS_FILE="$CONFIG_DIR/smbusers" \
     REV_SHARES_DIR="/shares" \
     REV_SHARE_USERS="shareuser" \
     REV_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
