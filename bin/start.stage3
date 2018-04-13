@@ -4,9 +4,7 @@
 # readonly IFS_bak=$IFS
 # readonly BIN_DIR="$(/usr/bin/dirname "$0")"
 # . "$BIN_DIR/start.stage2.functions"
-# readonly NAME="$(var - NAME)"
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
-# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # ---------------------------------------------------------
 
 if [ "$restart" == "false" ]
