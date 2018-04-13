@@ -10,7 +10,7 @@
 
 if [ "$restart" == "false" ]
 then
-   smbusers_file="$CONFIG_DIR/smbusers" \
+   smbusers_file="$CONFIG_DIR/smbusers"
    makefile "$smbusers_file"
    IFS="${IFS},"
    if [ ! -s "$CONFIG_FILE" ]
