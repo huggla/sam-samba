@@ -24,6 +24,8 @@ ENV REV_NAME="samba" \
 COPY ./bin ${BIN_DIR}
 
 RUN apk add --no-cache samba-server \
- && mv "$REV_CONFIG_FILE" "$REV_CONFIG_FILE.old"
+ && mv "$REV_CONFIG_FILE" "$REV_CONFIG_FILE.old" \
+ && chown root:$REV_NAME "$BIN_DIR/"* \
+ && chmod u=rx,g=rx,o= "$BIN_DIR/"*
  
 USER sudoer
