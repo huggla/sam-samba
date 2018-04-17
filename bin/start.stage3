@@ -10,7 +10,6 @@
 
 if [ "$restart" == "false" ]
 then
-   chmod o+rx /shares
    smbusers_file="$CONFIG_DIR/smbusers"
    makefile "$smbusers_file"
    IFS="${IFS},"
@@ -53,7 +52,7 @@ then
          done
          if [ "$share" != "global" ]
          then
-            /bin/mkdir -pm 755 "$path_value"
+            /bin/mkdir -p "$path_value"
             echo "path=$path_value" >> "$CONFIG_FILE"
          fi
       done
@@ -62,7 +61,7 @@ then
       readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
-         /bin/mkdir -pm 755 "$path"
+         /bin/mkdir -p "$path"
       done
    fi
    readonly SHARE_USERS="$(var - SHARE_USERS)"
@@ -103,6 +102,9 @@ then
          done
       fi
    fi
+   set +f
+   chmod o+rx /shares /shares/*
+   set -f
 fi
 /usr/bin/env -i /usr/local/sbin/sudo /usr/sbin/nmbd -D
 exec /usr/bin/env -i /usr/local/sbin/sudo /usr/sbin/smbd -FS
