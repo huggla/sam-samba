@@ -53,7 +53,7 @@ then
          done
          if [ "$share" != "global" ]
          then
-            /bin/mkdir -p "$path_value"
+            /bin/mkdir -pm 755 "$path_value"
             echo "path=$path_value" >> "$CONFIG_FILE"
          fi
       done
@@ -62,7 +62,7 @@ then
       readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
       for path in $share_paths
       do
-         /bin/mkdir -p "$path"
+         /bin/mkdir -pm 755 "$path"
       done
    fi
    readonly SHARE_USERS="$(var - SHARE_USERS)"
