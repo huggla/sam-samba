@@ -102,6 +102,9 @@ then
          done
       fi
    fi
+   set +f
+   chmod o+rx /shares /shares/*
+   set -f
 fi
 /usr/bin/env -i /usr/local/sbin/sudo /usr/sbin/nmbd -D
 exec /usr/bin/env -i /usr/local/sbin/sudo /usr/sbin/smbd -FS
