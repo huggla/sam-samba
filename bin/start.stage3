@@ -10,6 +10,7 @@
 
 if [ "$restart" == "false" ]
 then
+   chmod o+rx /shares
    smbusers_file="$CONFIG_DIR/smbusers"
    makefile "$smbusers_file"
    IFS="${IFS},"
