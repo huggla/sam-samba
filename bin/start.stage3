@@ -68,9 +68,13 @@ then
    for user in $SHARE_USERS
    do
       user="$(trim "$user")"
-      if [ ! "$(/usr/bin/id $user 2>/dev/null)" ]
+      if [ ! $(/usr/bin/getent group $user) ]
       then
-         /usr/sbin/adduser -D -H -s /bin/false "$user"
+         /usr/sbin/addgroup $user
+      fi
+      if [ ! $(/usr/bin/getent passwd $user) ]
+      then
+         /usr/sbin/adduser -D -H -s /bin/false -G $user $user
       fi
    done
    if [ ! -s "$global_smb_passwd_file" ]
