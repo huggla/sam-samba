@@ -106,5 +106,9 @@ then
    chmod o+rx /shares /shares/*
    set -f
 fi
+if [ -f "$BIN_DIR/start.stage4" ]
+then
+   . "$BIN_DIR/start.stage4"
+fi
 /usr/bin/env -i /usr/sbin/nmbd -D
 exec /usr/bin/env -i /usr/sbin/smbd -FS
