@@ -11,14 +11,14 @@
 if [ "$restart" == "false" ]
 then
    smbusers_file="$CONFIG_DIR/smbusers"
-   makefile "$smbusers_file"
+   trymakefile "$smbusers_file"
    IFS="${IFS},"
    if [ ! -s "$CONFIG_FILE" ]
    then
       readonly global_smb_passwd_file="$(var global smb_passwd_file)"
       if [ -n "$global_smb_passwd_file" ]
       then
-         makefile "$global_smb_passwd_file"
+         trymakefile "$global_smb_passwd_file"
          readonly global_passdb_backend="$(var global passdb_backend)"
          if [ -z "$global_passdb_backend" ]
          then
@@ -84,14 +84,14 @@ then
          user="$(trim "$user")"
          userpwfile="$(makepwfileforuser "$user")"
          echo | /bin/cat "$userpwfile" - "$userpwfile" | "$BIN_DIR/smbpasswd" -s -a "$user"
-         trydeletefile "$userpwfile"
+         trydelete "$userpwfile"
          echo "$user = $user" >> "$smbusers_file"
       done
    fi
    readonly global_username_map="$(var - global_username_map)"
    if [ -n "$global_username_map" ] 
    then
-      makefile "$global_username_map"
+      trymakefile "$global_username_map"
       if [ ! -s "$global_username_map" ]
       then
          readonly USERNAME_MAP="$(var - USERNAME_MAP)"
