@@ -7,21 +7,35 @@
 
 if [ "$isFirstRun" == "true" ]
 then
-   smbusers_file="$VAR_CONFIG_DIR/smbusers"
-   trymakefile "$smbusers_file"
-   IFS="${IFS},"
+   local smbusersFile="$VAR_CONFIG_DIR/smbusers"
+   trymakefile "$smbusersFile"
+   if [ -z "$VAR_global_passdb_backend" ]
+   then
+      if [ -z "$VAR_global_smb_passwd_file" ]
+      then
+         VAR_global_smb_passwd_file="$(/bin/mktemp)"
+      fi
+      VAR_global_passdb_backend="smbpasswd:$global_smb_passwd_file"
+      if [ ! -s "$VAR_global_smb_passwd_file" ]
+      then
+         local user=""
+         local userPw=""
+         local IFS=$(echo -en ",")
+         for user in $VAR_SHARE_USERS
+         do
+            user="$(trim $user)"
+            userPw="$(makePwForUser $user)"
+            echo -e "$userPw\n$userPw" | /usr/local/bin/smbpasswd -s -a "$user"
+            userPw=""
+            echo "$user = $user" >> "$smbusersFile"
+         done
+      fi
+   fi
    if [ ! -s "$VAR_CONFIG_FILE" ]
    then
-      configFromVarGroup > "$VAR_CONFIG_FILE"
-      if [ -n "$VAR_global_smb_passwd_file" ]
-      then
-         readonly global_passdb_backend="$(var global passdb_backend)"
-         if [ -z "$global_passdb_backend" ]
-         then
-            env_list="global_passdb_backend=smbpasswd:$global_smb_passwd_file"$'\n'"$env_list"
-         fi
-      fi
-      readonly env_list
+      configFromVarGroup global >> "$VAR_CONFIG_FILE"
+
+
       readonly SHARES="global"$'\n'"$(var - SHARES)"
       readonly SHARES_DIR="$(var - SHARES_DIR)"
       for share in $SHARES
