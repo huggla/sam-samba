@@ -1,6 +1,7 @@
 ARG TAG="20181204"
 ARG RUNDEPS="samba-server"
 ARG REMOVEFILES="/etc/samba/smb.conf"
+ARG CONFIG_DIR="/etc/samba"
 
 #---------------Don't edit----------------
 FROM ${CONTENTIMAGE1:-scratch} as content1
@@ -10,8 +11,6 @@ FROM ${BUILDIMAGE:-huggla/build:$TAG} as build
 FROM ${BASEIMAGE:-huggla/base:$TAG} as image
 COPY --from=build /imagefs /
 #-----------------------------------------
-
-ARG CONFIG_DIR="/etc/samba"
 
 ENV VAR_LINUX_USER="root" \
     VAR_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
