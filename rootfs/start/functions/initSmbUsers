@@ -1,0 +1,46 @@
+initSmbUsers(){
+   local IFS=$(echo -en ",")
+   local smbusersFile="$VAR_CONFIG_DIR/smbusers"
+   trymakefile "$smbusersFile"
+   if [ -z "$VAR_global_passdb_backend" ]
+   then
+      if [ -z "$VAR_global_smb_passwd_file" ]
+      then
+         VAR_global_smb_passwd_file="$(/bin/mktemp)"
+      fi
+      VAR_global_passdb_backend="smbpasswd:$global_smb_passwd_file"
+      if [ ! -s "$VAR_global_smb_passwd_file" ]
+      then
+         local user=""
+         local userPw=""
+         for user in $VAR_SHARE_USERS
+         do
+            user="$(trim $user)"
+            userPw="$(makePwForUser $user)"
+            echo -e "$userPw\n$userPw" | /usr/local/bin/smbpasswd -s -a "$user"
+            userPw=""
+            echo "$user = $user" >> "$smbusersFile"
+         done
+      fi
+   fi
+   local shareUser=""
+   local userCount="103"
+   for shareUser in $VAR_SHARE_USERS
+   do
+      shareUser="$(trim "$shareUser")"
+      if [ "$shareUser" != "$VAR_LINUX_USER" ]
+      then
+          echo "$shareUser:x:$userCount:$userCount:$shareUser:/dev/null:/sbin/nologin" >> /etc/passwd
+          echo "$shareUser:x:$userCount:" >> /etc/group
+      fi
+   done
+   trymakefile "$VAR_global_username_map"
+   if [ ! -s "$global_username_map" ] && [ -n "$VAR_USERNAME_MAP" ]
+   then
+      for user in $VAR_USERNAME_MAP
+      do
+         user="$(trim "$user")"
+         echo "$user" >> "$VAR_global_username_map"
+      done
+   fi
+}
