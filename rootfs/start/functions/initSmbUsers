@@ -1,7 +1,7 @@
 initSmbUsers(){
    local IFS=$(echo -en ",")
    local smbusersFile="$VAR_CONFIG_DIR/smbusers"
-   trymakefile "$smbusersFile"
+   tryMakeFile "$smbusersFile"
    if [ -z "$VAR_global_passdb_backend" ]
    then
       if [ -z "$VAR_global_smb_passwd_file" ]
@@ -34,7 +34,7 @@ initSmbUsers(){
           echo "$shareUser:x:$userCount:" >> /etc/group
       fi
    done
-   trymakefile "$VAR_global_username_map"
+   tryMakeFile "$VAR_global_username_map"
    if [ ! -s "$global_username_map" ] && [ -n "$VAR_USERNAME_MAP" ]
    then
       for user in $VAR_USERNAME_MAP
