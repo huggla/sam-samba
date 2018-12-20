@@ -33,50 +33,28 @@ then
    fi
    if [ ! -s "$VAR_CONFIG_FILE" ]
    then
-      VAR_SHARES="global"$'\n'"$VAR_SHARES"
       local share=""
-      local share_lc=""
+      local shareLc=""
+      VAR_SHARES="global"$'\n'"$VAR_SHARES"
       for share in $VAR_SHARES
       do
          share="$(trim "$share")"
-         share_lc="$(tolower "$share")"
+         shareLc="$(tolower "$share")"
          echo >> "$VAR_CONFIG_FILE"
          echo "[$share]" >> "$VAR_CONFIG_FILE"
-         configFromVarGroup $share >> "$VAR_CONFIG_FILE"
-         share_parameters="$(var $share_lc)"
-         path_value="$SHARES_DIR/$share"
-         for param in $share_parameters
-         do
-            param_value="$(var $share_lc $param)"
-            if [ -n "$param_value" ]
-            then
-               if [ "$param" == "path" ]
-               then
-                  path_value=$param_value
-               else
-                  echo -n "$param" | /usr/bin/tr '_' ' ' >> "$CONFIG_FILE"
-                  echo "=$param_value" >> "$CONFIG_FILE"
-               fi
-            fi
-         done
-         if [ "$share" != "global" ]
+         eval "local $shareLc_uScore=' '"
+         if [ "$shareLc" != "global" ]
          then
-            /bin/mkdir -p "$path_value"
-            echo "path=$path_value" >> "$CONFIG_FILE"
+            eval "VAR_$shareLc_path=\${VAR_$shareLc_path:-$VAR_SHARES_DIR/$share}"
          fi
-      done
-   else
-      readonly env_list
-      readonly share_paths="$(/bin/cat "$CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{print $2}')"
-      for path in $share_paths
-      do
-         /bin/mkdir -p "$path"
+         configFromVarGroup $shareLc >> "$VAR_CONFIG_FILE"
       done
    fi
-   readonly SHARE_USERS="$(var - SHARE_USERS)"
-   for user in $SHARE_USERS
+   /bin/cat "$VAR_CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{system("/bin/mkdir -p \""$2"\"")}'
+   local shareUser=""
+   for shareUser in $VAR_SHARE_USERS
    do
-      user="$(trim "$user")"
+      shareUser="$(trim "$shareUser")"
       if [ ! $(/usr/bin/getent group $user) ]
       then
          /usr/sbin/addgroup $user
