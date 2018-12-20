@@ -16,6 +16,7 @@ ENV VAR_LINUX_USER="root" \
     VAR_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     VAR_SHARES_DIR="/shares" \
     VAR_SHARE_USERS="shareuser" \
+    VAR_FINAL_COMMAND="/usr/sbin/nmbd -D && /usr/sbin/smbd -FS" \
     VAR_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     VAR_global_dns_proxy="no" \
     VAR_global_username_map="$CONFIG_DIR/usermap.txt" \
