@@ -1,6 +1,7 @@
 ARG TAG="20181204"
 ARG RUNDEPS="samba-server"
-ARG REMOVEFILES="/etc/samba/smb.conf"
+ARG EXECUTABLES="/usr/bin/smbpasswd"
+ARG REMOVEFILES="/etc/samba"
 ARG CONFIG_DIR="/etc/samba"
 
 #---------------Don't edit----------------
