@@ -1,0 +1,22 @@
+initConfigFile(){
+   if [ ! -s "$VAR_CONFIG_FILE" ]
+   then
+      local share=""
+      local shareLc=""
+      VAR_SHARES="global"$'\n'"$VAR_SHARES"
+      for share in $VAR_SHARES
+      do
+         share="$(trim "$share")"
+         shareLc="$(tolower "$share")"
+         echo >> "$VAR_CONFIG_FILE"
+         echo "[$share]" >> "$VAR_CONFIG_FILE"
+         eval "local $shareLc_uScore=' '"
+         if [ "$shareLc" != "global" ]
+         then
+            eval "VAR_$shareLc_path=\${VAR_$shareLc_path:-$VAR_SHARES_DIR/$share}"
+         fi
+         configFromVarGroup $shareLc >> "$VAR_CONFIG_FILE"
+      done
+   fi
+   /bin/cat "$VAR_CONFIG_FILE" | /bin/grep 'path=' | /usr/bin/awk -F= '{system("/bin/mkdir -p \""$2"\"")}'
+}
