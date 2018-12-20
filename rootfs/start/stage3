@@ -7,6 +7,7 @@
 
 if [ "$isFirstRun" == "true" ]
 then
+   local IFS=$(echo -en ",")
    local smbusersFile="$VAR_CONFIG_DIR/smbusers"
    trymakefile "$smbusersFile"
    if [ -z "$VAR_global_passdb_backend" ]
@@ -20,7 +21,6 @@ then
       then
          local user=""
          local userPw=""
-         local IFS=$(echo -en ",")
          for user in $VAR_SHARE_USERS
          do
             user="$(trim $user)"
@@ -33,17 +33,16 @@ then
    fi
    if [ ! -s "$VAR_CONFIG_FILE" ]
    then
-      configFromVarGroup global >> "$VAR_CONFIG_FILE"
-
-
-      readonly SHARES="global"$'\n'"$(var - SHARES)"
-      readonly SHARES_DIR="$(var - SHARES_DIR)"
-      for share in $SHARES
+      VAR_SHARES="global"$'\n'"$VAR_SHARES"
+      local share=""
+      local share_lc=""
+      for share in $VAR_SHARES
       do
          share="$(trim "$share")"
          share_lc="$(tolower "$share")"
-         echo >> "$CONFIG_FILE"
-         echo "[$share]" >> "$CONFIG_FILE"
+         echo >> "$VAR_CONFIG_FILE"
+         echo "[$share]" >> "$VAR_CONFIG_FILE"
+         configFromVarGroup $share >> "$VAR_CONFIG_FILE"
          share_parameters="$(var $share_lc)"
          path_value="$SHARES_DIR/$share"
          for param in $share_parameters
