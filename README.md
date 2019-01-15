@@ -1,5 +1,3 @@
-**Note! I use Docker latest tag for development, which means that it isn't allways working. Date tags are stable.**
-
 # samba-alpine
 A secure and minimal docker image with Samba server (share) on Alpine.
 
