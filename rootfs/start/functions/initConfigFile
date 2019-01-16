@@ -7,7 +7,7 @@ initConfigFile(){
       for share in $VAR_SHARES
       do
          share="$(trim "$share")"
-         shareLc="$(tolower "$share")"
+         shareLc="$(toLower "$share")"
          echo >> "$VAR_CONFIG_FILE"
          echo "[$share]" >> "$VAR_CONFIG_FILE"
          eval "local $shareLc_uScore=' '"
