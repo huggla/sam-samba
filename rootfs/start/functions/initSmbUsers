@@ -1,6 +1,6 @@
 initSmbUsers(){
    local guest="${VAR_global_guest_account:-nobody}"
-   createLinuxUser guest
+   createLinuxUser $guest
    local IFS=$(echo -en ",")
    local smbusersFile="$VAR_CONFIG_DIR/smbusers"
    tryMakeFile "$smbusersFile"
