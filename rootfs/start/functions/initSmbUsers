@@ -4,13 +4,6 @@ initSmbUsers(){
    local IFS=$(echo -en ",")
    local smbusersFile="$VAR_CONFIG_DIR/smbusers"
    tryMakeFile "$smbusersFile"
-   local shareUser=""
-   local userCount="103"
-   for shareUser in $VAR_SHARE_USERS
-   do
-      shareUser="$(trim "$shareUser")"
-      createLinuxUser "$shareUser"
-   done
    if [ -z "$VAR_global_passdb_backend" ]
    then
       if [ ! -s "$VAR_global_smb_passwd_file" ]
