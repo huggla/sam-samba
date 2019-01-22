@@ -7,6 +7,15 @@
 
 if [ "$isFirstRun" == "true" ]
 then
+   if [ -z "$VAR_global_passdb_backend" ]
+   then
+      if [ -z "$VAR_global_smb_passwd_file" ]
+      then
+         VAR_global_smb_passwd_file="$(/bin/mktemp)"
+      fi
+      VAR_global_passdb_backend="smbpasswd:$VAR_global_smb_passwd_file"
+   fi
+   createShareUsers
    initConfigFile
-   initSmbUsers
+   initShareUsers
 fi
