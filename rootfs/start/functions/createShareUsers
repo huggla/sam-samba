@@ -1,0 +1,8 @@
+createShareUsers(){
+   local shareUser=""
+   for shareUser in $VAR_SHARE_USERS
+   do
+      shareUser="$(trim "$shareUser")"
+      createLinuxUser "$shareUser"
+   done
+}
