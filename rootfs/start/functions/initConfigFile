@@ -1,14 +1,6 @@
 initConfigFile(){
    if [ ! -s "$VAR_CONFIG_FILE" ]
    then
-      if [ -z "$VAR_global_passdb_backend" ]
-      then
-         if [ -z "$VAR_global_smb_passwd_file" ]
-         then
-            VAR_global_smb_passwd_file="$(/bin/mktemp)"
-         fi
-         VAR_global_passdb_backend="smbpasswd:$VAR_global_smb_passwd_file"
-      fi
       local share=""
       local shareLc=""
       local tmpStr=''
