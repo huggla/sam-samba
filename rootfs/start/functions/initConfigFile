@@ -3,17 +3,21 @@ initConfigFile(){
    then
       local share=""
       local shareLc=""
-      VAR_SHARES="global"$'\n'"$VAR_SHARES"
+      local tmpStr=''
+      VAR_SHARES="global,$VAR_SHARES"
+      local IFS=$(echo -en ",")
       for share in $VAR_SHARES
       do
          share="$(trim "$share")"
          shareLc="$(toLower "$share")"
          echo >> "$VAR_CONFIG_FILE"
          echo "[$share]" >> "$VAR_CONFIG_FILE"
-         eval "local $shareLc_uScore=' '"
+         eval "local ${shareLc}_uScore=' '"
          if [ "$shareLc" != "global" ]
          then
-            eval "VAR_$shareLc_path=\${VAR_$shareLc_path:-$VAR_SHARES_DIR/$share}"
+            tmpStr="VAR_${shareLc}_path"
+            tmpStr="$tmpStr=\${$tmpStr:-$VAR_SHARES_DIR/$share}"
+            eval "$tmpStr"
          fi
          configFromVarGroup $shareLc >> "$VAR_CONFIG_FILE"
       done
