@@ -7,6 +7,6 @@
 
 if [ "$isFirstRun" == "true" ]
 then
-   initSmbUsers
    initConfigFile
+   initSmbUsers
 fi
