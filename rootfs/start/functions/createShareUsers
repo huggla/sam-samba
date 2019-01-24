@@ -2,6 +2,7 @@ createShareUsers(){
    local guest="${VAR_global_guest_account:-nobody}"
    createLinuxUser $guest
    local shareUser=""
+   local IFS=$(echo -en ",")
    for shareUser in $VAR_SHARE_USERS
    do
       shareUser="$(trim "$shareUser")"
