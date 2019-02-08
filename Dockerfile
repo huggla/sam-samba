@@ -1,16 +1,31 @@
-ARG TAG="20190115"
+ARG TAG="20190206"
 ARG RUNDEPS="samba-server"
 ARG EXECUTABLES="/usr/bin/smbpasswd"
 ARG REMOVEFILES="/etc/samba"
 
-#---------------Don't edit----------------
+#--------Generic template (don't edit)--------
 FROM ${CONTENTIMAGE1:-scratch} as content1
 FROM ${CONTENTIMAGE2:-scratch} as content2
 FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$TAG}} as init
 FROM ${BUILDIMAGE:-huggla/build} as build
 FROM ${BASEIMAGE:-huggla/base:$TAG} as image
+ARG CONTENTSOURCE1
+ARG CONTENTSOURCE1="${CONTENTSOURCE1:-/}"
+ARG CONTENTDESTINATION1
+ARG CONTENTDESTINATION1="${CONTENTDESTINATION1:-/buildfs/}"
+ARG CONTENTSOURCE2
+ARG CONTENTSOURCE2="${CONTENTSOURCE2:-/}"
+ARG CONTENTDESTINATION2
+ARG CONTENTDESTINATION2="${CONTENTDESTINATION2:-/buildfs/}"
+ARG CLONEGITSDIR
+ARG DOWNLOADSDIR
+ARG MAKEDIRS
+ARG MAKEFILES
+ARG EXECUTABLES
+ARG STARTUPEXECUTABLES
+ARG EXPOSEFUNCTIONS
 COPY --from=build /imagefs /
-#-----------------------------------------
+#---------------------------------------------
 
 ARG CONFIG_DIR="/etc/samba"
 
@@ -33,7 +48,7 @@ ENV VAR_LINUX_USER="root" \
     VAR_global_printcap_name="/dev/null" \
     VAR_global_disable_spoolss="yes"
      
-#---------------Don't edit----------------
+#--------Generic template (don't edit)--------
 USER starter
 ONBUILD USER root
-#-----------------------------------------
+#---------------------------------------------
