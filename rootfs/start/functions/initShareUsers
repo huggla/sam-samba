@@ -2,7 +2,7 @@ initShareUsers(){
    local IFS=$(echo -en ",")
    local smbusersFile="$VAR_CONFIG_DIR/smbusers"
    tryMakeFile "$smbusersFile"
-   if [ -z "$VAR_global_passdb_backend" ]
+   if $(echo VAR_global_passdb_backend | /bin/grep -q "smbpasswd")
    then
       if [ ! -s "$VAR_global_smb_passwd_file" ]
       then
