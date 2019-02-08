@@ -1,7 +1,7 @@
 ARG TAG="20190206"
 ARG RUNDEPS="samba-server"
-ARG EXECUTABLES="/usr/bin/smbpasswd"
-ARG REMOVEFILES="/etc/samba"
+ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd"
+ARG REMOVEDIRS="/etc/samba"
 
 #--------Generic template (don't edit)--------
 FROM ${CONTENTIMAGE1:-scratch} as content1
