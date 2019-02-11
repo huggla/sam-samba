@@ -1,11 +1,11 @@
 createShareUsers(){
    local guest="${VAR_global_guest_account:-nobody}"
-   createLinuxUser "$guest"
+   createLinuxUser "$guest" 102 0
    local shareUser=""
    local IFS=$(echo -en ",")
    for shareUser in $VAR_SHARE_USERS
    do
       shareUser="$(trim "$shareUser")"
-      createLinuxUser "$shareUser"
+      createLinuxUser "$shareUser" 102 0
    done
 }
