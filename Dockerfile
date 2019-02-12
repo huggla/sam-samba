@@ -1,6 +1,6 @@
 ARG TAG="20190206"
 ARG RUNDEPS="samba-server"
-ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd"
+ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEDIRS="/etc/samba"
 
 #--------Generic template (don't edit)--------
@@ -34,7 +34,7 @@ ENV VAR_LINUX_USER="root" \
     VAR_DEBUGLEVEL="1" \
     VAR_SHARES_DIR="/shares" \
     VAR_SHARE_USERS="shareuser" \
-    VAR_FINAL_COMMAND="/usr/sbin/nmbd --daemon --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && /usr/sbin/smbd --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
+    VAR_FINAL_COMMAND="nmbd --daemon --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
     VAR_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     VAR_global_dns_proxy="no" \
     VAR_global_username_map="$CONFIG_DIR/usermap.txt" \
