@@ -29,7 +29,7 @@ COPY --from=build /imagefs /
 
 ARG CONFIG_DIR="/etc/samba"
 
-ENV VAR_LINUX_USER="root" \
+ENV VAR_LINUX_USER="samba" \
     VAR_CONFIG_FILE="$CONFIG_DIR/smb.conf" \
     VAR_DEBUGLEVEL="1" \
     VAR_SHARES_DIR="/shares" \
