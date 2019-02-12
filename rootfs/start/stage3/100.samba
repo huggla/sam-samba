@@ -18,4 +18,5 @@ then
    createShareUsers
    initConfigFile
    initShareUsers
+   fixSambaPermissions
 fi
