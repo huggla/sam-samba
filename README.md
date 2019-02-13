@@ -1,11 +1,10 @@
 # samba-alpine
 A secure and minimal docker image with Samba server (share) on Alpine edge.
 
-## Internal container ports (expose if you wish)
-* UDP 137
-* UDP 138
-* TCP 139
-* TCP 445
+## Internal container ports (expose externally as 137, 139 and 445 if you wish)
+* UDP 1370
+* TCP 1390
+* TCP 4450
 
 ## Pre-set environment variables (can be set at runtime)
 * VAR_LINUX_USER (root)
