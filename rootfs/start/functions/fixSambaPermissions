@@ -1,5 +1,3 @@
 fixSambaPermissions(){
-  # /bin/mkdir -m 700 -p "$(/usr/bin/dirname $VAR_global_log_file)/cores"
-   /bin/chown -R $VAR_LINUX_USER "$(/usr/bin/dirname $VAR_global_log_file)" /var/lib/samba /etc/samba
-   /bin/chmod -R g=rwX /var/cache/samba /run/samba
+   /bin/chown -R $VAR_LINUX_USER "$(/usr/bin/dirname $VAR_global_log_file)"
 }
