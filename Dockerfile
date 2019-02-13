@@ -2,6 +2,7 @@ ARG TAG="20190206"
 ARG RUNDEPS="samba-server"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEDIRS="/etc/samba"
+ARG LINUXUSEROWNED="/var/lib/samba /etc/samba"
 
 #--------Generic template (don't edit)--------
 FROM ${CONTENTIMAGE1:-scratch} as content1
@@ -25,6 +26,7 @@ ARG EXECUTABLES
 ARG STARTUPEXECUTABLES
 ARG EXPOSEFUNCTIONS
 COPY --from=build /imagefs /
+RUN [ -n "$LINUXUSEROWNED" ] && chown 102 $LINUXUSEROWNED
 #---------------------------------------------
 
 ARG CONFIG_DIR="/etc/samba"
