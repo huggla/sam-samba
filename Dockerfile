@@ -1,6 +1,5 @@
 ARG TAG="20190206"
 ARG RUNDEPS="samba-server"
-ARG MAKEDIRS="/run
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
 ARG GID0WRITABLES="/var/cache/samba /run/samba"
