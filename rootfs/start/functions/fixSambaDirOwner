@@ -1,5 +1,5 @@
 fixSambaDirOwner(){
-   /bin/chown -R $VAR_LINUX_USER "$VAR_CONFIG_DIR"
+   /bin/chown -R $VAR_LINUX_USER "$VAR_CONFIG_DIR" /var/lib/samba
    if [ "$VAR_global_log_file" != "/var/log/samba" ]
    then
       /bin/chown -R $VAR_LINUX_USER "$(/usr/bin/dirname $VAR_global_log_file)"
