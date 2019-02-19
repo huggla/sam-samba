@@ -6,9 +6,9 @@ ARG REMOVEDIRS="/etc/samba"
 #--------Generic template (don't edit)--------
 FROM ${CONTENTIMAGE1:-scratch} as content1
 FROM ${CONTENTIMAGE2:-scratch} as content2
-FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$TAG}} as init
+FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:debug}} as init
 FROM ${BUILDIMAGE:-huggla/build:debug2} as build
-FROM ${BASEIMAGE:-huggla/base:$TAG} as image
+FROM ${BASEIMAGE:-huggla/base:debug} as image
 ARG CONTENTSOURCE1
 ARG CONTENTSOURCE1="${CONTENTSOURCE1:-/}"
 ARG CONTENTDESTINATION1
