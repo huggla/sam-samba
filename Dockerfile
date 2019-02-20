@@ -1,6 +1,6 @@
 ARG TAG="20190206"
 ARG RUNDEPS="samba-server"
-ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
+ARG EXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEDIRS="/etc/samba"
 
 #--------Generic template (don't edit)--------
