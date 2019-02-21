@@ -2,7 +2,7 @@ ARG TAG="20190220"
 ARG RUNDEPS="samba-server"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
-ARG GID0WRITABLES="/run/samba /var/lib/samba/*"
+ARG GID0WRITABLES="/run/samba"
 
 #--------Generic template (don't edit)--------
 FROM ${CONTENTIMAGE1:-scratch} as content1
