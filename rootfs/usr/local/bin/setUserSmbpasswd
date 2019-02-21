@@ -1,0 +1,3 @@
+#!/usr/local/bin/dash
+
+echo -e "$2\n$2" | /usr/local/bin/smbpasswd -s -a "$1"
