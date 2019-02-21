@@ -15,7 +15,7 @@ initShareUsers(){
             pwFile="$(runBinCmdAsLinuxUser /bin/mktemp)"
             runBinCmdAsLinuxUser "/bin/chmod g+w \"$pwFile\""
             echo -e "$userPw\n$userPw" >> "$pwFile"
-            runCmdAsUser "setSmbpasswdForUserFromFile \"$user\" \"$pwFile\""
+            runCmdAsLinuxUser "setSmbpasswdForUserFromFile \"$user\" \"$pwFile\""
             userPw=""
             /bin/rm "$pwFile"
             echo "$user = $user" >> "$smbusersFile"
