@@ -1,5 +1,5 @@
 # samba-alpine
-A secure and minimal docker image with Samba server (share) on Alpine edge.
+A secure and minimal docker image with Samba server (share) on Alpine edge. Runs as non-privileged user.
 
 ## Internal container ports (expose externally as 137, 139 and 445 if you wish)
 * UDP 1370
