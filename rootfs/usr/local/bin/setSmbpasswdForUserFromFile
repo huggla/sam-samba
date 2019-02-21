@@ -5,7 +5,7 @@ setSmbpasswdForUserFromFile(){
    local user="$1"
    local pwFile="$2"
    local userPw=""
-   read "$pwFile" userPw
+   read userPw < "$pwFile"
    echo "$userPw" | /usr/local/bin/smbpasswd -s -a "$user"
 }
 
