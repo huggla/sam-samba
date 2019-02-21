@@ -8,8 +8,8 @@ A secure and minimal docker image with Samba server (share) on Alpine edge.
 
 ## Pre-set environment variables (can be set at runtime)
 * VAR_LINUX_USER (root)
-* VAR_CONFIG_FILE (/etc/samba/smb.conf"
-* VAR_FINAL_COMMAND (/usr/sbin/nmbd --daemon --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && /usr/sbin/smbd --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
+* VAR_CONFIG_FILE (/etc/samba/smb.conf)
+* VAR_FINAL_COMMAND (nmbd --daemon -p 1370 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 1390 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
 * VAR_SHARES_DIR (/shares): Root directory for shares.
 * VAR_SHARE_USERS (shareuser): Comma separated list of user names that should have access the the shares.
 * VAR_DEBUGLEVEL (1)
