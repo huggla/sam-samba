@@ -12,7 +12,7 @@ initShareUsers(){
          do
             user="$(trim $user)"
             userPw="$(makePwForUser $user)"
-            echo -e "$userPw\n$userPw" | /usr/local/bin/smbpasswd -s -a "$user"
+            runCmdAsUser "echo -e \"$userPw\\n$userPw\" \| /usr/local/bin/smbpasswd -s -a \"$user\""
             userPw=""
             echo "$user = $user" >> "$smbusersFile"
          done
