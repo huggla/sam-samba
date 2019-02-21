@@ -39,4 +39,4 @@ A secure and minimal docker image with Samba server (share) on Alpine edge.
 * VAR_password_&lt;user name from USERS&gt;: Password for named user. Slightly less secure.
 
 ## Capabilities
-If using the default log directory (/var/log/samba) then all can be dropped but SETPCAP, SETGID and SETUID. If VAR_global_log_file has other path then CHOWN is needed as well.
+Can drop all but CHOWN, SETPCAP, SETGID and SETUID.
