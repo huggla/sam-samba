@@ -1,4 +1,4 @@
-ARG TAG="20190220"
+ARG TAG="20190418"
 ARG RUNDEPS="samba-server"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
@@ -7,6 +7,7 @@ ARG GID0WRITABLES="/run/samba"
 #--------Generic template (don't edit)--------
 FROM ${CONTENTIMAGE1:-scratch} as content1
 FROM ${CONTENTIMAGE2:-scratch} as content2
+FROM ${CONTENTIMAGE3:-scratch} as content3
 FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$TAG}} as init
 FROM ${BUILDIMAGE:-huggla/build} as build
 FROM ${BASEIMAGE:-huggla/base:$TAG} as image
@@ -18,6 +19,10 @@ ARG CONTENTSOURCE2
 ARG CONTENTSOURCE2="${CONTENTSOURCE2:-/}"
 ARG CONTENTDESTINATION2
 ARG CONTENTDESTINATION2="${CONTENTDESTINATION2:-/buildfs/}"
+ARG CONTENTSOURCE3
+ARG CONTENTSOURCE3="${CONTENTSOURCE3:-/}"
+ARG CONTENTDESTINATION3
+ARG CONTENTDESTINATION3="${CONTENTDESTINATION3:-/buildfs/}"
 ARG CLONEGITSDIR
 ARG DOWNLOADSDIR
 ARG MAKEDIRS
@@ -28,8 +33,8 @@ ARG EXPOSEFUNCTIONS
 ARG GID0WRITABLES
 ARG GID0WRITABLESRECURSIVE
 ARG LINUXUSEROWNED
+ARG LINUXUSEROWNEDRECURSIVE
 COPY --from=build /imagefs /
-RUN [ -n "$LINUXUSEROWNED" ] && chown 102 $LINUXUSEROWNED || true
 #---------------------------------------------
 
 ARG CONFIG_DIR="/etc/samba"
@@ -40,7 +45,7 @@ ENV VAR_LINUX_USER="samba" \
     VAR_DEBUGLEVEL="1" \
     VAR_SHARES_DIR="/shares" \
     VAR_SHARE_USERS="shareuser" \
-    VAR_FINAL_COMMAND="nmbd --daemon -p 1370 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 1390 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
+    VAR_FINAL_COMMAND="nmbd --daemon -p 1380 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 1390 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
     VAR_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     VAR_global_dns_proxy="no" \
     VAR_global_username_map="$CONFIG_DIR/usermap.txt" \
