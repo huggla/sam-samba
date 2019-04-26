@@ -45,7 +45,7 @@ ENV VAR_LINUX_USER="samba" \
     VAR_DEBUGLEVEL="1" \
     VAR_SHARES_DIR="/shares" \
     VAR_SHARE_USERS="shareuser" \
-    VAR_FINAL_COMMAND="nmbd --daemon -p 1380 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 1390 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
+    VAR_FINAL_COMMAND="nmbd --daemon -p 4450 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
     VAR_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     VAR_global_dns_proxy="no" \
     VAR_global_username_map="$CONFIG_DIR/usermap.txt" \
@@ -57,7 +57,8 @@ ENV VAR_LINUX_USER="samba" \
     VAR_global_load_printers="no" \
     VAR_global_printing="bsd" \
     VAR_global_printcap_name="/dev/null" \
-    VAR_global_disable_spoolss="yes"
+    VAR_global_disable_spoolss="yes" \
+    VAR_global_disable_netbios="yes"
      
 #--------Generic template (don't edit)--------
 USER starter
