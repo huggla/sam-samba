@@ -1,15 +1,14 @@
 # samba-alpine
 A secure and minimal docker image with Samba server (share) on Alpine edge. Runs as non-privileged user.
 
-## Internal container ports (expose externally as 138, 139 and 445 if you wish)
-* UDP 1380
-* TCP 1390
+## Internal container ports (expose externally as 445 if you wish)
+* UDP 4450
 * TCP 4450
 
 ## Pre-set environment variables (can be set at runtime)
 * VAR_LINUX_USER (root)
 * VAR_CONFIG_FILE (/etc/samba/smb.conf)
-* VAR_FINAL_COMMAND (nmbd --daemon -p 1380 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 1390 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
+* VAR_FINAL_COMMAND (nmbd --daemon -p 4450 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
 * VAR_SHARES_DIR (/shares): Root directory for shares.
 * VAR_SHARE_USERS (shareuser): Comma separated list of user names that should have access the the shares.
 * VAR_DEBUGLEVEL (1)
@@ -27,6 +26,7 @@ A secure and minimal docker image with Samba server (share) on Alpine edge. Runs
 * VAR_global_printing (bsd)
 * VAR_global_printcap_name (/dev/null)
 * VAR_global_disable_spoolss (yes)
+* VAR_global_disable_netbios (yes)
 
 ## Runtime environment variables
 * VAR_SHARES: Comma separated list of share names. Might also contain homes, printers.
