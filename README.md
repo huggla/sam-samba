@@ -27,6 +27,8 @@ A secure and minimal docker image with Samba server (share) on Alpine edge. Runs
 * VAR_global_printcap_name (/dev/null)
 * VAR_global_disable_spoolss (yes)
 * VAR_global_disable_netbios (yes)
+* VAR_global_smb_encrypt (required)
+* VAR_global_lanman_auth (no)
 
 ## Runtime environment variables
 * VAR_SHARES: Comma separated list of share names. Might also contain homes, printers.
