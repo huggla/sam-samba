@@ -51,7 +51,7 @@ ENV VAR_LINUX_USER="samba" \
     VAR_global_username_map="$CONFIG_DIR/usermap.txt" \
     VAR_global_log_file="/var/log/samba/log.%m" \
     VAR_global_max_log_size="0" \
-    VAR_global_panic_action="killall smbd" \
+    VAR_global_panic_action="killall nmbd smbd" \
     VAR_global_server_role="standalone" \
     VAR_global_map_to_guest="bad user" \
     VAR_global_load_printers="no" \
@@ -59,7 +59,7 @@ ENV VAR_LINUX_USER="samba" \
     VAR_global_printcap_name="/dev/null" \
     VAR_global_disable_spoolss="yes" \
     VAR_global_disable_netbios="yes" \
-    VAR_global_smb_encrypt="required" \
+    VAR_global_smb_encrypt="desired" \
     VAR_global_lanman_auth="no"
      
 #--------Generic template (don't edit)--------
