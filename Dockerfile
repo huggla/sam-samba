@@ -58,7 +58,9 @@ ENV VAR_LINUX_USER="samba" \
     VAR_global_printing="bsd" \
     VAR_global_printcap_name="/dev/null" \
     VAR_global_disable_spoolss="yes" \
-    VAR_global_disable_netbios="yes"
+    VAR_global_disable_netbios="yes" \
+    VAR_global_smb_encrypt="required" \
+    VAR_global_lanman_auth="no"
      
 #--------Generic template (don't edit)--------
 USER starter
