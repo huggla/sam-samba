@@ -19,7 +19,7 @@ A secure and minimal docker image with Samba server (share) on Alpine edge. Runs
 * VAR_global_username_map (/etc/samba/usermap.txt)
 * VAR_global_log_file (/var/log/samba/log.%m)
 * VAR_global_max_log_size (0)
-* VAR_global_panic_action (killall smbd nmdb)
+* VAR_global_panic_action (killall nmdb smbd)
 * VAR_global_server_role (standalone)
 * VAR_global_map_to_guest (bad user)
 * VAR_global_load_printers (no)
