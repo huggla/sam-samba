@@ -1,42 +1,37 @@
-ARG TAG="20190418"
+# =========================================================================
+# Init
+# =========================================================================
+# ARGs (can be passed to Build/Final) <BEGIN>
+ARG SaM_VERSION="1.0"
+ARG TAG="20191007"
+ARG IMAGETYPE="application"
 ARG RUNDEPS="samba-server"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
 ARG GID0WRITABLES="/run/samba"
+# ARGs (can be passed to Build/Final) </END>
 
-#--------Generic template (don't edit)--------
+# Generic template (don't edit) <BEGIN>
 FROM ${CONTENTIMAGE1:-scratch} as content1
 FROM ${CONTENTIMAGE2:-scratch} as content2
 FROM ${CONTENTIMAGE3:-scratch} as content3
-FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$TAG}} as init
-FROM ${BUILDIMAGE:-huggla/build} as build
-FROM ${BASEIMAGE:-huggla/base:$TAG} as image
-ARG CONTENTSOURCE1
-ARG CONTENTSOURCE1="${CONTENTSOURCE1:-/}"
-ARG CONTENTDESTINATION1
-ARG CONTENTDESTINATION1="${CONTENTDESTINATION1:-/buildfs/}"
-ARG CONTENTSOURCE2
-ARG CONTENTSOURCE2="${CONTENTSOURCE2:-/}"
-ARG CONTENTDESTINATION2
-ARG CONTENTDESTINATION2="${CONTENTDESTINATION2:-/buildfs/}"
-ARG CONTENTSOURCE3
-ARG CONTENTSOURCE3="${CONTENTSOURCE3:-/}"
-ARG CONTENTDESTINATION3
-ARG CONTENTDESTINATION3="${CONTENTDESTINATION3:-/buildfs/}"
-ARG CLONEGITSDIR
-ARG DOWNLOADSDIR
-ARG MAKEDIRS
-ARG MAKEFILES
-ARG EXECUTABLES
-ARG STARTUPEXECUTABLES
-ARG EXPOSEFUNCTIONS
-ARG GID0WRITABLES
-ARG GID0WRITABLESRECURSIVE
-ARG LINUXUSEROWNED
-ARG LINUXUSEROWNEDRECURSIVE
-COPY --from=build /imagefs /
-#---------------------------------------------
+FROM ${CONTENTIMAGE4:-scratch} as content4
+FROM ${CONTENTIMAGE5:-scratch} as content5
+FROM ${INITIMAGE:-${BASEIMAGE:-huggla/base:$SaM_VERSION-$TAG}} as init
+# Generic template (don't edit) </END>
 
+# =========================================================================
+# Build
+# =========================================================================
+# Generic template (don't edit) <BEGIN>
+FROM ${BUILDIMAGE:-huggla/build:$SaM_VERSION-$TAG} as build
+FROM ${BASEIMAGE:-huggla/base:$SaM_VERSION-$TAG} as final
+COPY --from=build /finalfs /
+# Generic template (don't edit) </END>
+
+# =========================================================================
+# Final
+# =========================================================================
 ARG CONFIG_DIR="/etc/samba"
 
 ENV VAR_LINUX_USER="samba" \
@@ -62,7 +57,7 @@ ENV VAR_LINUX_USER="samba" \
     VAR_global_smb_encrypt="desired" \
     VAR_global_lanman_auth="no"
      
-#--------Generic template (don't edit)--------
+# Generic template (don't edit) <BEGIN>
 USER starter
 ONBUILD USER root
-#---------------------------------------------
+# Generic template (don't edit) </END>
