@@ -40,5 +40,19 @@ A secure and minimal docker image with Samba server (share) on Alpine edge. Runs
 * VAR_password&#95;file_&lt;user name from USERS&gt;: Path to file containing password for named user.
 * VAR_password_&lt;user name from USERS&gt;: Password for named user. Slightly less secure.
 
+## Runtime environment example (recommended)
+* VAR_SHARE_USERS=user1
+* VAR_password_user1=1goodPa$$word
+* VAR_SHARES=user1share
+* VAR_user1share_browsable=yes
+* VAR_user1share_guest_ok=no
+* VAR_user1share_read_only=yes
+* VAR_user1share_write_list=user1
+* VAR_user1share_create_mask=0660
+* VAR_user1share_directory_mask=0770
+
 ## Capabilities
 Can drop all but CHOWN, SETPCAP, SETGID and SETUID.
+
+## Note!
+Connecting from Windows 10 can be tricky. Make sure smb support is turned on, then use the "map to drive letter" tool.
