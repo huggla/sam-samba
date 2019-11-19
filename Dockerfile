@@ -5,10 +5,12 @@
 ARG SaM_VERSION="1.1-edge"
 ARG TAG="20191112"
 ARG IMAGETYPE="application"
+ARG BUILDDEPS="https://pkgs.alpinelinux.org/package/edge/main/armhf/samba-common-tools"
 ARG RUNDEPS="samba-server"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
 ARG GID0WRITABLES="/run/samba"
+ARG BUILDCMDS="cp -a /usr/bin/smbpasswd /finalfs/usr/bin/"
 # ARGs (can be passed to Build/Final) </END>
 
 # Generic template (don't edit) <BEGIN>
