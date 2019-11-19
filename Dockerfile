@@ -5,7 +5,7 @@
 ARG SaM_VERSION="1.1-edge"
 ARG TAG="20191112"
 ARG IMAGETYPE="application"
-ARG RUNDEPS="samba-server samba-common-tools"
+ARG RUNDEPS="samba-server samba-common-tools libsmbclient"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
 ARG GID0WRITABLES="/run/samba"
