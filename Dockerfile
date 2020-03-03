@@ -1,9 +1,11 @@
+# Secure and Minimal image of Samba Share
+# https://hub.docker.com/repository/docker/huggla/sam-samba
+
 # =========================================================================
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="1.1-edge"
-ARG TAG="20191112"
+ARG SaM_VERSION="2.0.0"
 ARG IMAGETYPE="application"
 ARG RUNDEPS="samba-server samba-common-tools libsmbclient"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
@@ -17,15 +19,15 @@ FROM ${CONTENTIMAGE2:-scratch} as content2
 FROM ${CONTENTIMAGE3:-scratch} as content3
 FROM ${CONTENTIMAGE4:-scratch} as content4
 FROM ${CONTENTIMAGE5:-scratch} as content5
-FROM ${INITIMAGE:-${BASEIMAGE:-huggla/sam_$SaM_VERSION:base-$TAG}} as init
+FROM ${INITIMAGE:-${BASEIMAGE:-huggla/secure_and_minimal:$SaM_VERSION-base}} as init
 # Generic template (don't edit) </END>
 
 # =========================================================================
 # Build
 # =========================================================================
 # Generic template (don't edit) <BEGIN>
-FROM ${BUILDIMAGE:-huggla/sam_$SaM_VERSION:build-$TAG} as build
-FROM ${BASEIMAGE:-huggla/sam_$SaM_VERSION:base-$TAG} as final
+FROM ${BUILDIMAGE:-huggla/secure_and_minimal:$SaM_VERSION-build} as build
+FROM ${BASEIMAGE:-huggla/secure_and_minimal:$SaM_VERSION-base} as final
 COPY --from=build /finalfs /
 # Generic template (don't edit) </END>
 
