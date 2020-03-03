@@ -8,6 +8,8 @@
 ARG SaM_VERSION="2.0.0"
 ARG IMAGETYPE="application"
 ARG RUNDEPS="samba-server samba-common-tools libsmbclient"
+ARG MAKEFILES="/var/lib/samba/private/secrets.tdb"
+ARG MAKEDIRS="/run/samba"
 ARG STARTUPEXECUTABLES="/usr/bin/smbpasswd /usr/sbin/nmbd /usr/sbin/smbd"
 ARG REMOVEFILES="/etc/samba/*"
 ARG GID0WRITABLES="/run/samba"
