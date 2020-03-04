@@ -5,7 +5,7 @@
 # Init
 # =========================================================================
 # ARGs (can be passed to Build/Final) <BEGIN>
-ARG SaM_VERSION="dev"
+ARG SaM_VERSION="2.0.1"
 ARG IMAGETYPE="application"
 ARG RUNDEPS="samba-server samba-common-tools libsmbclient"
 ARG MAKEFILES="/var/lib/samba/private/secrets.tdb"
