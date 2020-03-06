@@ -44,7 +44,9 @@ ENV VAR_LINUX_USER="samba" \
     VAR_DEBUGLEVEL="1" \
     VAR_SHARES_DIR="/shares" \
     VAR_SHARE_USERS="shareuser" \
-    VAR_FINAL_COMMAND="nmbd --daemon -p 4450 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
+    VAR_NMBD_PORT="4450" \
+    VAR_SMBD_PORTS="4450" \
+    VAR_FINAL_COMMAND="nmbd --daemon -p \$VAR_NMBD_PORT --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p \$VAR_SMBD_PORTS --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group" \
     VAR_global_smb_passwd_file="$CONFIG_DIR/smbpasswd" \
     VAR_global_dns_proxy="no" \
     VAR_global_username_map="$CONFIG_DIR/usermap.txt" \
