@@ -1,17 +1,19 @@
 # sam-samba
 A secure and minimal docker image with Samba server (share) on Alpine edge. Runs as non-privileged user.
 
-## Internal container ports (expose externally as 445 if you wish)
-* UDP 4450
-* TCP 4450
+## Default internal container ports (expose externally as 445 if you wish)
+* UDP 4450 (VAR_NMBD_PORT)
+* TCP 4450 (VAR_SMBD_PORTS)
 
 ## Pre-set environment variables (can be set at runtime)
 * VAR_LINUX_USER (root)
 * VAR_CONFIG_FILE (/etc/samba/smb.conf)
-* VAR_FINAL_COMMAND (nmbd --daemon -p 4450 --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p 4450 --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
+* VAR_FINAL_COMMAND (nmbd --daemon -p \$VAR_NMBD_PORT --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p \$VAR_SMBD_PORTS --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
 * VAR_SHARES_DIR (/shares): Root directory for shares.
 * VAR_SHARE_USERS (shareuser): Comma separated list of user names that should have access the the shares.
 * VAR_DEBUGLEVEL (1)
+* VAR_NMBD_PORT (4450)
+* VAR_SMBD_PORTS (4450)
 
 ### Default global configuration
 * VAR_global_smb_passwd_file (/etc/samba/smbpasswd): Encrypted passwords for all Samba users.
