@@ -58,4 +58,4 @@ Can drop all but CHOWN, SETPCAP, SETGID and SETUID.
 
 ## Note!
 Connecting from Windows 10 can be tricky. Make sure smb support is turned on, then use the "map to drive letter" tool. An alternative to guest shares (which by default doesn't work on Windows 10) is to create a shortcut with the following target:
->cmd /c net use \\&lt;host&gt;\&lt;share&gt; /user:&lt;username&gt; &lt;password&gt; /savecred /persistent:yes & start \\&lt;host&gt;\&lt;share&gt;
+>cmd /c net use &#92;\\&lt;host&gt;\&lt;share&gt; /user:&lt;username&gt; &lt;password&gt; /savecred /persistent:yes & start \\&lt;host&gt;\&lt;share&gt;
