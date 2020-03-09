@@ -57,4 +57,5 @@ A secure and minimal docker image with Samba server (share) on Alpine edge. Runs
 Can drop all but CHOWN, SETPCAP, SETGID and SETUID.
 
 ## Note!
-Connecting from Windows 10 can be tricky. Make sure smb support is turned on, then use the "map to drive letter" tool.
+Connecting from Windows 10 can be tricky. Make sure smb support is turned on, then use the "map to drive letter" tool. An alternative to guest shares (which by default doesn't work on Windows 10) is to create a shortcut with the following target:
+cmd /c net use \\<host>\<share> /user:<username> <password> /savecred /persistent:yes & start \\<host>\<share>
