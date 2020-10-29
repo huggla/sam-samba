@@ -15,9 +15,12 @@ initConfigFile(){
          eval "local ${shareLc}_uScore=' '"
          if [ "$shareLc" != "global" ]
          then
-            tmpStr="VAR_${shareLc}_path"
-            tmpStr="$tmpStr=\${$tmpStr:-$VAR_SHARES_DIR/$share}"
-            eval "$tmpStr"
+            pathVar="VAR_${shareLc}_path"
+            evalStr="sharePath=\${$pathVar:-\"$VAR_SHARES_DIR/$share\"}"
+            eval "$evalStr"
+            evalStr="$pathVar=\"$sharePath\""
+            eval "$evalStr"
+            tryMakeDir "$sharePath"
          fi
          configFromVarGroup $shareLc >> "$VAR_CONFIG_FILE"
       done
