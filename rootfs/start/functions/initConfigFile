@@ -20,7 +20,7 @@ initConfigFile(){
             eval "$evalStr"
             evalStr="$pathVar=\"$sharePath\""
             eval "$evalStr"
-            tryMakeDir "$sharePath"
+            tryMakeDir "$sharePath" write
          fi
          configFromVarGroup $shareLc >> "$VAR_CONFIG_FILE"
       done
