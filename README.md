@@ -10,7 +10,7 @@ A secure and minimal docker image with Samba server (share) on Alpine edge. Runs
 * VAR_CONFIG_FILE (/etc/samba/smb.conf)
 * VAR_FINAL_COMMAND (nmbd --daemon -p \$VAR_NMBD_PORT --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group && smbd -p \$VAR_SMBD_PORTS --foreground --log-stdout --debuglevel=\$VAR_DEBUGLEVEL --configfile=\$VAR_CONFIG_FILE --no-process-group)
 * VAR_SHARES_DIR (/shares): Root directory for shares.
-* VAR_SHARE_USERS (shareuser): Comma separated list of user names that should have access the the shares.
+* VAR_SHARE_USERS (shareuser): Comma separated list of user names that should have access the the shares. (Usernames should not include numeric characters?)
 * VAR_DEBUGLEVEL (1)
 * VAR_NMBD_PORT (4450)
 * VAR_SMBD_PORTS (4450)
