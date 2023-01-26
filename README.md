@@ -1,3 +1,5 @@
+# NOTICE! This project has moved here: https://github.com/Kristianstad/samba/pkgs/container/samba
+
 # sam-samba
 A secure and minimal docker image with Samba server (share) on Alpine edge. Runs as non-privileged user.
 
